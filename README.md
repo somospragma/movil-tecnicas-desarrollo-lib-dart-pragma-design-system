@@ -54,6 +54,40 @@ class PragmaApp extends StatelessWidget {
 
 Consulta el paquete para más utilidades (`lib/src`) o revisa la app de ejemplo.
 
+## Tipografía y licencia
+
+- La tipografía oficial es [Poppins](https://fonts.google.com/specimen/Poppins) y `PragmaTypography` la aplica mediante `GoogleFonts.poppins`.
+- La familia se distribuye con la licencia **SIL Open Font License 1.1**; revisa el texto completo en [licenses/Poppins-OFL.txt](licenses/Poppins-OFL.txt).
+- Si tu aplicación debe funcionar sin conexión en el primer arranque, agrega los archivos `.ttf` a tus assets y deshabilita la descarga dinámica.
+
+### Cómo preparar un fallback offline
+
+1. Descarga las variantes que uses (por ejemplo Regular, SemiBold y Bold) desde Google Fonts y guárdalas en `assets/fonts/`.
+2. Decláralas en tu `pubspec.yaml`:
+
+   ```yaml
+   flutter:
+   	 fonts:
+   		 - family: Poppins
+   			 fonts:
+   				 - asset: assets/fonts/Poppins-Regular.ttf
+   				 - asset: assets/fonts/Poppins-SemiBold.ttf
+   				 - asset: assets/fonts/Poppins-Bold.ttf
+   ```
+
+3. Durante el arranque deshabilita la descarga remota:
+
+   ```dart
+   void main() {
+   	 GoogleFonts.config.allowRuntimeFetching = false;
+   	 runApp(const PragmaApp());
+   }
+   ```
+
+   Recuerda importar `package:google_fonts/google_fonts.dart`.
+
+Si no incluyes los archivos, la responsabilidad de proveer la tipografía recae en el implementador del proyecto que consuma este paquete.
+
 ## Ejemplo
 
 ```sh
