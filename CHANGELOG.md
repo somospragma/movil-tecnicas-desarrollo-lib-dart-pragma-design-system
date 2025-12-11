@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Archivo de referencia con todos los tokens cromáticos oficiales y esquemas Material 3 claro/oscuro construidos desde ellos.
-- Tokens de tipografía (Google Fonts) y espaciado basados en cuadrícula de 4px.
 - Componentes iniciales (`PragmaButton`, `PragmaCard`, `PragmaIconButton`) más utilidades de `PragmaButtons`.
 - App de ejemplo en `example/` que muestra tokens, tema y componentes, junto con prueba unitaria base.
+- Tipografía Poppins completa con tokens (`PragmaTypographyTokens`) y `TextTheme` alineado al spec.
+- Sistema de espaciados oficial con tokens reutilizables y helpers para `EdgeInsets`.
