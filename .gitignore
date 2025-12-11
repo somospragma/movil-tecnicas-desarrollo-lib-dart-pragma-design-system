@@ -133,3 +133,11 @@ app.*.symbols
 
 # test local projects
 /exampleb/
+
+# Example app outputs
+example/.dart_tool/
+example/build/
+example/macos/
+example/ios/Flutter/Flutter.framework
+example/ios/Flutter/Flutter.podspec
+example/pubspec.lock

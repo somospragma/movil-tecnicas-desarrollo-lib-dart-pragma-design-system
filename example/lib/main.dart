@@ -1,5 +1,9 @@
+// ignore_for_file: avoid_relative_lib_imports
+
 import 'package:flutter/material.dart';
 import 'package:pragma_design_system/pragma_design_system.dart';
+
+// Consumimos la librería local directamente para iterar sin publicar a pub.dev.
 
 void main() {
   runApp(const PragmaShowcaseApp());
@@ -45,7 +49,9 @@ class ShowcaseScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ColorScheme scheme = Theme.of(context).colorScheme;
+    final TextTheme textTheme = Theme.of(context).textTheme;
+    final Color onSurfaceVariant =
+        Theme.of(context).colorScheme.onSurfaceVariant;
 
     return Scaffold(
       appBar: AppBar(
@@ -53,12 +59,20 @@ class ShowcaseScreen extends StatelessWidget {
         actions: <Widget>[
           Row(
             children: <Widget>[
-              const Icon(Icons.light_mode, size: 18),
+              Icon(
+                Icons.light_mode,
+                size: 18,
+                color: onSurfaceVariant,
+              ),
               Switch(
                 value: mode == ThemeMode.dark,
                 onChanged: onModeChanged,
               ),
-              const Icon(Icons.dark_mode, size: 18),
+              Icon(
+                Icons.dark_mode,
+                size: 18,
+                color: onSurfaceVariant,
+              ),
               const SizedBox(width: PragmaSpacing.md),
             ],
           ),
@@ -70,11 +84,17 @@ class ShowcaseScreen extends StatelessWidget {
           vertical: PragmaSpacing.xl,
         ),
         children: <Widget>[
-          Text('Tokens', style: Theme.of(context).textTheme.titleLarge),
-          const SizedBox(height: PragmaSpacing.md),
-          _ColorTokensRow(scheme: scheme),
-          const SizedBox(height: PragmaSpacing.xl),
-          Text('Componentes', style: Theme.of(context).textTheme.titleLarge),
+          Text('Paleta cromática', style: textTheme.headlineSmall),
+          const SizedBox(height: PragmaSpacing.xs),
+          Text(
+            'Visualiza los tokens de color incluidos en la librería y cómo se agrupan por intención.',
+            style: textTheme.bodyMedium?.copyWith(color: onSurfaceVariant),
+          ),
+          const SizedBox(height: PragmaSpacing.lg),
+          for (final _PaletteSection section in _paletteSections)
+            _PaletteSectionView(section: section),
+          const SizedBox(height: PragmaSpacing.xxl),
+          Text('Componentes base', style: textTheme.headlineSmall),
           const SizedBox(height: PragmaSpacing.md),
           Wrap(
             spacing: PragmaSpacing.md,
@@ -109,13 +129,11 @@ class ShowcaseScreen extends StatelessWidget {
                 icon: Icons.palette,
                 onPressed: null,
                 tooltip: 'Deshabilitado',
-                variant: PragmaIconButtonVariant.tonal,
+                variant: PragmaIconButtonVariant.ghost,
               ),
             ],
           ),
           const SizedBox(height: PragmaSpacing.xl),
-          Text('Card', style: Theme.of(context).textTheme.titleLarge),
-          const SizedBox(height: PragmaSpacing.md),
           PragmaCard.section(
             headline: 'Estado de diseño',
             action: PragmaButton.icon(
@@ -129,12 +147,12 @@ class ShowcaseScreen extends StatelessWidget {
               children: <Widget>[
                 Text(
                   'Tokens sincronizados',
-                  style: Theme.of(context).textTheme.titleMedium,
+                  style: textTheme.titleMedium,
                 ),
                 const SizedBox(height: PragmaSpacing.sm),
                 Text(
                   'Mantén consistencia visual reutilizando estos componentes en cada squad.',
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: textTheme.bodyMedium,
                 ),
               ],
             ),
@@ -145,66 +163,551 @@ class ShowcaseScreen extends StatelessWidget {
   }
 }
 
-class _ColorTokensRow extends StatelessWidget {
-  const _ColorTokensRow({required this.scheme});
+class _PaletteSectionView extends StatelessWidget {
+  const _PaletteSectionView({required this.section});
 
-  final ColorScheme scheme;
+  final _PaletteSection section;
 
   @override
   Widget build(BuildContext context) {
-    final List<Color> colors = <Color>[
-      scheme.primary,
-      scheme.secondary,
-      scheme.tertiary,
-      scheme.error,
-      scheme.surface,
-      scheme.surfaceContainerHighest,
-    ];
+    final TextTheme textTheme = Theme.of(context).textTheme;
+    final Color onSurfaceVariant =
+        Theme.of(context).colorScheme.onSurfaceVariant;
 
-    return Wrap(
-      spacing: PragmaSpacing.sm,
-      children: colors
-          .map(
-            (Color color) => _ColorSwatch(
-              color: color,
-              label:
-                  '#${color.toARGB32().toRadixString(16).padLeft(8, '0').toUpperCase()}',
+    return Padding(
+      padding: const EdgeInsets.only(bottom: PragmaSpacing.xl),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(section.title, style: textTheme.titleLarge),
+          if (section.caption != null) ...<Widget>[
+            const SizedBox(height: PragmaSpacing.xs),
+            Text(
+              section.caption!,
+              style: textTheme.bodyMedium?.copyWith(color: onSurfaceVariant),
             ),
-          )
-          .toList(),
+          ],
+          const SizedBox(height: PragmaSpacing.md),
+          for (final _PaletteGroup group in section.groups)
+            _PaletteGroupTable(group: group),
+        ],
+      ),
     );
   }
 }
 
-class _ColorSwatch extends StatelessWidget {
-  const _ColorSwatch({required this.color, required this.label});
+class _PaletteGroupTable extends StatelessWidget {
+  const _PaletteGroupTable({required this.group});
 
-  final Color color;
-  final String label;
+  final _PaletteGroup group;
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme scheme = Theme.of(context).colorScheme;
+    final TextTheme textTheme = Theme.of(context).textTheme;
+
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Container(
-          width: 64,
-          height: 64,
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Theme.of(context).dividerColor),
+        Text(group.title, style: textTheme.titleMedium),
+        const SizedBox(height: PragmaSpacing.sm),
+        Card(
+          margin: const EdgeInsets.only(bottom: PragmaSpacing.lg),
+          clipBehavior: Clip.antiAlias,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding: PragmaSpacing.insetSymmetric(
+              horizontal: PragmaSpacing.lg,
+              vertical: PragmaSpacing.md,
+            ),
+            child: DataTable(
+              columnSpacing: PragmaSpacing.xl,
+              headingRowColor: WidgetStatePropertyAll<Color>(
+                scheme.surfaceContainerHighest,
+              ),
+              headingTextStyle: textTheme.labelMedium?.copyWith(
+                color: scheme.onSurfaceVariant,
+              ),
+              columns: const <DataColumn>[
+                DataColumn(label: Text('Preview')),
+                DataColumn(label: Text('Color name')),
+                DataColumn(label: Text('Hex')),
+                DataColumn(label: Text('Design token')),
+              ],
+              rows: group.colors
+                  .map(
+                    (_PaletteColor color) => DataRow(
+                      cells: <DataCell>[
+                        DataCell(_ColorPreview(color: color.color)),
+                        DataCell(Text(color.name)),
+                        DataCell(Text(color.hex)),
+                        DataCell(Text(color.token)),
+                      ],
+                    ),
+                  )
+                  .toList(),
+            ),
           ),
-        ),
-        const SizedBox(height: PragmaSpacing.xs),
-        Text(
-          label,
-          style: Theme.of(context)
-              .textTheme
-              .labelSmall
-              ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
         ),
       ],
     );
   }
 }
+
+class _ColorPreview extends StatelessWidget {
+  const _ColorPreview({required this.color});
+
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 56,
+      height: 56,
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Theme.of(context).dividerColor),
+      ),
+    );
+  }
+}
+
+class _PaletteSection {
+  const _PaletteSection({
+    required this.title,
+    required this.groups,
+    this.caption,
+  });
+
+  final String title;
+  final String? caption;
+  final List<_PaletteGroup> groups;
+}
+
+class _PaletteGroup {
+  const _PaletteGroup({
+    required this.title,
+    required this.colors,
+  });
+
+  final String title;
+  final List<_PaletteColor> colors;
+}
+
+class _PaletteColor {
+  const _PaletteColor({
+    required this.name,
+    required this.color,
+    required this.token,
+  });
+
+  final String name;
+  final Color color;
+  final String token;
+
+  String get hex => _hexFromColor(color);
+}
+
+String _hexFromColor(Color color) {
+  final String value =
+      color.toARGB32().toRadixString(16).padLeft(8, '0').toUpperCase();
+  return '#${value.substring(2)}';
+}
+
+const List<_PaletteSection> _paletteSections = <_PaletteSection>[
+  _PaletteSection(
+    title: 'Paleta primaria',
+    caption:
+        'Es la paleta que identifica nuestra marca. En web se utiliza aproximadamente el 60% del color en los diseños.',
+    groups: <_PaletteGroup>[
+      _PaletteGroup(
+        title: 'Primary purple',
+        colors: <_PaletteColor>[
+          _PaletteColor(
+            name: 'Primary-purple-50',
+            color: PragmaColorTokens.primaryPurple50,
+            token: r'$pds-color-primary-purple-50',
+          ),
+          _PaletteColor(
+            name: 'Primary-purple-300',
+            color: PragmaColorTokens.primaryPurple300,
+            token: r'$pds-color-primary-purple-300',
+          ),
+          _PaletteColor(
+            name: 'Primary-purple-500',
+            color: PragmaColorTokens.primaryPurple500,
+            token: r'$pds-color-primary-purple-500',
+          ),
+          _PaletteColor(
+            name: 'Primary-purple-700',
+            color: PragmaColorTokens.primaryPurple700,
+            token: r'$pds-color-primary-purple-700',
+          ),
+          _PaletteColor(
+            name: 'Primary-purple-900',
+            color: PragmaColorTokens.primaryPurple900,
+            token: r'$pds-color-primary-purple-900',
+          ),
+        ],
+      ),
+      _PaletteGroup(
+        title: 'Primary gray',
+        colors: <_PaletteColor>[
+          _PaletteColor(
+            name: 'Primary-gray-50',
+            color: PragmaColorTokens.primaryGray50,
+            token: r'$pds-color-primary-gray-50',
+          ),
+          _PaletteColor(
+            name: 'Primary-gray-300',
+            color: PragmaColorTokens.primaryGray300,
+            token: r'$pds-color-primary-gray-300',
+          ),
+          _PaletteColor(
+            name: 'Primary-gray-500',
+            color: PragmaColorTokens.primaryGray500,
+            token: r'$pds-color-primary-gray-500',
+          ),
+          _PaletteColor(
+            name: 'Primary-gray-700',
+            color: PragmaColorTokens.primaryGray700,
+            token: r'$pds-color-primary-gray-700',
+          ),
+          _PaletteColor(
+            name: 'Primary-gray-900',
+            color: PragmaColorTokens.primaryGray900,
+            token: r'$pds-color-primary-gray-900',
+          ),
+        ],
+      ),
+      _PaletteGroup(
+        title: 'Primary indigo',
+        colors: <_PaletteColor>[
+          _PaletteColor(
+            name: 'Primary-indigo-50',
+            color: PragmaColorTokens.primaryIndigo50,
+            token: r'$pds-color-primary-indigo-50',
+          ),
+          _PaletteColor(
+            name: 'Primary-indigo-300',
+            color: PragmaColorTokens.primaryIndigo300,
+            token: r'$pds-color-primary-indigo-300',
+          ),
+          _PaletteColor(
+            name: 'Primary-indigo-500',
+            color: PragmaColorTokens.primaryIndigo500,
+            token: r'$pds-color-primary-indigo-500',
+          ),
+          _PaletteColor(
+            name: 'Primary-indigo-700',
+            color: PragmaColorTokens.primaryIndigo700,
+            token: r'$pds-color-primary-indigo-700',
+          ),
+          _PaletteColor(
+            name: 'Primary-indigo-900',
+            color: PragmaColorTokens.primaryIndigo900,
+            token: r'$pds-color-primary-indigo-900',
+          ),
+        ],
+      ),
+    ],
+  ),
+  _PaletteSection(
+    title: 'Paleta secundaria',
+    caption:
+        'Estos tonos aportan contraste y presencia limpia/legible. En web se recomienda usar alrededor del 30% del canvas.',
+    groups: <_PaletteGroup>[
+      _PaletteGroup(
+        title: 'Secondary fuchsia',
+        colors: <_PaletteColor>[
+          _PaletteColor(
+            name: 'Secondary-fuchsia-50',
+            color: PragmaColorTokens.secondaryFuchsia50,
+            token: r'$pds-color-secondary-fuchsia-50',
+          ),
+          _PaletteColor(
+            name: 'Secondary-fuchsia-300',
+            color: PragmaColorTokens.secondaryFuchsia300,
+            token: r'$pds-color-secondary-fuchsia-300',
+          ),
+          _PaletteColor(
+            name: 'Secondary-fuchsia-500',
+            color: PragmaColorTokens.secondaryFuchsia500,
+            token: r'$pds-color-secondary-fuchsia-500',
+          ),
+          _PaletteColor(
+            name: 'Secondary-fuchsia-700',
+            color: PragmaColorTokens.secondaryFuchsia700,
+            token: r'$pds-color-secondary-fuchsia-700',
+          ),
+          _PaletteColor(
+            name: 'Secondary-fuchsia-900',
+            color: PragmaColorTokens.secondaryFuchsia900,
+            token: r'$pds-color-secondary-fuchsia-900',
+          ),
+        ],
+      ),
+      _PaletteGroup(
+        title: 'Secondary purple',
+        colors: <_PaletteColor>[
+          _PaletteColor(
+            name: 'Secondary-purple-50',
+            color: PragmaColorTokens.secondaryPurple50,
+            token: r'$pds-color-secondary-purple-50',
+          ),
+          _PaletteColor(
+            name: 'Secondary-purple-300',
+            color: PragmaColorTokens.secondaryPurple300,
+            token: r'$pds-color-secondary-purple-300',
+          ),
+          _PaletteColor(
+            name: 'Secondary-purple-500',
+            color: PragmaColorTokens.secondaryPurple500,
+            token: r'$pds-color-secondary-purple-500',
+          ),
+          _PaletteColor(
+            name: 'Secondary-purple-700',
+            color: PragmaColorTokens.secondaryPurple700,
+            token: r'$pds-color-secondary-purple-700',
+          ),
+          _PaletteColor(
+            name: 'Secondary-purple-900',
+            color: PragmaColorTokens.secondaryPurple900,
+            token: r'$pds-color-secondary-purple-900',
+          ),
+        ],
+      ),
+    ],
+  ),
+  _PaletteSection(
+    title: 'Paleta terciaria',
+    caption:
+        'Paleta de acento para resaltar información importante sin exceder el 10% del canvas.',
+    groups: <_PaletteGroup>[
+      _PaletteGroup(
+        title: 'Tertiary yellow',
+        colors: <_PaletteColor>[
+          _PaletteColor(
+            name: 'Tertiary-yellow-50',
+            color: PragmaColorTokens.tertiaryYellow50,
+            token: r'$pds-color-tertiary-yellow-50',
+          ),
+          _PaletteColor(
+            name: 'Tertiary-yellow-300',
+            color: PragmaColorTokens.tertiaryYellow300,
+            token: r'$pds-color-tertiary-yellow-300',
+          ),
+          _PaletteColor(
+            name: 'Tertiary-yellow-500',
+            color: PragmaColorTokens.tertiaryYellow500,
+            token: r'$pds-color-tertiary-yellow-500',
+          ),
+          _PaletteColor(
+            name: 'Tertiary-yellow-700',
+            color: PragmaColorTokens.tertiaryYellow700,
+            token: r'$pds-color-tertiary-yellow-700',
+          ),
+          _PaletteColor(
+            name: 'Tertiary-yellow-900',
+            color: PragmaColorTokens.tertiaryYellow900,
+            token: r'$pds-color-tertiary-yellow-900',
+          ),
+        ],
+      ),
+    ],
+  ),
+  _PaletteSection(
+    title: 'Escala de grises',
+    caption: 'Soporte secundario para fondos, textos y componentes modales.',
+    groups: <_PaletteGroup>[
+      _PaletteGroup(
+        title: 'Gray scale',
+        colors: <_PaletteColor>[
+          _PaletteColor(
+            name: 'Gray-50',
+            color: PragmaColorTokens.neutralGray50,
+            token: r'$pds-color-gray-50',
+          ),
+          _PaletteColor(
+            name: 'Gray-100',
+            color: PragmaColorTokens.neutralGray100,
+            token: r'$pds-color-gray-100',
+          ),
+          _PaletteColor(
+            name: 'Gray-200',
+            color: PragmaColorTokens.neutralGray200,
+            token: r'$pds-color-gray-200',
+          ),
+          _PaletteColor(
+            name: 'Gray-300',
+            color: PragmaColorTokens.neutralGray300,
+            token: r'$pds-color-gray-300',
+          ),
+          _PaletteColor(
+            name: 'Gray-400',
+            color: PragmaColorTokens.neutralGray400,
+            token: r'$pds-color-gray-400',
+          ),
+          _PaletteColor(
+            name: 'Gray-500',
+            color: PragmaColorTokens.neutralGray500,
+            token: r'$pds-color-gray-500',
+          ),
+          _PaletteColor(
+            name: 'Gray-600',
+            color: PragmaColorTokens.neutralGray600,
+            token: r'$pds-color-gray-600',
+          ),
+          _PaletteColor(
+            name: 'Gray-700',
+            color: PragmaColorTokens.neutralGray700,
+            token: r'$pds-color-gray-700',
+          ),
+          _PaletteColor(
+            name: 'Gray-800',
+            color: PragmaColorTokens.neutralGray800,
+            token: r'$pds-color-gray-800',
+          ),
+          _PaletteColor(
+            name: 'Gray-900',
+            color: PragmaColorTokens.neutralGray900,
+            token: r'$pds-color-gray-900',
+          ),
+        ],
+      ),
+    ],
+  ),
+  _PaletteSection(
+    title: 'Colores de acciones exitosas',
+    caption:
+        'Se utilizan como feedback visual para confirmar acciones satisfactorias.',
+    groups: <_PaletteGroup>[
+      _PaletteGroup(
+        title: 'Success',
+        colors: <_PaletteColor>[
+          _PaletteColor(
+            name: 'Success-50',
+            color: PragmaColorTokens.success50,
+            token: r'$pds-color-success-50',
+          ),
+          _PaletteColor(
+            name: 'Success-300',
+            color: PragmaColorTokens.success300,
+            token: r'$pds-color-success-300',
+          ),
+          _PaletteColor(
+            name: 'Success-500',
+            color: PragmaColorTokens.success500,
+            token: r'$pds-color-success-500',
+          ),
+          _PaletteColor(
+            name: 'Success-700',
+            color: PragmaColorTokens.success700,
+            token: r'$pds-color-success-700',
+          ),
+          _PaletteColor(
+            name: 'Success-900',
+            color: PragmaColorTokens.success900,
+            token: r'$pds-color-success-900',
+          ),
+        ],
+      ),
+    ],
+  ),
+  _PaletteSection(
+    title: 'Colores de advertencia',
+    caption:
+        'Usados para alertar y preparar al usuario ante acciones sensibles.',
+    groups: <_PaletteGroup>[
+      _PaletteGroup(
+        title: 'Warning',
+        colors: <_PaletteColor>[
+          _PaletteColor(
+            name: 'Warning-50',
+            color: PragmaColorTokens.warning50,
+            token: r'$pds-color-warning-50',
+          ),
+          _PaletteColor(
+            name: 'Warning-300',
+            color: PragmaColorTokens.warning300,
+            token: r'$pds-color-warning-300',
+          ),
+          _PaletteColor(
+            name: 'Warning-500',
+            color: PragmaColorTokens.warning500,
+            token: r'$pds-color-warning-500',
+          ),
+          _PaletteColor(
+            name: 'Warning-700',
+            color: PragmaColorTokens.warning700,
+            token: r'$pds-color-warning-700',
+          ),
+          _PaletteColor(
+            name: 'Warning-900',
+            color: PragmaColorTokens.warning900,
+            token: r'$pds-color-warning-900',
+          ),
+        ],
+      ),
+    ],
+  ),
+  _PaletteSection(
+    title: 'Colores de error',
+    caption:
+        'Acompañan mensajes críticos y ayudan a comunicar estados de fallo.',
+    groups: <_PaletteGroup>[
+      _PaletteGroup(
+        title: 'Error',
+        colors: <_PaletteColor>[
+          _PaletteColor(
+            name: 'Error-50',
+            color: PragmaColorTokens.error50,
+            token: r'$pds-color-error-50',
+          ),
+          _PaletteColor(
+            name: 'Error-300',
+            color: PragmaColorTokens.error300,
+            token: r'$pds-color-error-300',
+          ),
+          _PaletteColor(
+            name: 'Error-500',
+            color: PragmaColorTokens.error500,
+            token: r'$pds-color-error-500',
+          ),
+          _PaletteColor(
+            name: 'Error-700',
+            color: PragmaColorTokens.error700,
+            token: r'$pds-color-error-700',
+          ),
+          _PaletteColor(
+            name: 'Error-900',
+            color: PragmaColorTokens.error900,
+            token: r'$pds-color-error-900',
+          ),
+        ],
+      ),
+    ],
+  ),
+  _PaletteSection(
+    title: 'Basic shades',
+    caption: 'Tonos esenciales para mantener contraste extremo.',
+    groups: <_PaletteGroup>[
+      _PaletteGroup(
+        title: 'Neutros absolutos',
+        colors: <_PaletteColor>[
+          _PaletteColor(
+            name: 'White-50',
+            color: PragmaColorTokens.basicWhite50,
+            token: r'$pds-color-white-50',
+          ),
+          _PaletteColor(
+            name: 'Black-300',
+            color: PragmaColorTokens.basicBlack300,
+            token: r'$pds-color-black-300',
+          ),
+        ],
+      ),
+    ],
+  ),
+];
