@@ -15,5 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tipografía Poppins completa con tokens (`PragmaTypographyTokens`) y `TextTheme` alineado al spec.
 - Sistema de espaciados oficial con tokens reutilizables y helpers para `EdgeInsets`.
 - Documentación sobre la licencia de Poppins y pasos para incluir un fallback offline, además del archivo `licenses/Poppins-OFL.txt`.
+- Ejemplo con fuentes Poppins locales, `GoogleFonts` deshabilitado en tiempo de ejecución y fallback en `PragmaTypography` para respetar los assets registrados.
+
+```
 
 ```

@@ -1,11 +1,13 @@
 // ignore_for_file: avoid_relative_lib_imports
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pragma_design_system/pragma_design_system.dart';
 
 // Consumimos la librería local directamente para iterar sin publicar a pub.dev.
 
 void main() {
+  GoogleFonts.config.allowRuntimeFetching = false;
   runApp(const PragmaShowcaseApp());
 }
 

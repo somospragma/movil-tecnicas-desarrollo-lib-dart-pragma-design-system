@@ -59,6 +59,7 @@ Consulta el paquete para más utilidades (`lib/src`) o revisa la app de ejemplo.
 - La tipografía oficial es [Poppins](https://fonts.google.com/specimen/Poppins) y `PragmaTypography` la aplica mediante `GoogleFonts.poppins`.
 - La familia se distribuye con la licencia **SIL Open Font License 1.1**; revisa el texto completo en [licenses/Poppins-OFL.txt](licenses/Poppins-OFL.txt).
 - Si tu aplicación debe funcionar sin conexión en el primer arranque, agrega los archivos `.ttf` a tus assets y deshabilita la descarga dinámica.
+- Consulta [doc/poppins_offline.md](doc/poppins_offline.md) para conocer el paso a paso y enlaces directos de descarga.
 
 ### Cómo preparar un fallback offline
 

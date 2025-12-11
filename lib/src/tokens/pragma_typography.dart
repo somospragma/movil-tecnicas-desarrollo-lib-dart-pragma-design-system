@@ -6,6 +6,8 @@ import 'package:google_fonts/google_fonts.dart';
 class PragmaTypography {
   const PragmaTypography._();
 
+  static const String _fontFamily = 'Poppins';
+
   static TextTheme textTheme({Brightness brightness = Brightness.light}) {
     final Color color =
         brightness == Brightness.dark ? Colors.white : const Color(0xFF111111);
@@ -58,16 +60,20 @@ class PragmaTextStyleToken {
   double get height => lineHeight / fontSize;
 
   TextStyle resolve({Color? color}) {
-    return GoogleFonts.poppins(
-      textStyle: TextStyle(
-        color: color,
-        fontSize: fontSize,
-        height: height,
-        fontWeight: fontWeight,
-        decoration: decoration,
-        letterSpacing: letterSpacing,
-      ),
+    final TextStyle base = TextStyle(
+      color: color,
+      fontSize: fontSize,
+      height: height,
+      fontWeight: fontWeight,
+      decoration: decoration,
+      letterSpacing: letterSpacing,
     );
+
+    if (GoogleFonts.config.allowRuntimeFetching) {
+      return GoogleFonts.poppins(textStyle: base);
+    }
+
+    return base.copyWith(fontFamily: PragmaTypography._fontFamily);
   }
 }
 
