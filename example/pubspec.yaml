@@ -1,0 +1,18 @@
+name: pragma_design_system_example
+description: Ejemplo de integración para el paquete pragma_design_system.
+publish_to: "none"
+version: 1.0.0+1
+environment:
+  sdk: ">=3.4.0 <4.0.0"
+dependencies:
+  flutter:
+    sdk: flutter
+  google_fonts: ^6.2.1
+  pragma_design_system:
+    path: ..
+dev_dependencies:
+  flutter_lints: ^4.0.0
+  flutter_test:
+    sdk: flutter
+flutter:
+  uses-material-design: true

@@ -1,0 +1,12 @@
+/// Biblioteca principal que reexporta los tokens, temas y componentes
+/// del Design System de Pragma.
+library pragma_design_system;
+
+export 'src/theme/pragma_theme.dart';
+export 'src/tokens/pragma_color_tokens.dart';
+export 'src/tokens/pragma_colors.dart';
+export 'src/tokens/pragma_spacing.dart';
+export 'src/tokens/pragma_typography.dart';
+export 'src/widgets/pragma_button.dart';
+export 'src/widgets/pragma_card.dart';
+export 'src/widgets/pragma_icon_button.dart';

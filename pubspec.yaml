@@ -1,0 +1,21 @@
+name: pragma_design_system
+description: >-
+  Biblioteca Flutter que concentra los tokens, temas y componentes base del Design System de Pragma para apps móviles.
+version: 0.0.1
+homepage: https://pragma.co/
+repository: https://github.com/somospragma/movil-tecnicas-desarrollo-lib-dart-pragma-design-system
+issue_tracker: https://github.com/somospragma/movil-tecnicas-desarrollo-lib-dart-pragma-design-system/issues
+environment:
+  sdk: ">=3.4.0 <4.0.0"
+  flutter: ">=3.22.0"
+dependencies:
+  flutter:
+    sdk: flutter
+  google_fonts: ^6.2.1
+  meta: ^1.12.0
+dev_dependencies:
+  flutter_lints: ^4.0.0
+  flutter_test:
+    sdk: flutter
+flutter:
+  uses-material-design: true
