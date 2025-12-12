@@ -10,6 +10,9 @@
 .history
 .svn/
 
+# Local assistant notes
+internal_guidelines.md
+
 # IntelliJ related
 *.iml
 *.ipr

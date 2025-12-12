@@ -11,12 +11,12 @@ import 'package:flutter/widgets.dart';
 class PragmaScaleBox extends StatelessWidget {
   const PragmaScaleBox({
     required this.child,
-    required Size designSize,
+    required this.designSize,
     this.alignment = Alignment.topCenter,
     this.minScale,
     this.maxScale,
     super.key,
-  }) : designSize = designSize;
+  });
 
   /// Contenido que se escalará.
   final Widget child;

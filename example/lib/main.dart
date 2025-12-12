@@ -164,6 +164,26 @@ class ShowcaseScreen extends StatelessWidget {
               ],
             ),
           ),
+          const SizedBox(height: PragmaSpacing.xl),
+          Text('PragmaAccordionWidget', style: textTheme.headlineSmall),
+          const SizedBox(height: PragmaSpacing.sm),
+          PragmaAccordionWidget(
+            text: 'Resumen del sprint',
+            icon: Icons.calendar_today_outlined,
+            child: Text(
+              'Comparte acuerdos, links a tableros y métricas clave sin saturar la vista principal.',
+              style: textTheme.bodyMedium,
+            ),
+          ),
+          const SizedBox(height: PragmaSpacing.md),
+          const PragmaAccordionWidget(
+            text: 'Checklist bloqueado',
+            icon: Icons.lock_outline,
+            disable: true,
+            size: PragmaAccordionSize.block,
+            child:
+                Text('Este panel permanece cerrado hasta habilitar el flujo.'),
+          ),
         ],
       ),
     );
@@ -337,7 +357,7 @@ class _MockupPhone extends StatelessWidget {
         borderRadius: BorderRadius.circular(48),
         boxShadow: <BoxShadow>[
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.9),
             blurRadius: 30,
             offset: const Offset(0, 30),
           ),
@@ -412,8 +432,10 @@ class _MockupPhone extends StatelessWidget {
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           colors: <Color>[
-                            scheme.primary.withOpacity(0.05),
-                            scheme.secondary.withOpacity(0.05),
+                            scheme.primary
+                                .withValues(alpha: PragmaOpacity.opacity8),
+                            scheme.secondary
+                                .withValues(alpha: PragmaOpacity.opacity8),
                           ],
                         ),
                       ),

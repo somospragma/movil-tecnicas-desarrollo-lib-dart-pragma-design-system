@@ -6,7 +6,7 @@ Biblioteca Flutter enfocada en móviles que reúne los tokens de diseño, temas 
 
 - Tokens consistentes de color, tipografía, espaciado **y grillas responsivas**.
 - `PragmaTheme` con variantes claro/oscuro y Material 3 habilitado.
-- Componentes accesibles (`PragmaButton`, `PragmaCard`, `PragmaIconButton`).
+- Componentes accesibles (`PragmaButton`, `PragmaCard`, `PragmaIconButton`, `PragmaAccordionWidget`).
 - `PragmaGridTokens`, helpers de viewport y el widget `PragmaGridContainer` para depurar layouts.
 - App de ejemplo lista para ejecutar y validar (incluye página "Grid debugger").
 
@@ -16,7 +16,7 @@ Agrega el paquete en tu `pubspec.yaml`:
 
 ```yaml
 dependencies:
-	pragma_design_system: ^0.0.2
+	pragma_design_system: ^0.0.3
 ```
 
 Después ejecuta:
@@ -51,8 +51,13 @@ class PragmaApp extends StatelessWidget {
 - **Colores:** `PragmaColors` expone esquemas `ColorScheme` claro/oscuro y valores de marca.
 - **Tipografía:** `PragmaTypography` define escalas responsivas basadas en Google Fonts.
 - **Espaciado:** `PragmaSpacing` concentra valores de 4pt system y funciones utilitarias.
+- **Radios:** `PragmaBorderRadiusTokens` y `PragmaBorderRadius` aseguran bordes redondeados consistentes en incrementos de 4/8dp.
+- **Opacidad:** `PragmaOpacityTokens` y `PragmaOpacity` limitan overlays a los intervalos 8/30/60 y usan `Color.withValues` para mantener consistencia en Flutter 3.22+.
 - **Grid:** `PragmaGridTokens`, `getGridConfigFromContext`, `PragmaGridContainer` y `PragmaScaleBox` permiten replicar la retícula oficial, respetar márgenes y escalar maquetas completas.
-- **Componentes:** Widgets como `PragmaButton.icon` o `PragmaCard` incluyen estados y elevación consistentes.
+- **Componentes:** Widgets como `PragmaButton.icon`, `PragmaCard` o `PragmaAccordionWidget` incluyen estados y elevación consistentes.
+
+Consulta [doc/opacidad.md](doc/opacidad.md) para ver la tabla completa y ejemplos
+de uso de `Color.withValues`.
 
 Consulta el paquete para más utilidades (`lib/src`), revisa la app de ejemplo y lee [doc/grid_utilitarios.md](doc/grid_utilitarios.md) para adoptar los helpers de grilla.
 

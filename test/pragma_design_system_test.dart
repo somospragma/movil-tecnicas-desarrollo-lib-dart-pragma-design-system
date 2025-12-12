@@ -34,4 +34,22 @@ void main() {
     expect(PragmaSpacingTokens.all.first.value, 4);
     expect(PragmaSpacingTokens.xxl6.value, 88);
   });
+
+  test('Border radius tokens expose rounded presets', () {
+    expect(PragmaBorderRadiusTokens.all.length, 5);
+    expect(PragmaBorderRadiusTokens.xl.value, 24);
+    expect(
+      PragmaBorderRadius.circularToken(PragmaBorderRadiusTokens.l),
+      equals(BorderRadius.circular(16)),
+    );
+  });
+
+  test('Opacity tokens expose the 8/30/60 scale', () {
+    expect(PragmaOpacityTokens.all.length, 3);
+    expect(PragmaOpacity.opacity8, closeTo(0.08, 0.001));
+    expect(
+      PragmaOpacityTokens.opacity60.apply(Colors.black).a,
+      closeTo(0.6, 0.001),
+    );
+  });
 }

@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.3] - 2025-12-12
+
+### Added
+
+- `PragmaAccordionWidget`, un acordeón con gestión interna del estado, compatibilidad con `IconData`, tamaños "block"/"default" y soporte de `Semantics`.
+- Documentación `dartdoc` con ejemplo listo para copiar/pegar y export público en `pragma_design_system.dart`.
+- `PragmaBorderRadiusTokens` y helpers `PragmaBorderRadius` para estandarizar los radios descritos en el spec.
+- Pruebas widget para el acordeón y caso unitario que asegura los nuevos tokens.
+- Actualización del `example/` mostrando acordiones activos y deshabilitados junto con la guía de componentes en README.
+- Tokens de opacidad (`PragmaOpacityTokens`, `PragmaOpacity`) con documentación dedicada y migración del paquete a `Color.withValues` en todos los overlays.
+- Nueva guía `doc/opacidad.md`, README enlazado y gradientes/control de estados migrados en `example/` y widgets para consumir los tokens de transparencia oficiales.
+
 ## [0.0.2] - 2025-12-11
 
 ### Added
