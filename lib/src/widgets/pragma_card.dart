@@ -11,7 +11,8 @@ class PragmaCard extends StatelessWidget {
     this.padding,
   });
   factory PragmaCard.section({
-    required Widget body, Key? key,
+    required Widget body,
+    Key? key,
     String? headline,
     Widget? action,
   }) {
