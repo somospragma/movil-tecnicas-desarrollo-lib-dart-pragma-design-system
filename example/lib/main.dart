@@ -141,7 +141,7 @@ class ShowcaseScreen extends StatelessWidget {
                 tooltip: 'Deshabilitado',
                 variant: PragmaIconButtonVariant.ghost,
               ),
-              PragmaAvatarWidget(
+              const PragmaAvatarWidget(
                 radius: PragmaSpacing.md,
                 initials: 'PD',
                 tooltip: 'Avatar estático',
