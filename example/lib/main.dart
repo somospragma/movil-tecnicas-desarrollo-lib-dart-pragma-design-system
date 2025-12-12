@@ -78,6 +78,11 @@ class ShowcaseScreen extends StatelessWidget {
               const SizedBox(width: PragmaSpacing.md),
             ],
           ),
+          IconButton(
+            tooltip: 'Grid debugger',
+            icon: const Icon(Icons.grid_4x4_outlined),
+            onPressed: () => _openGridDebugger(context),
+          ),
         ],
       ),
       body: ListView(
@@ -160,6 +165,89 @@ class ShowcaseScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+void _openGridDebugger(BuildContext context) {
+  Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => const GridDebuggerPage(),
+    ),
+  );
+}
+
+class GridDebuggerPage extends StatelessWidget {
+  const GridDebuggerPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final double width = MediaQuery.sizeOf(context).width;
+    final PragmaViewportEnum viewport = getViewportFromWidth(width);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Grid debugger · ${viewport.name} · ${width.toStringAsFixed(0)}px',
+        ),
+      ),
+      body: PragmaGridContainer(
+        child: ListView(
+          padding: PragmaSpacing.insetSymmetric(
+            horizontal: PragmaSpacing.xl,
+            vertical: PragmaSpacing.xl,
+          ),
+          children: <Widget>[
+            Text(
+              'Experimenta con el layout responsive',
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+            const SizedBox(height: PragmaSpacing.md),
+            Text(
+              'Redimensiona la ventana o gira el dispositivo para ver cómo '
+              'cambian los márgenes, gutters y columnas.',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            const SizedBox(height: PragmaSpacing.xl),
+            Wrap(
+              spacing: PragmaSpacing.md,
+              runSpacing: PragmaSpacing.md,
+              children: List<Widget>.generate(4, (int index) {
+                return SizedBox(
+                  width: 320,
+                  child: PragmaCard.section(
+                    headline: 'Módulo ${index + 1}',
+                    action: PragmaButton.icon(
+                      label: 'Más info',
+                      icon: Icons.open_in_new,
+                      onPressed: () {},
+                      variant: PragmaButtonVariant.text,
+                    ),
+                    body: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          'Contenido alineado a la grilla para validar '
+                          'la maquetación.',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        const SizedBox(height: PragmaSpacing.sm),
+                        Text(
+                          'Viewport actual: ${viewport.name}',
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelMedium
+                              ?.copyWith(color: Colors.grey.shade600),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+            ),
+          ],
+        ),
       ),
     );
   }

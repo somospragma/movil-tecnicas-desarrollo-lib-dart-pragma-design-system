@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.2] - 2025-12-11
+
+### Added
+
+- Tokens y utilitarios responsivos de grilla (`PragmaGridTokens`, `PragmaViewportEnum`, `getGridConfigFromWidth`/`Context`) con pruebas unitarias para validar los cálculos por breakpoint.
+- `PragmaGridContainer`, un contenedor de depuración que pinta columnas, gutters y márgenes; incluye badge informativo con métricas del viewport.
+- Página “Grid debugger” dentro del `example/` que muestra el overlay en vivo y expone casos de uso para distintos tamaños de pantalla.
+- Documento en `doc/` con instrucciones para adoptar los utilitarios y el `PragmaGridContainer` en implementaciones de producto.
+
 ## [0.0.1] - 2025-12-11
 
 ### Added

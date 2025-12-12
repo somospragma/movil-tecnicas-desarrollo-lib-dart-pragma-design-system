@@ -1,7 +1,7 @@
 name: pragma_design_system_example
 description: Ejemplo de integración para el paquete pragma_design_system.
 publish_to: "none"
-version: 1.0.0+1
+version: 0.0.1
 environment:
   sdk: ">=3.4.0 <4.0.0"
 dependencies:
