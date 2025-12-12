@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.6] - 2025-12-12
+
+### Added
+
+- `PragmaAvatarWidget`, a radius-driven avatar surface with fallbacks for image/icon/initials, palette styles, tooltips, and tap support.
+- Example playground demonstrating avatar radius, style, and data bindings, plus README snippet for quick adoption.
+- Widget tests covering initials/icon rendering, radius clamping, and semantics (goldens left as tech debt).
+
 ## [0.0.5] - 2025-12-12
 
 ### Changed

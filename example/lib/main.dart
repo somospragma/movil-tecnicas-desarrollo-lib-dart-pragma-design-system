@@ -141,6 +141,11 @@ class ShowcaseScreen extends StatelessWidget {
                 tooltip: 'Deshabilitado',
                 variant: PragmaIconButtonVariant.ghost,
               ),
+              PragmaAvatarWidget(
+                radius: PragmaSpacing.md,
+                initials: 'PD',
+                tooltip: 'Avatar estático',
+              ),
             ],
           ),
           const SizedBox(height: PragmaSpacing.xl),
@@ -187,6 +192,8 @@ class ShowcaseScreen extends StatelessWidget {
             child:
                 Text('Este panel permanece cerrado hasta habilitar el flujo.'),
           ),
+          const SizedBox(height: PragmaSpacing.xl),
+          const _AvatarPlayground(),
           const SizedBox(height: PragmaSpacing.xl),
           Text('Componentes documentados', style: textTheme.headlineSmall),
           const SizedBox(height: PragmaSpacing.sm),
@@ -546,6 +553,115 @@ class _MetricChip extends StatelessWidget {
                 .bodySmall
                 ?.copyWith(color: scheme.onSurfaceVariant),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AvatarPlayground extends StatefulWidget {
+  const _AvatarPlayground();
+
+  @override
+  State<_AvatarPlayground> createState() => _AvatarPlaygroundState();
+}
+
+class _AvatarPlaygroundState extends State<_AvatarPlayground> {
+  static const double _minRadius = PragmaSpacing.sm;
+  static const double _maxRadius = PragmaSpacing.xxl3;
+
+  late final TextEditingController _initialsController;
+  late final TextEditingController _imageUrlController;
+  double _radius = PragmaSpacing.md;
+  PragmaAvatarStyle _style = PragmaAvatarStyle.primary;
+  bool _useImage = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initialsController = TextEditingController(text: 'PD');
+    _imageUrlController = TextEditingController(
+      text: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1',
+    );
+  }
+
+  @override
+  void dispose() {
+    _initialsController.dispose();
+    _imageUrlController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final Widget avatar = PragmaAvatarWidget(
+      radius: _radius,
+      initials: _useImage ? null : _initialsController.text,
+      imageUrl: _useImage ? _imageUrlController.text : null,
+      style: _style,
+      tooltip: 'Avatar preview',
+    );
+
+    return PragmaCard.section(
+      headline: 'PragmaAvatarWidget',
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Center(child: avatar),
+          const SizedBox(height: PragmaSpacing.md),
+          Text(
+            'Radius ${_radius.toStringAsFixed(0)} px',
+            style: theme.textTheme.labelLarge,
+          ),
+          Slider(
+            value: _radius,
+            min: _minRadius,
+            max: _maxRadius,
+            divisions: (_maxRadius - _minRadius).toInt(),
+            onChanged: (double value) => setState(() => _radius = value),
+          ),
+          const SizedBox(height: PragmaSpacing.sm),
+          TextField(
+            controller: _initialsController,
+            decoration: const InputDecoration(labelText: 'Initials'),
+            onChanged: (_) {
+              if (!_useImage) {
+                setState(() {});
+              }
+            },
+          ),
+          const SizedBox(height: PragmaSpacing.sm),
+          DropdownButtonFormField<PragmaAvatarStyle>(
+            initialValue: _style,
+            decoration: const InputDecoration(labelText: 'Style'),
+            items: PragmaAvatarStyle.values.map((PragmaAvatarStyle style) {
+              return DropdownMenuItem<PragmaAvatarStyle>(
+                value: style,
+                child: Text(style.name),
+              );
+            }).toList(),
+            onChanged: (PragmaAvatarStyle? value) {
+              if (value != null) {
+                setState(() => _style = value);
+              }
+            },
+          ),
+          const SizedBox(height: PragmaSpacing.sm),
+          SwitchListTile.adaptive(
+            value: _useImage,
+            contentPadding: EdgeInsets.zero,
+            title: const Text('Use image URL'),
+            onChanged: (bool value) => setState(() => _useImage = value),
+          ),
+          if (_useImage) ...<Widget>[
+            const SizedBox(height: PragmaSpacing.xs),
+            TextField(
+              controller: _imageUrlController,
+              decoration: const InputDecoration(labelText: 'Image URL'),
+              onChanged: (_) => setState(() {}),
+            ),
+          ],
         ],
       ),
     );

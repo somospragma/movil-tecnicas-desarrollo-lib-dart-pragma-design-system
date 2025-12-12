@@ -17,7 +17,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-	pragma_design_system: ^0.0.5
+	pragma_design_system: ^0.0.6
 ```
 
 Then run:
@@ -56,7 +56,19 @@ class PragmaApp extends StatelessWidget {
 - **Opacity:** `PragmaOpacityTokens` and `PragmaOpacity` constrain overlays to 8/30/60 intervals using `Color.withValues` for Flutter 3.22+.
 - **Domain models:** `ModelPragmaComponent` and `ModelAnatomyAttribute` serialize the documentation sourced from Figma and guarantee JSON roundtrips.
 - **Grid:** `PragmaGridTokens`, `getGridConfigFromContext`, `PragmaGridContainer`, and `PragmaScaleBox` help replicate the official grid, respect gutters, and scale full mockups.
-- **Components:** Widgets such as `PragmaButton.icon`, `PragmaCard`, or `PragmaAccordionWidget` ship consistent states and elevation.
+- **Components:** Widgets such as `PragmaButton.icon`, `PragmaCard`, `PragmaAvatarWidget`, or `PragmaAccordionWidget` ship consistent states and elevation.
+
+### Avatar quick sample
+
+```dart
+PragmaAvatarWidget(
+	radius: 28,
+	initials: 'PD',
+	imageUrl: 'https://cdn.pragma.co/avatar.jpg',
+	style: PragmaAvatarStyle.primary,
+	tooltip: 'Pragma Designer',
+)
+```
 
 See [doc/opacity_tokens.md](doc/opacity_tokens.md) for the full opacity table and `Color.withValues` examples.
 
