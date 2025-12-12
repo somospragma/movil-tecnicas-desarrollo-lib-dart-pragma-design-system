@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.7] - 2025-12-12
+
+### Added
+
+- `PragmaBreadcrumbWidget`, including underline and standard variants driven by the theme plus tooltip/semantics support.
+- Example showcase with a playground that toggles variants, disabled state, and active page, plus a compact sample in the components wrap.
+- README quick sample, public exports, and widget tests covering rendering, interaction, and disabled behaviors.
+
 ## [0.0.6] - 2025-12-12
 
 ### Added

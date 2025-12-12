@@ -146,6 +146,13 @@ class ShowcaseScreen extends StatelessWidget {
                 initials: 'PD',
                 tooltip: 'Avatar estático',
               ),
+              const PragmaBreadcrumbWidget(
+                items: <PragmaBreadcrumbItem>[
+                  PragmaBreadcrumbItem(label: 'Inicio'),
+                  PragmaBreadcrumbItem(label: 'Componentes'),
+                  PragmaBreadcrumbItem(label: 'Breadcrumb', isCurrent: true),
+                ],
+              ),
             ],
           ),
           const SizedBox(height: PragmaSpacing.xl),
@@ -194,6 +201,8 @@ class ShowcaseScreen extends StatelessWidget {
           ),
           const SizedBox(height: PragmaSpacing.xl),
           const _AvatarPlayground(),
+          const SizedBox(height: PragmaSpacing.xl),
+          const _BreadcrumbPlayground(),
           const SizedBox(height: PragmaSpacing.xl),
           Text('Componentes documentados', style: textTheme.headlineSmall),
           const SizedBox(height: PragmaSpacing.sm),
@@ -662,6 +671,106 @@ class _AvatarPlaygroundState extends State<_AvatarPlayground> {
               onChanged: (_) => setState(() {}),
             ),
           ],
+        ],
+      ),
+    );
+  }
+}
+
+class _BreadcrumbPlayground extends StatefulWidget {
+  const _BreadcrumbPlayground();
+
+  @override
+  State<_BreadcrumbPlayground> createState() => _BreadcrumbPlaygroundState();
+}
+
+class _BreadcrumbPlaygroundState extends State<_BreadcrumbPlayground> {
+  PragmaBreadcrumbType _type = PragmaBreadcrumbType.standard;
+  bool _disabled = false;
+  int _activeIndex = 2;
+
+  final List<String> _labels = <String>['Inicio', 'Componentes', 'Breadcrumb'];
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final List<PragmaBreadcrumbItem> items =
+        List<PragmaBreadcrumbItem>.generate(
+      _labels.length,
+      (int index) {
+        return PragmaBreadcrumbItem(
+          label: _labels[index],
+          isCurrent: index == _activeIndex,
+          onTap: index == _activeIndex
+              ? null
+              : () {
+                  final ScaffoldMessengerState messenger =
+                      ScaffoldMessenger.of(context);
+                  messenger.clearSnackBars();
+                  messenger.showSnackBar(
+                    SnackBar(content: Text('Navigate to ${_labels[index]}')),
+                  );
+                },
+        );
+      },
+    );
+
+    return PragmaCard.section(
+      headline: 'PragmaBreadcrumbWidget',
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          PragmaBreadcrumbWidget(
+            items: items,
+            type: _type,
+            disabled: _disabled,
+          ),
+          const SizedBox(height: PragmaSpacing.md),
+          DropdownButtonFormField<PragmaBreadcrumbType>(
+            initialValue: _type,
+            decoration: const InputDecoration(labelText: 'Type'),
+            items:
+                PragmaBreadcrumbType.values.map((PragmaBreadcrumbType value) {
+              return DropdownMenuItem<PragmaBreadcrumbType>(
+                value: value,
+                child: Text(value.name),
+              );
+            }).toList(),
+            onChanged: (PragmaBreadcrumbType? value) {
+              if (value != null) {
+                setState(() => _type = value);
+              }
+            },
+          ),
+          const SizedBox(height: PragmaSpacing.sm),
+          DropdownButtonFormField<int>(
+            initialValue: _activeIndex,
+            decoration: const InputDecoration(labelText: 'Active item'),
+            items: List<DropdownMenuItem<int>>.generate(
+              _labels.length,
+              (int index) => DropdownMenuItem<int>(
+                value: index,
+                child: Text(_labels[index]),
+              ),
+            ),
+            onChanged: (int? value) {
+              if (value != null) {
+                setState(() => _activeIndex = value);
+              }
+            },
+          ),
+          const SizedBox(height: PragmaSpacing.sm),
+          SwitchListTile.adaptive(
+            value: _disabled,
+            contentPadding: EdgeInsets.zero,
+            title: const Text('Disabled'),
+            onChanged: (bool value) => setState(() => _disabled = value),
+          ),
+          const SizedBox(height: PragmaSpacing.sm),
+          Text(
+            'Active page: ${_labels[_activeIndex]}',
+            style: theme.textTheme.labelLarge,
+          ),
         ],
       ),
     );
