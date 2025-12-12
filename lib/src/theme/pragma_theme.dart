@@ -37,13 +37,22 @@ class PragmaTheme {
             : SystemUiOverlayStyle.dark,
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
-        style: PragmaButtons.primaryStyle(colorScheme: colorScheme),
+        style: PragmaButtons.primaryStyle(
+          colorScheme: colorScheme,
+          textTheme: textTheme,
+        ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
-        style: PragmaButtons.outlinedStyle(colorScheme: colorScheme),
+        style: PragmaButtons.outlinedStyle(
+          colorScheme: colorScheme,
+          textTheme: textTheme,
+        ),
       ),
       textButtonTheme: TextButtonThemeData(
-        style: PragmaButtons.textStyle(colorScheme: colorScheme),
+        style: PragmaButtons.textStyle(
+          colorScheme: colorScheme,
+          textTheme: textTheme,
+        ),
       ),
       chipTheme: ChipThemeData(
         labelStyle: textTheme.labelMedium?.copyWith(

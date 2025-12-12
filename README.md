@@ -17,7 +17,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-	pragma_design_system: ^0.0.7
+	pragma_design_system: ^0.0.8
 ```
 
 Then run:
@@ -56,7 +56,7 @@ class PragmaApp extends StatelessWidget {
 - **Opacity:** `PragmaOpacityTokens` and `PragmaOpacity` constrain overlays to 8/30/60 intervals using `Color.withValues` for Flutter 3.22+.
 - **Domain models:** `ModelPragmaComponent` and `ModelAnatomyAttribute` serialize the documentation sourced from Figma and guarantee JSON roundtrips.
 - **Grid:** `PragmaGridTokens`, `getGridConfigFromContext`, `PragmaGridContainer`, and `PragmaScaleBox` help replicate the official grid, respect gutters, and scale full mockups.
-- **Components:** Widgets such as `PragmaButton.icon`, `PragmaCard`, `PragmaAvatarWidget`, `PragmaBreadcrumbWidget`, or `PragmaAccordionWidget` ship consistent states and elevation.
+- **Components:** Widgets such as `PragmaPrimaryButton`, `PragmaSecondaryButton`, `PragmaButton.icon`, `PragmaCard`, `PragmaAvatarWidget`, `PragmaBreadcrumbWidget`, or `PragmaAccordionWidget` ship consistent states and elevation.
 
 ### Avatar quick sample
 
@@ -67,6 +67,23 @@ PragmaAvatarWidget(
 	imageUrl: 'https://cdn.pragma.co/avatar.jpg',
 	style: PragmaAvatarStyle.primary,
 	tooltip: 'Pragma Designer',
+)
+```
+
+### Button quick sample
+
+```dart
+PragmaPrimaryButton(
+	label: 'Guardar cambios',
+	one: PragmaButtonTone.brand,
+	onPressed: () {},
+)
+
+PragmaButton.icon(
+	label: 'Ver detalles',
+	icon: Icons.open_in_new,
+	hierarchy: PragmaButtonHierarchy.tertiary,
+	onPressed: () {},
 )
 ```
 

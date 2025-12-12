@@ -110,25 +110,33 @@ class ShowcaseScreen extends StatelessWidget {
             spacing: PragmaSpacing.md,
             runSpacing: PragmaSpacing.md,
             children: <Widget>[
-              PragmaButton(
+              const PragmaPrimaryButton(
                 label: 'Primario',
-                onPressed: () {},
+                onPressed: _noop,
               ),
-              PragmaButton(
-                label: 'Tonal',
-                onPressed: () {},
-                variant: PragmaButtonVariant.tonal,
+              const PragmaPrimaryButton(
+                label: 'Primario inverso',
+                tone: PragmaButtonTone.inverse,
+                onPressed: _noop,
               ),
-              PragmaButton(
+              const PragmaSecondaryButton(
                 label: 'Secundario',
-                onPressed: () {},
-                variant: PragmaButtonVariant.secondary,
+                onPressed: _noop,
+              ),
+              const PragmaTertiaryButton(
+                label: 'Terciario',
+                onPressed: _noop,
+              ),
+              const PragmaSecondaryButton(
+                label: 'Secundario small',
+                size: PragmaButtonSize.small,
+                onPressed: _noop,
               ),
               PragmaButton.icon(
-                label: 'Texto',
+                label: 'Texto con ícono',
                 icon: Icons.arrow_forward,
-                variant: PragmaButtonVariant.text,
-                onPressed: () {},
+                hierarchy: PragmaButtonHierarchy.tertiary,
+                onPressed: _noop,
               ),
               PragmaIconButton(
                 icon: Icons.favorite,
@@ -161,8 +169,8 @@ class ShowcaseScreen extends StatelessWidget {
             action: PragmaButton.icon(
               label: 'Ver detalles',
               icon: Icons.open_in_new,
-              onPressed: () {},
-              variant: PragmaButtonVariant.text,
+              hierarchy: PragmaButtonHierarchy.tertiary,
+              onPressed: _noop,
             ),
             body: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -218,6 +226,8 @@ class ShowcaseScreen extends StatelessWidget {
   }
 }
 
+void _noop() {}
+
 void _openGridDebugger(BuildContext context) {
   Navigator.of(context).push(
     MaterialPageRoute<void>(
@@ -263,7 +273,7 @@ class GridDebuggerPage extends StatelessWidget {
               child: PragmaButton.icon(
                 label: 'Ver demo con ScaleBox',
                 icon: Icons.open_in_new,
-                variant: PragmaButtonVariant.secondary,
+                hierarchy: PragmaButtonHierarchy.secondary,
                 onPressed: () => Navigator.of(context).push(
                   MaterialPageRoute<void>(
                     builder: (_) => const ScaleBoxDemoPage(),
@@ -283,8 +293,8 @@ class GridDebuggerPage extends StatelessWidget {
                     action: PragmaButton.icon(
                       label: 'Más info',
                       icon: Icons.open_in_new,
-                      onPressed: () {},
-                      variant: PragmaButtonVariant.text,
+                      hierarchy: PragmaButtonHierarchy.tertiary,
+                      onPressed: _noop,
                     ),
                     body: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
