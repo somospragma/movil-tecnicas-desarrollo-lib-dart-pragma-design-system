@@ -1,32 +1,32 @@
 # pragma_design_system
 
-Biblioteca Flutter enfocada en móviles que reúne los tokens de diseño, temas base y componentes reutilizables del Design System de Pragma.
+Flutter library focused on mobile experiences that bundles Pragma's design tokens, base themes, and reusable UI components.
 
-## Características
+## Features
 
-- Tokens consistentes de color, tipografía, espaciado **y grillas responsivas**.
-- `PragmaTheme` con variantes claro/oscuro y Material 3 habilitado.
-- Componentes accesibles (`PragmaButton`, `PragmaCard`, `PragmaIconButton`, `PragmaAccordionWidget`).
-- `PragmaGridTokens`, helpers de viewport y el widget `PragmaGridContainer` para depurar layouts.
-- Modelado de componentes (`ModelPragmaComponent`, `ModelAnatomyAttribute`) para sincronizar documentación y showcases.
-- App de ejemplo lista para ejecutar y validar (incluye página "Grid debugger").
+- Consistent color, typography, spacing, and **responsive grid** tokens.
+- `PragmaTheme` with light/dark variants and Material 3 enabled by default.
+- Accessible components (`PragmaButton`, `PragmaCard`, `PragmaIconButton`, `PragmaAccordionWidget`).
+- `PragmaGridTokens`, viewport helpers, and the `PragmaGridContainer` widget to debug layouts.
+- Component modeling (`ModelPragmaComponent`, `ModelAnatomyAttribute`) to sync documentation and showcases from JSON.
+- Example app ready to run and validate (includes a "Grid debugger" page).
 
-## Instalación
+## Installation
 
-Agrega el paquete en tu `pubspec.yaml`:
+Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-	pragma_design_system: ^0.0.4
+	pragma_design_system: ^0.0.5
 ```
 
-Después ejecuta:
+Then run:
 
 ```sh
 flutter pub get
 ```
 
-## Uso rápido
+## Quick start
 
 ```dart
 import 'package:flutter/material.dart';
@@ -47,36 +47,34 @@ class PragmaApp extends StatelessWidget {
 }
 ```
 
-## Tokens y componentes
+## Tokens and components
 
-- **Colores:** `PragmaColors` expone esquemas `ColorScheme` claro/oscuro y valores de marca.
-- **Tipografía:** `PragmaTypography` define escalas responsivas basadas en Google Fonts.
-- **Espaciado:** `PragmaSpacing` concentra valores de 4pt system y funciones utilitarias.
-- **Radios:** `PragmaBorderRadiusTokens` y `PragmaBorderRadius` aseguran bordes redondeados consistentes en incrementos de 4/8dp.
-- **Opacidad:** `PragmaOpacityTokens` y `PragmaOpacity` limitan overlays a los intervalos 8/30/60 y usan `Color.withValues` para mantener consistencia en Flutter 3.22+.
-- **Dominio:** `ModelPragmaComponent` y `ModelAnatomyAttribute` permiten serializar la documentación proveniente de Figma y garantizar roundtrip JSON.
-- **Grid:** `PragmaGridTokens`, `getGridConfigFromContext`, `PragmaGridContainer` y `PragmaScaleBox` permiten replicar la retícula oficial, respetar márgenes y escalar maquetas completas.
-- **Componentes:** Widgets como `PragmaButton.icon`, `PragmaCard` o `PragmaAccordionWidget` incluyen estados y elevación consistentes.
+- **Colors:** `PragmaColors` exposes brand-aware `ColorScheme` definitions for light and dark modes.
+- **Typography:** `PragmaTypography` defines responsive scales built on top of Google Fonts.
+- **Spacing:** `PragmaSpacing` concentrates 4pt-system values and handy utilities.
+- **Radius:** `PragmaBorderRadiusTokens` and `PragmaBorderRadius` keep rounded corners consistent in 4/8dp steps.
+- **Opacity:** `PragmaOpacityTokens` and `PragmaOpacity` constrain overlays to 8/30/60 intervals using `Color.withValues` for Flutter 3.22+.
+- **Domain models:** `ModelPragmaComponent` and `ModelAnatomyAttribute` serialize the documentation sourced from Figma and guarantee JSON roundtrips.
+- **Grid:** `PragmaGridTokens`, `getGridConfigFromContext`, `PragmaGridContainer`, and `PragmaScaleBox` help replicate the official grid, respect gutters, and scale full mockups.
+- **Components:** Widgets such as `PragmaButton.icon`, `PragmaCard`, or `PragmaAccordionWidget` ship consistent states and elevation.
 
-Consulta [doc/opacidad.md](doc/opacidad.md) para ver la tabla completa y ejemplos
-de uso de `Color.withValues`.
+See [doc/opacity_tokens.md](doc/opacity_tokens.md) for the full opacity table and `Color.withValues` examples.
 
-Lee [doc/componentes_modelados.md](doc/componentes_modelados.md) para entender
-cómo estructurar los JSON y reutilizarlos en showcases.
+Read [doc/component_modeling.md](doc/component_modeling.md) to structure JSON payloads and reuse them in showcases.
 
-Consulta el paquete para más utilidades (`lib/src`), revisa la app de ejemplo y lee [doc/grid_utilitarios.md](doc/grid_utilitarios.md) para adoptar los helpers de grilla.
+Explore `lib/src` for additional utilities, run the example app, and check [doc/grid_utilities.md](doc/grid_utilities.md) to adopt the grid helpers.
 
-## Tipografía y licencia
+## Typography and license
 
-- La tipografía oficial es [Poppins](https://fonts.google.com/specimen/Poppins) y `PragmaTypography` la aplica mediante `GoogleFonts.poppins`.
-- La familia se distribuye con la licencia **SIL Open Font License 1.1**; revisa el texto completo en [licenses/Poppins-OFL.txt](licenses/Poppins-OFL.txt).
-- Si tu aplicación debe funcionar sin conexión en el primer arranque, agrega los archivos `.ttf` a tus assets y deshabilita la descarga dinámica.
-- Consulta [doc/poppins_offline.md](doc/poppins_offline.md) para conocer el paso a paso y enlaces directos de descarga.
+- The official typeface is [Poppins](https://fonts.google.com/specimen/Poppins) and `PragmaTypography` applies it through `GoogleFonts.poppins`.
+- The family ships under the **SIL Open Font License 1.1**; see the full text in [licenses/Poppins-OFL.txt](licenses/Poppins-OFL.txt).
+- If your app must work offline on first launch, bundle the `.ttf` files in your assets and disable runtime fetching.
+- Follow [doc/poppins_offline.md](doc/poppins_offline.md) for the step-by-step guide and download links.
 
-### Cómo preparar un fallback offline
+### How to prepare an offline fallback
 
-1. Descarga las variantes que uses (por ejemplo Regular, SemiBold y Bold) desde Google Fonts y guárdalas en `assets/fonts/`.
-2. Decláralas en tu `pubspec.yaml`:
+1. Download the weights you use (for example Regular, SemiBold, and Bold) from Google Fonts and store them inside `assets/fonts/`.
+2. Declare them in `pubspec.yaml`:
 
    ```yaml
    flutter:
@@ -88,7 +86,7 @@ Consulta el paquete para más utilidades (`lib/src`), revisa la app de ejemplo y
    				 - asset: assets/fonts/Poppins-Bold.ttf
    ```
 
-3. Durante el arranque deshabilita la descarga remota:
+3. Disable runtime fetching during startup:
 
    ```dart
    void main() {
@@ -97,21 +95,21 @@ Consulta el paquete para más utilidades (`lib/src`), revisa la app de ejemplo y
    }
    ```
 
-   Recuerda importar `package:google_fonts/google_fonts.dart`.
+   Remember to import `package:google_fonts/google_fonts.dart`.
 
-Si no incluyes los archivos, la responsabilidad de proveer la tipografía recae en el implementador del proyecto que consuma este paquete.
+If you skip bundling the files, the responsibility of providing the typeface falls on the app that consumes this package.
 
-## Ejemplo
+## Example
 
 ```sh
 cd example
 flutter run
 ```
 
-La app incluye una pantalla conmutando tema, tokens y componentes básicos.
+The sample app toggles themes, tokens, and staple components.
 
-## Desarrollo
+## Development
 
-- `flutter test` para ejecutar las pruebas.
-- `dart format .` para mantener el estilo.
-- `flutter analyze` para validar contra `analysis_options.yaml`.
+- `flutter test` to run the tests.
+- `dart format .` to keep formatting consistent.
+- `flutter analyze` to validate against `analysis_options.yaml`.

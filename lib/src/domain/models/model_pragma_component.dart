@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import 'model_anatomy_attribute.dart';
 
-/// Enumera los campos serializados del [ModelPragmaComponent].
+/// Enumerates the serialized fields of [ModelPragmaComponent].
 enum PragmaComponentEnum {
   titleComponent,
   description,
@@ -58,7 +58,7 @@ class ModelPragmaComponent {
     );
   }
 
-  /// Crea un modelo a partir de un JSON.
+  /// Creates a model from raw JSON.
   factory ModelPragmaComponent.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
       return empty;
@@ -80,7 +80,7 @@ class ModelPragmaComponent {
     required this.urlImages,
   });
 
-  /// Instancia cómoda para pruebas o valores por defecto.
+  /// Handy instance for tests or default states.
   static const ModelPragmaComponent empty = ModelPragmaComponent._(
     titleComponent: '',
     description: '',
@@ -89,22 +89,22 @@ class ModelPragmaComponent {
     urlImages: <String>[],
   );
 
-  /// Título del componente (coincide con el nombre en Figma).
+  /// Component title (matches the Figma node name).
   final String titleComponent;
 
-  /// Descripción corta que explica el propósito del componente.
+  /// Short description that explains the component intent.
   final String description;
 
-  /// Lista de elementos anatómicos resaltados en la documentación.
+  /// Highlighted anatomy entries used by the documentation.
   final List<ModelAnatomyAttribute> anatomy;
 
-  /// Casos de uso recomendados.
+  /// Recommended use cases.
   final List<String> useCases;
 
-  /// URLs a capturas o mockups.
+  /// URLs that point to screenshots or mockups.
   final List<String> urlImages;
 
-  /// Serializa el componente a JSON.
+  /// Serializes the component into JSON.
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       PragmaComponentEnum.titleComponent.name: titleComponent,
@@ -116,7 +116,7 @@ class ModelPragmaComponent {
     };
   }
 
-  /// Retorna una copia con valores modificados.
+  /// Returns a copy with the provided overrides.
   ModelPragmaComponent copyWith({
     String? titleComponent,
     String? description,

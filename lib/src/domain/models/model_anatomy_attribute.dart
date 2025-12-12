@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 
-/// Enumera las propiedades serializables del [ModelAnatomyAttribute].
+/// Enumerates the serializable properties of [ModelAnatomyAttribute].
 enum AnatomyAttributeEnum { title, description, value }
 
-/// Describe un atributo anatómico dentro de un componente de Figma.
+/// Describes a single anatomy attribute inside a Figma component.
 @immutable
 class ModelAnatomyAttribute {
   const ModelAnatomyAttribute({
@@ -12,7 +12,7 @@ class ModelAnatomyAttribute {
     this.value = 0.1,
   });
 
-  /// Crea una instancia a partir de un mapa JSON.
+  /// Creates an instance from a JSON map.
   factory ModelAnatomyAttribute.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
       return const ModelAnatomyAttribute(title: '');
@@ -25,16 +25,16 @@ class ModelAnatomyAttribute {
     );
   }
 
-  /// Nombre visible del elemento anatómico.
+  /// Visible name of the anatomy entry.
   final String title;
 
-  /// Descripción opcional del elemento.
+  /// Optional extended description.
   final String description;
 
-  /// Valor asociado (por ejemplo porcentaje de tamaño relativo, entre 0.0 y 1.0).
+  /// Associated value (for example, a relative percentage in the 0.0–1.0 range).
   final double value;
 
-  /// Genera una copia con valores reemplazados.
+  /// Returns a copy with the provided overrides.
   ModelAnatomyAttribute copyWith({
     String? title,
     String? description,
@@ -47,7 +47,7 @@ class ModelAnatomyAttribute {
     );
   }
 
-  /// Serializa el atributo a JSON.
+  /// Serializes the attribute into JSON.
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       AnatomyAttributeEnum.title.name: title,

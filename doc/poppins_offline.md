@@ -1,18 +1,18 @@
-# Asegurar Poppins sin conexión
+# Ensuring offline Poppins
 
-Este documento describe cómo garantizar que la tipografía oficial (Poppins) esté disponible desde la primera ejecución de cualquier app que consuma `pragma_design_system`.
+This document explains how to make the official typeface (Poppins) available from the very first run of any app that depends on `pragma_design_system`.
 
-## Variantes mínimas recomendadas
+## Minimum recommended weights
 
-El manual de diseño utiliza principalmente las variantes Regular (400), SemiBold (600) y Bold (700). Puedes descargar los archivos individuales desde el repositorio oficial de Google Fonts:
+The design manual primarily leverages Regular (400), SemiBold (600), and Bold (700). Download the individual files from the official Google Fonts repository:
 
 - [Poppins-Regular.ttf](https://github.com/google/fonts/raw/main/ofl/poppins/Poppins-Regular.ttf)
 - [Poppins-SemiBold.ttf](https://github.com/google/fonts/raw/main/ofl/poppins/Poppins-SemiBold.ttf)
 - [Poppins-Bold.ttf](https://github.com/google/fonts/raw/main/ofl/poppins/Poppins-Bold.ttf)
 
-Guárdalos en la carpeta `assets/fonts/` de tu proyecto. Si tu producto necesita soportar _todas_ las variantes, descarga el paquete completo desde [https://fonts.google.com/specimen/Poppins](https://fonts.google.com/specimen/Poppins) y copia los archivos `.ttf` correspondientes.
+Store them inside your project's `assets/fonts/` folder. If your product needs to support _every_ weight, download the complete package from [https://fonts.google.com/specimen/Poppins](https://fonts.google.com/specimen/Poppins) and copy the corresponding `.ttf` files.
 
-## Declarar los assets
+## Declare the assets
 
 ```yaml
 flutter:
@@ -25,12 +25,12 @@ flutter:
           weight: 600
         - asset: assets/fonts/Poppins-Bold.ttf
           weight: 700
-        # Agrega aquí las variantes adicionales si las necesitas
+        # Add extra weights here if you need them
 ```
 
-## Deshabilitar la descarga en tiempo de ejecución
+## Disable runtime fetching
 
-`PragmaTypography` usará automáticamente la familia registrada cuando `GoogleFonts.config.allowRuntimeFetching` sea `false`. Configúralo antes de invocar `runApp`:
+`PragmaTypography` automatically uses the registered family when `GoogleFonts.config.allowRuntimeFetching` is `false`. Configure it before invoking `runApp`:
 
 ```dart
 import 'package:google_fonts/google_fonts.dart';
@@ -41,4 +41,4 @@ Future<void> main() async {
 }
 ```
 
-La app de ejemplo (carpeta `example/`) ya tiene estos pasos implementados para que puedas usarlos como referencia.
+The sample app (`example/` folder) already implements these steps, so feel free to use it as a reference.
