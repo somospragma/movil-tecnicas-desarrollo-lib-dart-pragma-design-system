@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/widgets.dart';
 import '../tokens/pragma_grid_tokens.dart';
+import '../tokens/pragma_spacing.dart';
 
 /// Clasificación de viewports compatible con las guías de Material/Pragma.
 enum PragmaViewportEnum {
@@ -80,17 +81,31 @@ PragmaGridConfig getGridConfigFromWidth(double width) {
   final PragmaViewportEnum viewport = getViewportFromWidth(width);
   final PragmaGridTokenSet tokens = PragmaGridTokens.ofViewport(viewport);
 
-  final double containerWidth = math.min(width, tokens.baseWidth);
-  final double contentWidth = containerWidth - (tokens.minMargin * 2.0);
-  final double columnsSpace =
-      contentWidth - tokens.gutter * (tokens.columns - 1);
-  final double columnWidth = columnsSpace / tokens.columns;
+  final double containerWidth = width;
+  final double scale = width / tokens.baseWidth;
+
+  double margin = tokens.minMargin;
+  double gutter = tokens.gutter;
+
+  if (scale < 1) {
+    margin = math.max(PragmaSpacing.lg, tokens.minMargin * scale);
+    gutter = math.max(PragmaSpacing.sm, tokens.gutter * scale);
+  }
+
+  margin = math.min(margin, containerWidth / 2);
+  gutter = math.max(0, gutter);
+
+  final double contentWidth = math.max(0, containerWidth - (margin * 2));
+  final double guttersTotal = gutter * math.max(0, tokens.columns - 1);
+  final double columnsSpace = math.max(0, contentWidth - guttersTotal);
+  final double columnWidth =
+      tokens.columns > 0 ? columnsSpace / tokens.columns : 0;
 
   return PragmaGridConfig(
     viewport: viewport,
     columns: tokens.columns,
-    gutter: tokens.gutter,
-    margin: tokens.minMargin,
+    gutter: gutter,
+    margin: margin,
     columnWidth: columnWidth,
     containerWidth: containerWidth,
   );

@@ -209,6 +209,20 @@ class GridDebuggerPage extends StatelessWidget {
               'cambian los márgenes, gutters y columnas.',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
+            const SizedBox(height: PragmaSpacing.md),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: PragmaButton.icon(
+                label: 'Ver demo con ScaleBox',
+                icon: Icons.open_in_new,
+                variant: PragmaButtonVariant.secondary,
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const ScaleBoxDemoPage(),
+                  ),
+                ),
+              ),
+            ),
             const SizedBox(height: PragmaSpacing.xl),
             Wrap(
               spacing: PragmaSpacing.md,
@@ -248,6 +262,257 @@ class GridDebuggerPage extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class ScaleBoxDemoPage extends StatelessWidget {
+  const ScaleBoxDemoPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('PragmaScaleBox demo'),
+      ),
+      body: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          final double width = constraints.maxWidth;
+          final bool isCompact = width < 480;
+
+          return ListView(
+            padding: PragmaSpacing.insetSymmetric(
+              horizontal: PragmaSpacing.xl,
+              vertical: PragmaSpacing.xl,
+            ),
+            children: <Widget>[
+              Text(
+                'Escala composiciones completas',
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+              const SizedBox(height: PragmaSpacing.md),
+              Text(
+                'El PragmaScaleBox toma una composición con tamaño de diseño '
+                'fijo (ej. 390x844) y la estira para ocupar el ancho '
+                'disponible manteniendo la proporción. Úsalo para mostrar '
+                'maquetas, capturas o layouts creados en Figma sin perder '
+                'referencias visuales.',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              const SizedBox(height: PragmaSpacing.xl),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.shade300),
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                padding: const EdgeInsets.all(PragmaSpacing.lg),
+                child: PragmaScaleBox(
+                  designSize: const Size(390, 844),
+                  minScale: 0.5,
+                  maxScale: 1.5,
+                  child: _MockupPhone(isCompact: isCompact),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _MockupPhone extends StatelessWidget {
+  const _MockupPhone({required this.isCompact});
+
+  final bool isCompact;
+
+  @override
+  Widget build(BuildContext context) {
+    final ColorScheme scheme = Theme.of(context).colorScheme;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: scheme.surface,
+        borderRadius: BorderRadius.circular(48),
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 30,
+            offset: const Offset(0, 30),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              CircleAvatar(backgroundColor: scheme.primary),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text('Squad Andes',
+                        style: Theme.of(context).textTheme.titleMedium),
+                    Text(
+                      'Dashboard mobile',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(color: scheme.onSurfaceVariant),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                Icons.signal_cellular_alt,
+                color: scheme.onSurfaceVariant,
+              ),
+            ],
+          ),
+          const SizedBox(height: 32),
+          Text(
+            'Componentes sincronizados',
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
+          const SizedBox(height: 12),
+          Text(
+            'Este mockup respeta los márgenes y grilla de mobile, pero puede '
+            'mostrarse en cualquier viewport gracias al escalado automático.',
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium
+                ?.copyWith(color: scheme.onSurfaceVariant),
+          ),
+          const SizedBox(height: 24),
+          Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            children: const <Widget>[
+              _MetricChip(icon: Icons.format_paint, label: 'Grid mobile 4px'),
+              _MetricChip(icon: Icons.layers, label: '8 columnas'),
+              _MetricChip(icon: Icons.lock, label: 'Ratio asegurado'),
+              _MetricChip(icon: Icons.animation, label: 'Resizing automático'),
+            ],
+          ),
+          const SizedBox(height: 24),
+          AspectRatio(
+            aspectRatio: isCompact ? 16 / 9 : 4 / 3,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(32),
+              child: Stack(
+                children: <Widget>[
+                  Positioned.fill(
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: <Color>[
+                            scheme.primary.withOpacity(0.05),
+                            scheme.secondary.withOpacity(0.05),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment:
+                        isCompact ? Alignment.topCenter : Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: isCompact ? 0 : 24,
+                        vertical: isCompact ? 12 : 24,
+                      ),
+                      child: _CompactCard(isCompact: isCompact),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CompactCard extends StatelessWidget {
+  const _CompactCard({required this.isCompact});
+
+  final bool isCompact;
+
+  @override
+  Widget build(BuildContext context) {
+    final ColorScheme scheme = Theme.of(context).colorScheme;
+
+    return Container(
+      width: isCompact ? double.infinity : 280,
+      decoration: BoxDecoration(
+        color: scheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(24),
+      ),
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text('Próximo release',
+              style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: 8),
+          Text(
+            'QA visual validado en 4 viewports usando el ScaleBox.',
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium
+                ?.copyWith(color: scheme.onSurfaceVariant),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: <Widget>[
+              const Icon(Icons.play_circle_outline),
+              const SizedBox(width: 8),
+              Text('Demo interactiva',
+                  style: Theme.of(context).textTheme.bodyMedium),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MetricChip extends StatelessWidget {
+  const _MetricChip({required this.icon, required this.label});
+
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final ColorScheme scheme = Theme.of(context).colorScheme;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(99),
+        color: scheme.surfaceContainer,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Icon(icon, size: 16, color: scheme.onSurfaceVariant),
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall
+                ?.copyWith(color: scheme.onSurfaceVariant),
+          ),
+        ],
       ),
     );
   }

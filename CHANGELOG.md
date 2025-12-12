@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `PragmaGridContainer`, un contenedor de depuración que pinta columnas, gutters y márgenes; incluye badge informativo con métricas del viewport.
 - Página “Grid debugger” dentro del `example/` que muestra el overlay en vivo y expone casos de uso para distintos tamaños de pantalla.
 - Documento en `doc/` con instrucciones para adoptar los utilitarios y el `PragmaGridContainer` en implementaciones de producto.
+- `PragmaScaleBox`, widget para escalar composiciones fijas dentro del viewport con demo navegable desde la página Grid Debugger del `example/`.
 
 ## [0.0.1] - 2025-12-11
 

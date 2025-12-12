@@ -32,19 +32,13 @@ class PragmaGridContainer extends StatelessWidget {
           return child;
         }
         final PragmaGridConfig grid = getGridConfigFromWidth(width);
-        final double contentWidth = math.min(grid.containerWidth, width);
-        final double effectiveMargin = math.min(grid.margin, contentWidth / 2);
 
+        final double safeMargin = math.max(0, math.min(grid.margin, width / 2));
         final Widget constrainedChild = Align(
           alignment: Alignment.topCenter,
-          child: SizedBox(
-            width: contentWidth,
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: math.max(0, effectiveMargin),
-              ),
-              child: child,
-            ),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: safeMargin),
+            child: child,
           ),
         );
 

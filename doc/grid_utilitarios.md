@@ -62,6 +62,19 @@ return PragmaGridContainer(
 
 El overlay incluye un badge flotante con métricas en tiempo real. Puedes personalizar colores pasando `columnColor`, `gutterColor`, `marginColor` o `infoBackgroundColor`.
 
+## Escalar pantallas con `PragmaScaleBox`
+
+Cuando necesites presentar una maqueta completa o un layout compuesto que deba conservar las proporciones de su diseño original, envuélvelo con `PragmaScaleBox`. Solo debes indicar el tamaño base del diseño y el widget escalará el contenido para ocupar el ancho disponible:
+
+```dart
+PragmaScaleBox(
+  designSize: const Size(390, 844),
+  child: const _PhoneMockup(),
+)
+```
+
+Opcionalmente puedes limitar `minScale`/`maxScale` o cambiar el `alignment` para decidir desde qué punto se estira la maqueta.
+
 ## Flujo recomendado para implementadores
 
 1. **Configura Poppins offline** siguiendo la guía `doc/poppins_offline.md` y ejecuta la app de ejemplo para validar que todo compila.

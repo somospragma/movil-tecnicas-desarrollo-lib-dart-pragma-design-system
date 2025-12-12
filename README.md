@@ -4,10 +4,11 @@ Biblioteca Flutter enfocada en móviles que reúne los tokens de diseño, temas 
 
 ## Características
 
-- Tokens consistentes de color, tipografía y espaciado.
+- Tokens consistentes de color, tipografía, espaciado **y grillas responsivas**.
 - `PragmaTheme` con variantes claro/oscuro y Material 3 habilitado.
 - Componentes accesibles (`PragmaButton`, `PragmaCard`, `PragmaIconButton`).
-- App de ejemplo lista para ejecutar y validar en dispositivos reales.
+- `PragmaGridTokens`, helpers de viewport y el widget `PragmaGridContainer` para depurar layouts.
+- App de ejemplo lista para ejecutar y validar (incluye página "Grid debugger").
 
 ## Instalación
 
@@ -15,7 +16,7 @@ Agrega el paquete en tu `pubspec.yaml`:
 
 ```yaml
 dependencies:
-	pragma_design_system: ^0.0.1
+	pragma_design_system: ^0.0.2
 ```
 
 Después ejecuta:
@@ -50,9 +51,10 @@ class PragmaApp extends StatelessWidget {
 - **Colores:** `PragmaColors` expone esquemas `ColorScheme` claro/oscuro y valores de marca.
 - **Tipografía:** `PragmaTypography` define escalas responsivas basadas en Google Fonts.
 - **Espaciado:** `PragmaSpacing` concentra valores de 4pt system y funciones utilitarias.
+- **Grid:** `PragmaGridTokens`, `getGridConfigFromContext`, `PragmaGridContainer` y `PragmaScaleBox` permiten replicar la retícula oficial, respetar márgenes y escalar maquetas completas.
 - **Componentes:** Widgets como `PragmaButton.icon` o `PragmaCard` incluyen estados y elevación consistentes.
 
-Consulta el paquete para más utilidades (`lib/src`) o revisa la app de ejemplo.
+Consulta el paquete para más utilidades (`lib/src`), revisa la app de ejemplo y lee [doc/grid_utilitarios.md](doc/grid_utilitarios.md) para adoptar los helpers de grilla.
 
 ## Tipografía y licencia
 

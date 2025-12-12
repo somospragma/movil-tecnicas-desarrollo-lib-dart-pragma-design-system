@@ -4,6 +4,7 @@ library pragma_design_system;
 
 export 'src/layout/pragma_grid.dart';
 export 'src/layout/pragma_grid_container.dart';
+export 'src/layout/pragma_scale_box.dart';
 export 'src/theme/pragma_theme.dart';
 export 'src/tokens/pragma_color_tokens.dart';
 export 'src/tokens/pragma_colors.dart';
