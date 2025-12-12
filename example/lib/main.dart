@@ -388,10 +388,10 @@ class _MockupPhone extends StatelessWidget {
                 ?.copyWith(color: scheme.onSurfaceVariant),
           ),
           const SizedBox(height: 24),
-          Wrap(
+          const Wrap(
             spacing: 12,
             runSpacing: 12,
-            children: const <Widget>[
+            children: <Widget>[
               _MetricChip(icon: Icons.format_paint, label: 'Grid mobile 4px'),
               _MetricChip(icon: Icons.layers, label: '8 columnas'),
               _MetricChip(icon: Icons.lock, label: 'Ratio asegurado'),
