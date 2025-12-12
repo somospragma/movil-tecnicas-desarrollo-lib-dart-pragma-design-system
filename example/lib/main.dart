@@ -54,6 +54,9 @@ class ShowcaseScreen extends StatelessWidget {
     final TextTheme textTheme = Theme.of(context).textTheme;
     final Color onSurfaceVariant =
         Theme.of(context).colorScheme.onSurfaceVariant;
+    final List<ModelPragmaComponent> documentedComponents = _componentCatalog
+        .map<ModelPragmaComponent>(ModelPragmaComponent.fromJson)
+        .toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -183,6 +186,15 @@ class ShowcaseScreen extends StatelessWidget {
             size: PragmaAccordionSize.block,
             child:
                 Text('Este panel permanece cerrado hasta habilitar el flujo.'),
+          ),
+          const SizedBox(height: PragmaSpacing.xl),
+          Text('Componentes documentados', style: textTheme.headlineSmall),
+          const SizedBox(height: PragmaSpacing.sm),
+          Column(
+            children:
+                documentedComponents.map((ModelPragmaComponent component) {
+              return _ComponentDocCard(component: component);
+            }).toList(),
           ),
         ],
       ),
@@ -540,6 +552,108 @@ class _MetricChip extends StatelessWidget {
   }
 }
 
+class _ComponentDocCard extends StatelessWidget {
+  const _ComponentDocCard({required this.component});
+
+  final ModelPragmaComponent component;
+
+  @override
+  Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+    final ColorScheme scheme = Theme.of(context).colorScheme;
+
+    return Card(
+      margin: const EdgeInsets.only(bottom: PragmaSpacing.md),
+      child: Padding(
+        padding: const EdgeInsets.all(PragmaSpacing.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              component.titleComponent,
+              style: textTheme.titleLarge,
+            ),
+            const SizedBox(height: PragmaSpacing.xs),
+            Text(component.description, style: textTheme.bodyMedium),
+            if (component.useCases.isNotEmpty) ...<Widget>[
+              const SizedBox(height: PragmaSpacing.md),
+              Text('Casos de uso', style: textTheme.labelLarge),
+              const SizedBox(height: PragmaSpacing.xs),
+              Wrap(
+                spacing: PragmaSpacing.sm,
+                runSpacing: PragmaSpacing.xs,
+                children: component.useCases.map((String useCase) {
+                  return Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: PragmaSpacing.sm,
+                      vertical: PragmaSpacing.xs,
+                    ),
+                    decoration: BoxDecoration(
+                      color: scheme.surfaceContainerHighest,
+                      borderRadius: BorderRadius.circular(99),
+                    ),
+                    child: Text(
+                      useCase,
+                      style: textTheme.bodySmall,
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
+            if (component.anatomy.isNotEmpty) ...<Widget>[
+              const SizedBox(height: PragmaSpacing.md),
+              Text('Anatomía', style: textTheme.labelLarge),
+              const SizedBox(height: PragmaSpacing.xs),
+              Column(
+                children: component.anatomy.map((ModelAnatomyAttribute attr) {
+                  final String percentage =
+                      '${(attr.value * 100).toStringAsFixed(0)}%';
+                  return ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    dense: true,
+                    leading: CircleAvatar(
+                      radius: 18,
+                      backgroundColor: scheme.primary.withValues(
+                        alpha: PragmaOpacity.opacity30,
+                      ),
+                      child: Text(
+                        percentage,
+                        style: textTheme.labelSmall,
+                      ),
+                    ),
+                    title: Text(attr.title, style: textTheme.bodyMedium),
+                    subtitle: attr.description.isEmpty
+                        ? null
+                        : Text(attr.description, style: textTheme.bodySmall),
+                  );
+                }).toList(),
+              ),
+            ],
+            if (component.urlImages.isNotEmpty) ...<Widget>[
+              const SizedBox(height: PragmaSpacing.md),
+              Text('Referencias visuales', style: textTheme.labelLarge),
+              const SizedBox(height: PragmaSpacing.xs),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: component.urlImages.map((String url) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: PragmaSpacing.xs),
+                    child: SelectableText(
+                      url,
+                      style:
+                          textTheme.bodySmall?.copyWith(color: scheme.primary),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _PaletteSectionView extends StatelessWidget {
   const _PaletteSectionView({required this.section});
 
@@ -691,6 +805,51 @@ String _hexFromColor(Color color) {
       color.toARGB32().toRadixString(16).padLeft(8, '0').toUpperCase();
   return '#${value.substring(2)}';
 }
+
+const List<Map<String, dynamic>> _componentCatalog = <Map<String, dynamic>>[
+  <String, dynamic>{
+    'titleComponent': 'PragmaAccordionWidget',
+    'description':
+        'Panel expandible que gestiona su estado interno y expone callbacks.',
+    'anatomy': <Map<String, dynamic>>[
+      <String, dynamic>{
+        'title': 'Header',
+        'description': 'Dispara el toggle y aloja íconos auxiliares.',
+        'value': 0.35,
+      },
+      <String, dynamic>{
+        'title': 'Body',
+        'description': 'Contenedor con contenido colapsable.',
+        'value': 0.65,
+      },
+    ],
+    'useCases': <String>['FAQs', 'Centros de ayuda', 'Documentación interna'],
+    'urlImages': <String>[
+      'https://cdn.pragma.co/components/accordion/cover.png',
+    ],
+  },
+  <String, dynamic>{
+    'titleComponent': 'PragmaScaleBox',
+    'description':
+        'Escala mockups de Figma al width disponible manteniendo el aspecto.',
+    'anatomy': <Map<String, dynamic>>[
+      <String, dynamic>{
+        'title': 'Viewport wrapper',
+        'description': 'Delimita el ancho máximo disponible.',
+        'value': 0.4,
+      },
+      <String, dynamic>{
+        'title': 'Mockup',
+        'description': 'Contenido diseñado a un tamaño fijo.',
+        'value': 0.6,
+      },
+    ],
+    'useCases': <String>['Demos responsivas', 'QA visual'],
+    'urlImages': <String>[
+      'https://cdn.pragma.co/components/scalebox/cover.png',
+    ],
+  },
+];
 
 const List<_PaletteSection> _paletteSections = <_PaletteSection>[
   _PaletteSection(

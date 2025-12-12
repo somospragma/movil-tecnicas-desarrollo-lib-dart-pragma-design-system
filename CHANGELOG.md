@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.4] - 2025-12-12
+
+### Added
+
+- Modelos de dominio `ModelPragmaComponent` y `ModelAnatomyAttribute` bajo `lib/src/domain/models`, expuestos en la biblioteca pública.
+- Pruebas unitarias y fixtures JSON que validan roundtrip para los modelos, asegurando datos coherentes para los showcases.
+- Documentación en `doc/componentes_modelados.md` con tabla de propiedades, ejemplo JSON y buenas prácticas.
+- Actualización del `example/` para renderizar componentes documentados a partir de los nuevos modelos.
+- README, versión (`0.0.4`) y changelog alineados al nuevo flujo basado en JSON.
+
 ## [0.0.3] - 2025-12-12
 
 ### Added

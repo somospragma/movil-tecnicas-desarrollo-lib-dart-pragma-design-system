@@ -1,0 +1,15 @@
+{
+  "titleComponent": "PragmaScaleBox",
+  "description": "Escala composiciones manteniendo la proporción original sin recortar contenido.",
+  "anatomy": [
+    {"title": "Contenedor", "description": "Widget padre que define el ancho disponible.", "value": 0.3},
+    {"title": "Contenido escalable", "description": "Maqueta fija que se adapta", "value": 0.7}
+  ],
+  "useCases": [
+    "Mostrar mockups responsivos",
+    "Validar contenido en múltiples viewports"
+  ],
+  "urlImages": [
+    "https://cdn.pragma.co/components/scalebox/cover.png"
+  ]
+}

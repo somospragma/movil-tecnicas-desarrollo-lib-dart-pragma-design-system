@@ -2,6 +2,8 @@
 /// del Design System de Pragma.
 library pragma_design_system;
 
+export 'src/domain/models/model_anatomy_attribute.dart';
+export 'src/domain/models/model_pragma_component.dart';
 export 'src/layout/pragma_grid.dart';
 export 'src/layout/pragma_grid_container.dart';
 export 'src/layout/pragma_scale_box.dart';
