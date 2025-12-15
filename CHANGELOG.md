@@ -5,7 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.1] - 2025-12-15
+## [0.1.3] - 2025-12-15
+
+### Added
+
+- `ModelFieldState`, an immutable value object with JSON helpers to keep field values, validation flags, and autocomplete suggestions in sync across widgets.
+- `PragmaInputWidget` plus the `PragmaInputController`, a ValueNotifier-driven text field with Pragma variants, density presets, password toggle, and an overlay that filters suggestions in real time.
+- Example playground, README quick sample, and widget tests that validate controller synchronization, error rendering, suggestion selection, and the obscure-text toggle.
 
 ## [0.1.2] - 2025-12-15
 
@@ -14,6 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `PragmaIconButtonWidget`, a spec-driven icon button with filled/outlined variants, light/dark tones, and regular/compact sizes plus hover/pressed/disabled states.
 - Example playground and README quick sample that showcase the new widget while encouraging migration away from the legacy `PragmaIconButton` (now deprecated).
 - Widget tests that validate palette resolution, disabled styling, and tap callbacks for the new component.
+
+## [0.1.1] - 2025-12-15
 
 ### Added
 

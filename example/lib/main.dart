@@ -307,6 +307,8 @@ class ShowcaseScreen extends StatelessWidget {
                 Text('Este panel permanece cerrado hasta habilitar el flujo.'),
           ),
           const SizedBox(height: PragmaSpacing.xl),
+          const _InputPlayground(),
+          const SizedBox(height: PragmaSpacing.xl),
           const _DropdownPlayground(),
           const SizedBox(height: PragmaSpacing.xl),
           const _DropdownListPlayground(),
@@ -679,6 +681,184 @@ class _MetricChip extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _InputPlayground extends StatefulWidget {
+  const _InputPlayground();
+
+  @override
+  State<_InputPlayground> createState() => _InputPlaygroundState();
+}
+
+class _InputPlaygroundState extends State<_InputPlayground> {
+  late final PragmaInputController _controller;
+  PragmaInputVariant _variant = PragmaInputVariant.filled;
+  PragmaInputSize _size = PragmaInputSize.regular;
+  bool _enabled = true;
+  bool _passwordMode = false;
+  final List<String> _suggestions = <String>[
+    'Analytics Squad',
+    'Aplicaciones iOS',
+    'Aplicaciones Android',
+    'Discovery Lab',
+    'Growth',
+    'Research',
+  ];
+  String? _lastSuggestion;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = PragmaInputController(
+      ModelFieldState(suggestions: _suggestions),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _handleChanged(String value) {
+    if (value.trim().isEmpty) {
+      _controller
+        ..setValidation(isDirty: true, isValid: false)
+        ..setError('Dato requerido');
+    } else {
+      _controller
+        ..setValidation(isDirty: true, isValid: true)
+        ..setError(null);
+    }
+    setState(() {});
+  }
+
+  void _handleSuggestionSelected(String value) {
+    setState(() => _lastSuggestion = value);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+    final ColorScheme scheme = Theme.of(context).colorScheme;
+    final String statusLabel = _controller.value.errorText ??
+        (_controller.value.value.isEmpty
+            ? 'Esperando entrada'
+            : 'Campo validado');
+    final Color statusColor =
+        _controller.value.errorText != null ? scheme.error : scheme.secondary;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text('PragmaInputWidget', style: textTheme.headlineSmall),
+        const SizedBox(height: PragmaSpacing.sm),
+        Wrap(
+          spacing: PragmaSpacing.lg,
+          runSpacing: PragmaSpacing.lg,
+          alignment: WrapAlignment.start,
+          children: <Widget>[
+            SizedBox(
+              width: 360,
+              child: PragmaInputWidget(
+                label: 'Nombre del squad',
+                placeholder: 'Introduce al menos 3 caracteres',
+                helperText: 'Ofrecemos sugerencias de equipos activos',
+                controller: _controller,
+                variant: _variant,
+                size: _size,
+                enabled: _enabled,
+                enablePasswordToggle: _passwordMode,
+                obscureText: _passwordMode,
+                onChanged: _handleChanged,
+                onSuggestionSelected: _handleSuggestionSelected,
+              ),
+            ),
+            SizedBox(
+              width: 320,
+              child: PragmaCard.section(
+                headline: 'Configura el campo',
+                body: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    DropdownButtonFormField<PragmaInputVariant>(
+                      initialValue: _variant,
+                      decoration: const InputDecoration(labelText: 'Variant'),
+                      items: PragmaInputVariant.values
+                          .map(
+                            (PragmaInputVariant value) =>
+                                DropdownMenuItem<PragmaInputVariant>(
+                              value: value,
+                              child: Text(value.name),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (PragmaInputVariant? value) {
+                        if (value != null) {
+                          setState(() => _variant = value);
+                        }
+                      },
+                    ),
+                    const SizedBox(height: PragmaSpacing.sm),
+                    DropdownButtonFormField<PragmaInputSize>(
+                      initialValue: _size,
+                      decoration: const InputDecoration(labelText: 'Size'),
+                      items: PragmaInputSize.values
+                          .map(
+                            (PragmaInputSize value) =>
+                                DropdownMenuItem<PragmaInputSize>(
+                              value: value,
+                              child: Text(value.name),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (PragmaInputSize? value) {
+                        if (value != null) {
+                          setState(() => _size = value);
+                        }
+                      },
+                    ),
+                    const SizedBox(height: PragmaSpacing.xs),
+                    SwitchListTile.adaptive(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text('Habilitado'),
+                      value: _enabled,
+                      onChanged: (bool value) =>
+                          setState(() => _enabled = value),
+                    ),
+                    SwitchListTile.adaptive(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text('Modo contraseña'),
+                      value: _passwordMode,
+                      onChanged: (bool value) =>
+                          setState(() => _passwordMode = value),
+                    ),
+                    if (_lastSuggestion != null) ...<Widget>[
+                      const SizedBox(height: PragmaSpacing.xs),
+                      Text(
+                        'Sugerencia seleccionada: $_lastSuggestion',
+                        style: textTheme.labelMedium,
+                      ),
+                    ],
+                    const SizedBox(height: PragmaSpacing.xs),
+                    Text(
+                      'Estado: $statusLabel',
+                      style: textTheme.labelLarge?.copyWith(color: statusColor),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: PragmaSpacing.md),
+        Text(
+          'Valor actual: ${_controller.value.value}',
+          style: textTheme.bodyMedium,
+        ),
+      ],
     );
   }
 }
