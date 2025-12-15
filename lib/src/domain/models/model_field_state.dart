@@ -107,6 +107,14 @@ class ModelFieldState {
     );
   }
 
+  /// Creates a new instance without the existing error message.
+  ModelFieldState clearError() {
+    if (errorText == null) {
+      return this;
+    }
+    return copyWith(errorText: null);
+  }
+
   /// Convenience getter to know if there is an error to display.
   bool get hasError => errorText != null && errorText!.trim().isNotEmpty;
 

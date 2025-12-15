@@ -51,6 +51,11 @@ class PragmaInputController extends ValueNotifier<ModelFieldState> {
     value = state ?? ModelFieldState.empty;
   }
 
+  /// Removes the current error message without altering the value.
+  void clearError() {
+    update((ModelFieldState state) => state.clearError());
+  }
+
   /// Applies a custom reducer to the current state.
   void update(ModelFieldState Function(ModelFieldState state) reducer) {
     value = reducer(value);
@@ -84,11 +89,18 @@ class PragmaInputWidget extends StatefulWidget {
     this.maxLines = 1,
     this.minLines,
     this.maxLength,
+    this.onChangeAttempt,
+    this.onSubmitAttempt,
+    this.onFocusChanged,
     this.onChanged,
     this.onSubmitted,
     this.onEditingComplete,
     this.onSuggestionSelected,
-    this.suggestionsMaxHeight = 240,
+    this.suffixIconBuilder,
+    this.semanticsLabel,
+    this.semanticsHint,
+    this.maxOptionsHeight = 240,
+    this.minOptionsWidth,
   });
 
   /// Label displayed inside the input decoration.
@@ -133,6 +145,10 @@ class PragmaInputWidget extends StatefulWidget {
   /// Optional trailing widget rendered after the text.
   final Widget? trailing;
 
+  /// Builder that can generate a trailing widget based on the field state.
+  final Widget? Function(BuildContext context, ModelFieldState state)?
+      suffixIconBuilder;
+
   /// External focus node (one is created automatically otherwise).
   final FocusNode? focusNode;
 
@@ -145,14 +161,24 @@ class PragmaInputWidget extends StatefulWidget {
   final int? minLines;
   final int? maxLength;
 
-  /// Field callbacks.
+  /// Callbacks.
+  final ValueChanged<String>? onChangeAttempt;
+  final ValueChanged<String>? onSubmitAttempt;
+  final ValueChanged<bool>? onFocusChanged;
   final ValueChanged<String>? onChanged;
   final ValueChanged<String>? onSubmitted;
   final VoidCallback? onEditingComplete;
   final ValueChanged<String>? onSuggestionSelected;
 
   /// Max height for the suggestions overlay panel.
-  final double suggestionsMaxHeight;
+  final double maxOptionsHeight;
+
+  /// Minimum width for the suggestions overlay panel.
+  final double? minOptionsWidth;
+
+  /// Custom semantics overrides to improve accessibility descriptions.
+  final String? semanticsLabel;
+  final String? semanticsHint;
 
   @override
   State<PragmaInputWidget> createState() => _PragmaInputWidgetState();
@@ -227,6 +253,7 @@ class _PragmaInputWidgetState extends State<PragmaInputWidget> {
   }
 
   void _handleFocusChanged() {
+    widget.onFocusChanged?.call(_focusNode.hasFocus);
     _refreshOverlay();
   }
 
@@ -245,6 +272,7 @@ class _PragmaInputWidgetState extends State<PragmaInputWidget> {
   }
 
   void _handleTextChanged(String value) {
+    widget.onChangeAttempt?.call(value);
     widget.controller.setValue(value);
     widget.onChanged?.call(value);
     _updateFilteredSuggestions(scheduleOverlayUpdate: true);
@@ -327,8 +355,9 @@ class _PragmaInputWidgetState extends State<PragmaInputWidget> {
         final ThemeData theme = Theme.of(context);
         final ColorScheme colorScheme = theme.colorScheme;
         final Size screenSize = MediaQuery.sizeOf(context);
-        final double width =
+        final double fallbackWidth =
             _fieldSize.width == 0 ? screenSize.width * 0.6 : _fieldSize.width;
+        final double minWidth = widget.minOptionsWidth ?? fallbackWidth;
         final double height = _fieldSize.height == 0 ? 64 : _fieldSize.height;
 
         return Stack(
@@ -347,8 +376,8 @@ class _PragmaInputWidgetState extends State<PragmaInputWidget> {
                 color: Colors.transparent,
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
-                    maxHeight: widget.suggestionsMaxHeight,
-                    minWidth: width,
+                    maxHeight: widget.maxOptionsHeight,
+                    minWidth: minWidth,
                   ),
                   child: _SuggestionPanel(
                     suggestions: _filteredSuggestions,
@@ -365,6 +394,7 @@ class _PragmaInputWidgetState extends State<PragmaInputWidget> {
   }
 
   void _handleSuggestionSelected(String value) {
+    widget.onChangeAttempt?.call(value);
     widget.controller.setValue(value);
     widget.onSuggestionSelected?.call(value);
     widget.onChanged?.call(value);
@@ -377,6 +407,11 @@ class _PragmaInputWidgetState extends State<PragmaInputWidget> {
 
   void _toggleObscure() {
     setState(() => _obscureText = !_obscureText);
+  }
+
+  void _handleSubmitted(String value) {
+    widget.onSubmitAttempt?.call(value);
+    widget.onSubmitted?.call(value);
   }
 
   @override
@@ -405,7 +440,7 @@ class _PragmaInputWidgetState extends State<PragmaInputWidget> {
       errorText: state.errorText,
       hintText: widget.placeholder,
       prefixIcon: widget.leading,
-      suffixIcon: _buildSuffixIcon(colorScheme),
+      suffixIcon: _buildSuffixIcon(context, colorScheme),
       suffixIconConstraints: const BoxConstraints(),
       filled: true,
       fillColor: colors.fillColor,
@@ -424,37 +459,74 @@ class _PragmaInputWidgetState extends State<PragmaInputWidget> {
     final bool obscureText =
         widget.enablePasswordToggle ? _obscureText : widget.obscureText;
 
+    Widget field = TextField(
+      controller: _textController,
+      focusNode: _focusNode,
+      enabled: widget.enabled,
+      readOnly: widget.readOnly,
+      autofocus: widget.autofocus,
+      keyboardType: widget.keyboardType,
+      textCapitalization: widget.textCapitalization,
+      textInputAction: widget.textInputAction,
+      autofillHints: widget.autofillHints,
+      maxLines: widget.maxLines,
+      minLines: widget.minLines,
+      maxLength: widget.maxLength,
+      obscureText: obscureText,
+      style: textTheme.bodyLarge,
+      decoration: decoration,
+      onChanged: _handleTextChanged,
+      onSubmitted: _handleSubmitted,
+      onEditingComplete: widget.onEditingComplete,
+    );
+
+    if (widget.semanticsLabel != null || widget.semanticsHint != null) {
+      field = Semantics(
+        label: widget.semanticsLabel,
+        hint: widget.semanticsHint,
+        container: true,
+        excludeSemantics: true,
+        child: field,
+      );
+    }
+
+    final bool showShadow =
+        widget.enabled && _focusNode.hasFocus && !hasError && !widget.readOnly;
+
+    field = AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeOutCubic,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(PragmaBorderRadius.l),
+        boxShadow: showShadow
+            ? <BoxShadow>[
+                BoxShadow(
+                  color: colorScheme.primary.withValues(alpha: 0.15),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
+                ),
+              ]
+            : null,
+      ),
+      child: field,
+    );
+
     return CompositedTransformTarget(
       link: _layerLink,
       child: KeyedSubtree(
         key: _fieldKey,
-        child: TextField(
-          controller: _textController,
-          focusNode: _focusNode,
-          enabled: widget.enabled,
-          readOnly: widget.readOnly,
-          autofocus: widget.autofocus,
-          keyboardType: widget.keyboardType,
-          textCapitalization: widget.textCapitalization,
-          textInputAction: widget.textInputAction,
-          autofillHints: widget.autofillHints,
-          maxLines: widget.maxLines,
-          minLines: widget.minLines,
-          maxLength: widget.maxLength,
-          obscureText: obscureText,
-          style: textTheme.bodyLarge,
-          decoration: decoration,
-          onChanged: _handleTextChanged,
-          onSubmitted: widget.onSubmitted,
-          onEditingComplete: widget.onEditingComplete,
-        ),
+        child: field,
       ),
     );
   }
 
-  Widget? _buildSuffixIcon(ColorScheme scheme) {
+  Widget? _buildSuffixIcon(BuildContext context, ColorScheme scheme) {
     final List<Widget> children = <Widget>[];
-    if (widget.trailing != null) {
+    final Widget? builderSuffix =
+        widget.suffixIconBuilder?.call(context, widget.controller.value);
+    if (builderSuffix != null) {
+      children.add(builderSuffix);
+    } else if (widget.trailing != null) {
       children.add(widget.trailing!);
     }
     if (widget.enablePasswordToggle) {

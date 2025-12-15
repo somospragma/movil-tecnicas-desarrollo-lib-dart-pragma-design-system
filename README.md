@@ -6,7 +6,7 @@ Flutter library focused on mobile experiences that bundles Pragma's design token
 
 - Consistent color, typography, spacing, and **responsive grid** tokens.
 - `PragmaTheme` with light/dark variants and Material 3 enabled by default.
-- Accessible components (`PragmaButton`, `PragmaCard`, `PragmaIconButtonWidget`, `PragmaInputWidget`, `PragmaAccordionWidget`).
+- Accessible components (`PragmaButton`, `PragmaCard`, `PragmaIconButtonWidget`, `PragmaInputWidget`, `PragmaToastWidget`, `PragmaAccordionWidget`).
 - `PragmaGridTokens`, viewport helpers, and the `PragmaGridContainer` widget to debug layouts.
 - Component modeling (`ModelPragmaComponent`, `ModelAnatomyAttribute`) to sync documentation and showcases from JSON.
 - Example app ready to run and validate (includes a "Grid debugger" page).
@@ -56,7 +56,7 @@ class PragmaApp extends StatelessWidget {
 - **Opacity:** `PragmaOpacityTokens` and `PragmaOpacity` constrain overlays to 8/30/60 intervals using `Color.withValues` for Flutter 3.22+.
 - **Domain models:** `ModelPragmaComponent`, `ModelAnatomyAttribute`, and `ModelFieldState` serialize the documentation sourced from Figma, power the input widgets, and guarantee JSON roundtrips.
 - **Grid:** `PragmaGridTokens`, `getGridConfigFromContext`, `PragmaGridContainer`, and `PragmaScaleBox` help replicate the official grid, respect gutters, and scale full mockups.
-- **Components:** Widgets such as `PragmaPrimaryButton`, `PragmaSecondaryButton`, `PragmaButton.icon`, `PragmaCard`, `PragmaCardWidget`, `PragmaDropdownWidget`, `PragmaInputWidget`, `PragmaAvatarWidget`, `PragmaBreadcrumbWidget`, or `PragmaAccordionWidget` ship consistent states and elevation.
+- **Components:** Widgets such as `PragmaPrimaryButton`, `PragmaSecondaryButton`, `PragmaButton.icon`, `PragmaCard`, `PragmaCardWidget`, `PragmaDropdownWidget`, `PragmaInputWidget`, `PragmaToastWidget`, `PragmaAvatarWidget`, `PragmaBreadcrumbWidget`, or `PragmaAccordionWidget` ship consistent states and elevation.
 
 ### Avatar quick sample
 
@@ -124,6 +124,23 @@ PragmaInputWidget(
 		controller
 			..setValidation(isDirty: true, isValid: value.isNotEmpty)
 			..setError(value.isEmpty ? 'Dato requerido' : null);
+	},
+);
+```
+
+### Toast quick sample
+
+```dart
+PragmaToastService.showToast(
+	context: context,
+	title: 'Operación exitosa',
+	message: 'Synced con Discovery Lab hace 10 segundos.',
+	variant: PragmaToastVariant.success,
+	duration: const Duration(milliseconds: 4500),
+	alignment: PragmaToastAlignment.topRight,
+	actionLabel: 'Ver log',
+	onActionPressed: () {
+		debugPrint('Mostrar detalles');
 	},
 );
 ```

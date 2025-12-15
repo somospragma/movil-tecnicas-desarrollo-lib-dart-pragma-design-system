@@ -309,6 +309,8 @@ class ShowcaseScreen extends StatelessWidget {
           const SizedBox(height: PragmaSpacing.xl),
           const _InputPlayground(),
           const SizedBox(height: PragmaSpacing.xl),
+          const _ToastPlayground(),
+          const SizedBox(height: PragmaSpacing.xl),
           const _DropdownPlayground(),
           const SizedBox(height: PragmaSpacing.xl),
           const _DropdownListPlayground(),
@@ -868,6 +870,181 @@ class _DropdownPlayground extends StatefulWidget {
 
   @override
   State<_DropdownPlayground> createState() => _DropdownPlaygroundState();
+}
+
+class _ToastPlayground extends StatefulWidget {
+  const _ToastPlayground();
+
+  @override
+  State<_ToastPlayground> createState() => _ToastPlaygroundState();
+}
+
+class _ToastPlaygroundState extends State<_ToastPlayground> {
+  final TextEditingController _titleController =
+      TextEditingController(text: 'Default Toast');
+  final TextEditingController _messageController =
+      TextEditingController(text: 'Este es un mensaje contextual.');
+  PragmaToastVariant _variant = PragmaToastVariant.success;
+  PragmaToastAlignment _alignment = PragmaToastAlignment.topCenter;
+  double _durationSeconds = 6;
+  bool _includeAction = false;
+  int _counter = 0;
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _messageController.dispose();
+    super.dispose();
+  }
+
+  void _showToast(BuildContext context) {
+    final Duration duration = Duration(
+      milliseconds: (_durationSeconds * 1000).round(),
+    );
+    PragmaToastService.showToast(
+      context: context,
+      title: _titleController.text,
+      message: _messageController.text,
+      variant: _variant,
+      duration: duration,
+      alignment: _alignment,
+      actionLabel: _includeAction ? 'Ver log' : null,
+      onActionPressed: _includeAction
+          ? () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Acción ${++_counter} confirmada'),
+                ),
+              );
+            }
+          : null,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+
+    return PragmaCard.section(
+      headline: 'PragmaToastWidget',
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'Dispara toasts con variantes neon que caen desde la parte superior.',
+            style: textTheme.bodyMedium,
+          ),
+          const SizedBox(height: PragmaSpacing.md),
+          Wrap(
+            spacing: PragmaSpacing.lg,
+            runSpacing: PragmaSpacing.lg,
+            children: <Widget>[
+              SizedBox(
+                width: 320,
+                child: TextField(
+                  controller: _titleController,
+                  decoration: const InputDecoration(labelText: 'Título'),
+                ),
+              ),
+              SizedBox(
+                width: 420,
+                child: TextField(
+                  controller: _messageController,
+                  decoration:
+                      const InputDecoration(labelText: 'Mensaje opcional'),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: PragmaSpacing.md),
+          Wrap(
+            spacing: PragmaSpacing.md,
+            runSpacing: PragmaSpacing.sm,
+            children: <Widget>[
+              SizedBox(
+                width: 220,
+                child: DropdownButtonFormField<PragmaToastVariant>(
+                  value: _variant,
+                  decoration: const InputDecoration(labelText: 'Variant'),
+                  items: PragmaToastVariant.values
+                      .map(
+                        (PragmaToastVariant value) =>
+                            DropdownMenuItem<PragmaToastVariant>(
+                          value: value,
+                          child: Text(value.name),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (PragmaToastVariant? value) {
+                    if (value != null) {
+                      setState(() => _variant = value);
+                    }
+                  },
+                ),
+              ),
+              SizedBox(
+                width: 220,
+                child: DropdownButtonFormField<PragmaToastAlignment>(
+                  value: _alignment,
+                  decoration: const InputDecoration(labelText: 'Alignment'),
+                  items: PragmaToastAlignment.values
+                      .map(
+                        (PragmaToastAlignment value) =>
+                            DropdownMenuItem<PragmaToastAlignment>(
+                          value: value,
+                          child: Text(value.name),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (PragmaToastAlignment? value) {
+                    if (value != null) {
+                      setState(() => _alignment = value);
+                    }
+                  },
+                ),
+              ),
+              SizedBox(
+                width: 220,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text('Duración ${_durationSeconds.toStringAsFixed(1)}s',
+                        style: textTheme.labelSmall),
+                    Slider(
+                      value: _durationSeconds,
+                      min: 2,
+                      max: 10,
+                      divisions: 16,
+                      label: '${_durationSeconds.toStringAsFixed(1)}s',
+                      onChanged: (double value) =>
+                          setState(() => _durationSeconds = value),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                width: 220,
+                child: SwitchListTile.adaptive(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('Incluir acción secundaria'),
+                  value: _includeAction,
+                  onChanged: (bool value) =>
+                      setState(() => _includeAction = value),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: PragmaSpacing.md),
+          PragmaButton.icon(
+            label: 'Mostrar toast',
+            icon: Icons.play_arrow,
+            hierarchy: PragmaButtonHierarchy.primary,
+            onPressed: () => _showToast(context),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _DropdownPlaygroundState extends State<_DropdownPlayground> {
