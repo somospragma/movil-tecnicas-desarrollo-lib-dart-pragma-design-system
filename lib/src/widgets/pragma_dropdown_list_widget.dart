@@ -538,15 +538,20 @@ class _DropdownListTileState<T> extends State<_DropdownListTile<T>> {
                 ),
               Expanded(child: label),
               if (widget.showRemoveAction)
-                IconButton(
-                  iconSize: 18,
-                  tooltip: 'Eliminar',
-                  onPressed: disabled
-                      ? null
-                      : () => widget.onRemove(widget.option.value),
-                  icon: Icon(
-                    Icons.close,
-                    color: foreground,
+                Semantics(
+                  button: true,
+                  enabled: !disabled,
+                  label: 'Eliminar ${widget.option.label}',
+                  child: IconButton(
+                    iconSize: 18,
+                    tooltip: null,
+                    onPressed: disabled
+                        ? null
+                        : () => widget.onRemove(widget.option.value),
+                    icon: Icon(
+                      Icons.close,
+                      color: foreground,
+                    ),
                   ),
                 ),
             ],
