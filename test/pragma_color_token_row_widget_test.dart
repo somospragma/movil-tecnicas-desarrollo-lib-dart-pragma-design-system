@@ -10,7 +10,7 @@ void main() {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         ),
-        home: const Scaffold(
+        home: Scaffold(
           body: PragmaColorTokenRowWidget(
             token: ModelColorToken(
               label: 'Primary',

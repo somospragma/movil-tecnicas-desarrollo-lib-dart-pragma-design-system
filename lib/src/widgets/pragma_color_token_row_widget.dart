@@ -8,8 +8,8 @@ import '../tokens/pragma_spacing.dart';
 /// editable hexadecimal value.
 class PragmaColorTokenRowWidget extends StatefulWidget {
   const PragmaColorTokenRowWidget({
-    super.key,
     required this.token,
+    super.key,
     this.onChanged,
     this.enabled = true,
     this.previewSize = const Size(72, 48),
@@ -87,7 +87,7 @@ class _PragmaColorTokenRowWidgetState extends State<PragmaColorTokenRowWidget> {
     final ColorScheme scheme = theme.colorScheme;
     final Color previewColor = _pendingPreviewColor ??
         _colorFromHex(widget.token.color) ??
-        scheme.surfaceVariant;
+        scheme.surfaceContainerHighest;
 
     return Padding(
       padding: PragmaSpacing.insetSymmetric(
@@ -146,7 +146,7 @@ class _PragmaColorTokenRowWidgetState extends State<PragmaColorTokenRowWidget> {
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(PragmaSpacing.sm),
-          border: Border.all(color: Colors.black, width: 1),
+          border: Border.all(),
         ),
       ),
     );
