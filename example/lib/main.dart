@@ -51,9 +51,10 @@ class ShowcaseScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
-    final Color onSurfaceVariant =
-        Theme.of(context).colorScheme.onSurfaceVariant;
+    final ThemeData theme = Theme.of(context);
+    final TextTheme textTheme = theme.textTheme;
+    final ColorScheme colorScheme = theme.colorScheme;
+    final Color onSurfaceVariant = colorScheme.onSurfaceVariant;
     final List<ModelPragmaComponent> documentedComponents = _componentCatalog
         .map<ModelPragmaComponent>(ModelPragmaComponent.fromJson)
         .toList();
@@ -186,6 +187,97 @@ class ShowcaseScreen extends StatelessWidget {
                 ),
               ],
             ),
+          ),
+          const SizedBox(height: PragmaSpacing.xl),
+          Text('PragmaCardWidget', style: textTheme.headlineSmall),
+          const SizedBox(height: PragmaSpacing.sm),
+          Wrap(
+            spacing: PragmaSpacing.lg,
+            runSpacing: PragmaSpacing.lg,
+            children: <Widget>[
+              SizedBox(
+                width: 360,
+                child: PragmaCardWidget(
+                  title: 'Actividad semanal',
+                  subtitle: 'Actualizado hace 5 min',
+                  metadata: const Wrap(
+                    spacing: PragmaSpacing.xs,
+                    runSpacing: PragmaSpacing.xs,
+                    children: <Widget>[
+                      Chip(label: Text('Squad Atlas')),
+                      Chip(label: Text('Mobile')),
+                    ],
+                  ),
+                  body: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        'Sesiones totales',
+                        style: textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: PragmaSpacing.xs),
+                      Text(
+                        '18.4K · +4.1% vs semana anterior',
+                        style: textTheme.bodyMedium?.copyWith(
+                          color: onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                  variant: PragmaCardVariant.tonal,
+                  actions: <Widget>[
+                    PragmaButton.icon(
+                      label: 'Ver dashboard',
+                      icon: Icons.open_in_new,
+                      hierarchy: PragmaButtonHierarchy.tertiary,
+                      onPressed: _noop,
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                width: 320,
+                child: PragmaCardWidget(
+                  title: 'Prototipo desktop',
+                  subtitle: 'Listo para pruebas internas',
+                  metadata: Text(
+                    'Actualizado por UX Research',
+                    style: textTheme.bodySmall?.copyWith(
+                      color: onSurfaceVariant,
+                    ),
+                  ),
+                  media: AspectRatio(
+                    aspectRatio: 4 / 3,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: <Color>[
+                            colorScheme.primaryContainer,
+                            colorScheme.secondaryContainer,
+                          ],
+                        ),
+                      ),
+                      child: const Center(
+                        child: Icon(Icons.view_in_ar, size: 48),
+                      ),
+                    ),
+                  ),
+                  body: Text(
+                    'Comparte enlaces a los archivos clave sin perder el contexto visual.',
+                    style: textTheme.bodyMedium,
+                  ),
+                  size: PragmaCardSize.small,
+                  variant: PragmaCardVariant.outlined,
+                  actions: <Widget>[
+                    TextButton.icon(
+                      onPressed: _noop,
+                      icon: const Icon(Icons.visibility_outlined),
+                      label: const Text('Abrir preview'),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: PragmaSpacing.xl),
           Text('PragmaAccordionWidget', style: textTheme.headlineSmall),

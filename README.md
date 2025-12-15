@@ -56,7 +56,7 @@ class PragmaApp extends StatelessWidget {
 - **Opacity:** `PragmaOpacityTokens` and `PragmaOpacity` constrain overlays to 8/30/60 intervals using `Color.withValues` for Flutter 3.22+.
 - **Domain models:** `ModelPragmaComponent` and `ModelAnatomyAttribute` serialize the documentation sourced from Figma and guarantee JSON roundtrips.
 - **Grid:** `PragmaGridTokens`, `getGridConfigFromContext`, `PragmaGridContainer`, and `PragmaScaleBox` help replicate the official grid, respect gutters, and scale full mockups.
-- **Components:** Widgets such as `PragmaPrimaryButton`, `PragmaSecondaryButton`, `PragmaButton.icon`, `PragmaCard`, `PragmaAvatarWidget`, `PragmaBreadcrumbWidget`, or `PragmaAccordionWidget` ship consistent states and elevation.
+- **Components:** Widgets such as `PragmaPrimaryButton`, `PragmaSecondaryButton`, `PragmaButton.icon`, `PragmaCard`, `PragmaCardWidget`, `PragmaAvatarWidget`, `PragmaBreadcrumbWidget`, or `PragmaAccordionWidget` ship consistent states and elevation.
 
 ### Avatar quick sample
 
@@ -151,6 +151,32 @@ flutter run
 The sample app toggles themes, tokens, and staple components.
 
 ## Development
+
+### Card quick sample
+
+```
+PragmaCardWidget(
+	title: 'Funnel weekly',
+	subtitle: 'Actualizado hace 5 min',
+	body: Column(
+		crossAxisAlignment: CrossAxisAlignment.start,
+		children: const <Widget>[
+			Text('Sesiones: 18.4K'),
+			SizedBox(height: PragmaSpacing.xs),
+			Text('CTR: 4.1% vs semana anterior'),
+		],
+	),
+	variant: PragmaCardVariant.tonal,
+	actions: <Widget>[
+		PragmaButton.icon(
+			label: 'Ver dashboard',
+			icon: Icons.open_in_new,
+			hierarchy: PragmaButtonHierarchy.tertiary,
+			onPressed: () {},
+		),
+	],
+)
+```
 
 - `flutter test` to run the tests.
 - `dart format .` to keep formatting consistent.
