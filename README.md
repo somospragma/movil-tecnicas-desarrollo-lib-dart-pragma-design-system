@@ -17,7 +17,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-	pragma_design_system: ^0.0.8
+	pragma_design_system: ^0.1.0
 ```
 
 Then run:
@@ -56,7 +56,7 @@ class PragmaApp extends StatelessWidget {
 - **Opacity:** `PragmaOpacityTokens` and `PragmaOpacity` constrain overlays to 8/30/60 intervals using `Color.withValues` for Flutter 3.22+.
 - **Domain models:** `ModelPragmaComponent` and `ModelAnatomyAttribute` serialize the documentation sourced from Figma and guarantee JSON roundtrips.
 - **Grid:** `PragmaGridTokens`, `getGridConfigFromContext`, `PragmaGridContainer`, and `PragmaScaleBox` help replicate the official grid, respect gutters, and scale full mockups.
-- **Components:** Widgets such as `PragmaPrimaryButton`, `PragmaSecondaryButton`, `PragmaButton.icon`, `PragmaCard`, `PragmaCardWidget`, `PragmaAvatarWidget`, `PragmaBreadcrumbWidget`, or `PragmaAccordionWidget` ship consistent states and elevation.
+- **Components:** Widgets such as `PragmaPrimaryButton`, `PragmaSecondaryButton`, `PragmaButton.icon`, `PragmaCard`, `PragmaCardWidget`, `PragmaDropdownWidget`, `PragmaAvatarWidget`, `PragmaBreadcrumbWidget`, or `PragmaAccordionWidget` ship consistent states and elevation.
 
 ### Avatar quick sample
 
@@ -175,6 +175,28 @@ PragmaCardWidget(
 			onPressed: () {},
 		),
 	],
+)
+```
+
+### Dropdown quick sample
+
+```
+PragmaDropdownWidget<String>(
+	label: 'Rol asignado',
+	placeholder: 'Selecciona un rol',
+	helperText: 'Usaremos este rol en los tableros',
+	options: const <PragmaDropdownOption<String>>[
+		PragmaDropdownOption(label: 'Product Designer', value: 'ux'),
+		PragmaDropdownOption(label: 'Product Manager', value: 'pm'),
+		PragmaDropdownOption(
+			label: 'iOS Engineer',
+			value: 'ios',
+			description: 'SwiftUI + UIKit',
+		),
+	],
+	onChanged: (String? value) {
+		debugPrint('Role: $value');
+	},
 )
 ```
 

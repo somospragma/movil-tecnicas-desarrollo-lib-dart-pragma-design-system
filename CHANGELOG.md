@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.0] - 2025-12-15
+
+### Added
+
+- `PragmaDropdownWidget` and `PragmaDropdownOption` to present themed dropdowns with helper text, error states, icons per option, and tone-aware menu surfaces driven by the active `ColorScheme`.
+- Dropdown showcase in the example app plus reusable option data to demonstrate helper/error/disabled scenarios.
+- README quick sample, public exports, and widget tests that validate rendering, callbacks, and error decorations.
+
 ## [0.0.9] - 2025-12-15
 
 ### Added

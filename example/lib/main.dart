@@ -306,6 +306,8 @@ class ShowcaseScreen extends StatelessWidget {
                 Text('Este panel permanece cerrado hasta habilitar el flujo.'),
           ),
           const SizedBox(height: PragmaSpacing.xl),
+          const _DropdownPlayground(),
+          const SizedBox(height: PragmaSpacing.xl),
           const _AvatarPlayground(),
           const SizedBox(height: PragmaSpacing.xl),
           const _BreadcrumbPlayground(),
@@ -672,6 +674,74 @@ class _MetricChip extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _DropdownPlayground extends StatefulWidget {
+  const _DropdownPlayground();
+
+  @override
+  State<_DropdownPlayground> createState() => _DropdownPlaygroundState();
+}
+
+class _DropdownPlaygroundState extends State<_DropdownPlayground> {
+  String? _selectedRole;
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final TextTheme textTheme = theme.textTheme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text('PragmaDropdownWidget', style: textTheme.headlineSmall),
+        const SizedBox(height: PragmaSpacing.sm),
+        Wrap(
+          spacing: PragmaSpacing.lg,
+          runSpacing: PragmaSpacing.lg,
+          children: <Widget>[
+            SizedBox(
+              width: 320,
+              child: PragmaDropdownWidget<String>(
+                label: 'Rol asignado',
+                placeholder: 'Selecciona un rol',
+                helperText: 'Define permisos en tableros y reportes',
+                options: _dropdownOptions,
+                value: _selectedRole,
+                onChanged: (String? value) {
+                  setState(() => _selectedRole = value);
+                },
+              ),
+            ),
+            SizedBox(
+              width: 320,
+              child: PragmaDropdownWidget<String>(
+                label: 'Estado de revisión',
+                placeholder: 'Selecciona un estado',
+                errorText: 'Campo obligatorio',
+                options: _dropdownOptions,
+                value: null,
+                onChanged: (String? value) {
+                  setState(() => _selectedRole = value);
+                },
+              ),
+            ),
+            SizedBox(
+              width: 320,
+              child: PragmaDropdownWidget<String>(
+                label: 'Revisor asignado',
+                placeholder: 'No disponible',
+                enabled: false,
+                options: _dropdownOptions,
+                value: null,
+                onChanged: (_) {},
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
@@ -1182,6 +1252,26 @@ const List<Map<String, dynamic>> _componentCatalog = <Map<String, dynamic>>[
       'https://cdn.pragma.co/components/scalebox/cover.png',
     ],
   },
+];
+
+const List<PragmaDropdownOption<String>> _dropdownOptions =
+    <PragmaDropdownOption<String>>[
+  PragmaDropdownOption<String>(
+    label: 'Product Designer',
+    value: 'ux',
+  ),
+  PragmaDropdownOption<String>(
+    label: 'Product Manager',
+    value: 'pm',
+  ),
+  PragmaDropdownOption<String>(
+    label: 'iOS Engineer',
+    value: 'ios',
+  ),
+  PragmaDropdownOption<String>(
+    label: 'Android Engineer',
+    value: 'android',
+  ),
 ];
 
 const List<_PaletteSection> _paletteSections = <_PaletteSection>[
