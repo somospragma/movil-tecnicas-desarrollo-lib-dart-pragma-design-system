@@ -160,6 +160,14 @@ PragmaThemeEditorWidget(
 );
 ```
 
+### Theme Lab workflow
+
+1. Ejecuta el `example/` y presiona el botón **Theme lab** del `AppBar` (junto al Grid debugger) para abrir la página dedicada.
+2. Ajusta la tipografía, el modo (claro/oscuro) y cada `ModelColorToken` desde los `PragmaColorTokenRowWidget` dentro del panel izquierdo.
+3. Observa los cambios en vivo en el panel derecho: los botones, tarjetas (`PragmaCardWidget`) y gradientes usan el `ThemeData` generado por `PragmaThemeBuilder`.
+4. Copia el JSON resultante desde la sección _"JSON listo para exportar"_ para versionarlo o compartirlo con tu squad.
+5. Carga el JSON dentro de tu app (`ModelThemePragma.fromJson(payload)`) y construye un `ThemeData` con `PragmaThemeBuilder.buildTheme` para aplicar el tema en caliente o persistirlo como configuración.
+
 ### Toast quick sample
 
 ```dart

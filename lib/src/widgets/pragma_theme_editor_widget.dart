@@ -277,30 +277,30 @@ class _PragmaThemeEditorWidgetState extends State<PragmaThemeEditorWidget> {
   }
 
   Widget _buildPreviewPanel(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
+    return Theme(
+      data: _previewTheme,
+      child: Builder(
+        builder: (BuildContext previewContext) {
+          final TextTheme textTheme = Theme.of(previewContext).textTheme;
+          final ColorScheme scheme = Theme.of(previewContext).colorScheme;
 
-    return Card(
-      elevation: 3,
-      clipBehavior: Clip.antiAlias,
-      child: Padding(
-        padding: const EdgeInsets.all(PragmaSpacing.lg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text('Preview en vivo', style: textTheme.titleLarge),
-            const SizedBox(height: PragmaSpacing.xs),
-            Text(
-              'Usamos botones, tarjetas y el row de tokens para que valides contrastes y jerarquías.',
-              style: textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: PragmaSpacing.lg),
-            Theme(
-              data: _previewTheme,
+          return Card(
+            elevation: 3,
+            clipBehavior: Clip.antiAlias,
+            child: Padding(
+              padding: const EdgeInsets.all(PragmaSpacing.lg),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  Text('Preview en vivo', style: textTheme.titleLarge),
+                  const SizedBox(height: PragmaSpacing.xs),
+                  Text(
+                    'Usamos botones, tarjetas y el row de tokens para que valides contrastes y jerarquías.',
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: scheme.onSurfaceVariant,
+                    ),
+                  ),
+                  const SizedBox(height: PragmaSpacing.lg),
                   Wrap(
                     spacing: PragmaSpacing.md,
                     runSpacing: PragmaSpacing.md,
@@ -327,11 +327,11 @@ class _PragmaThemeEditorWidgetState extends State<PragmaThemeEditorWidget> {
                     subtitle: 'Sincroniza tokens y tipografías',
                     metadata: Text(
                       'Actualizado en vivo',
-                      style: _previewTheme.textTheme.labelMedium,
+                      style: textTheme.labelMedium,
                     ),
                     body: Text(
                       'Explora cómo se ven los estados base usando tus colores personalizados.',
-                      style: _previewTheme.textTheme.bodyMedium,
+                      style: textTheme.bodyMedium,
                     ),
                     actions: <Widget>[
                       PragmaButton.icon(
@@ -339,6 +339,46 @@ class _PragmaThemeEditorWidgetState extends State<PragmaThemeEditorWidget> {
                         icon: Icons.description_outlined,
                         hierarchy: PragmaButtonHierarchy.secondary,
                         onPressed: () {},
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: PragmaSpacing.lg),
+                  PragmaCardWidget(
+                    title: 'Prototipo desktop',
+                    subtitle: 'Listo para pruebas internas',
+                    metadata: Text(
+                      'Actualizado por UX Research',
+                      style: textTheme.bodySmall?.copyWith(
+                        color: scheme.onSurfaceVariant,
+                      ),
+                    ),
+                    media: AspectRatio(
+                      aspectRatio: 4 / 3,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: <Color>[
+                              scheme.primaryContainer,
+                              scheme.onSecondary,
+                            ],
+                          ),
+                        ),
+                        child: const Center(
+                          child: Icon(Icons.view_in_ar, size: 48),
+                        ),
+                      ),
+                    ),
+                    body: Text(
+                      'Comparte enlaces a los archivos clave sin perder el contexto visual.',
+                      style: textTheme.bodyMedium,
+                    ),
+                    size: PragmaCardSize.small,
+                    variant: PragmaCardVariant.outlined,
+                    actions: <Widget>[
+                      TextButton.icon(
+                        onPressed: () {},
+                        icon: const Icon(Icons.visibility_outlined),
+                        label: const Text('Abrir preview'),
                       ),
                     ],
                   ),
@@ -351,8 +391,8 @@ class _PragmaThemeEditorWidgetState extends State<PragmaThemeEditorWidget> {
                 ],
               ),
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

@@ -24,9 +24,20 @@ class PragmaThemeBuilder {
       baseTextTheme,
     );
 
-    final TextTheme coloredTextTheme = googleFontsTheme.apply(
-      bodyColor: _colorFromHex(theme.textColorFor('body').color),
-      displayColor: _colorFromHex(theme.textColorFor('display').color),
+    final Color bodyColor = _colorFromHex(theme.textColorFor('body').color);
+    final Color displayColor =
+        _colorFromHex(theme.textColorFor('display').color);
+    final Color labelColor = _colorFromHex(theme.textColorFor('label').color);
+
+    final TextTheme appliedTheme = googleFontsTheme.apply(
+      bodyColor: bodyColor,
+      displayColor: displayColor,
+    );
+
+    final TextTheme coloredTextTheme = appliedTheme.copyWith(
+      labelLarge: appliedTheme.labelLarge?.copyWith(color: labelColor),
+      labelMedium: appliedTheme.labelMedium?.copyWith(color: labelColor),
+      labelSmall: appliedTheme.labelSmall?.copyWith(color: labelColor),
     );
 
     return ThemeData(
