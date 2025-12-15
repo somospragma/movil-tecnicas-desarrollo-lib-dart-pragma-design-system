@@ -21,5 +21,7 @@ export 'src/widgets/pragma_breadcrumb_widget.dart';
 export 'src/widgets/pragma_button.dart';
 export 'src/widgets/pragma_card.dart';
 export 'src/widgets/pragma_card_widget.dart';
+export 'src/widgets/pragma_dropdown_list_widget.dart';
+export 'src/widgets/pragma_dropdown_option.dart';
 export 'src/widgets/pragma_dropdown_widget.dart';
 export 'src/widgets/pragma_icon_button.dart';

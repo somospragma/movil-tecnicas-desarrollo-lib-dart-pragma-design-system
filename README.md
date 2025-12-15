@@ -17,7 +17,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-	pragma_design_system: ^0.1.0
+	pragma_design_system: ^0.1.1
 ```
 
 Then run:
@@ -188,11 +188,7 @@ PragmaDropdownWidget<String>(
 	options: const <PragmaDropdownOption<String>>[
 		PragmaDropdownOption(label: 'Product Designer', value: 'ux'),
 		PragmaDropdownOption(label: 'Product Manager', value: 'pm'),
-		PragmaDropdownOption(
-			label: 'iOS Engineer',
-			value: 'ios',
-			description: 'SwiftUI + UIKit',
-		),
+		PragmaDropdownOption(label: 'iOS Engineer', value: 'ios'),
 	],
 	onChanged: (String? value) {
 		debugPrint('Role: $value');
@@ -201,5 +197,26 @@ PragmaDropdownWidget<String>(
 ```
 
 - `flutter test` to run the tests.
+
+### Dropdown list quick sample
+
+```
+PragmaDropdownListWidget<String>(
+	label: 'Equipo colaborador',
+	placeholder: 'Selecciona perfiles',
+	options: const <PragmaDropdownOption<String>>[
+		PragmaDropdownOption(label: 'UX Research', value: 'research'),
+		PragmaDropdownOption(label: 'Mobile iOS', value: 'ios'),
+		PragmaDropdownOption(label: 'Mobile Android', value: 'android'),
+	],
+	initialSelectedValues: const <String>['ios'],
+	onSelectionChanged: (List<String> roles) {
+		debugPrint('Seleccionados: $roles');
+	},
+	onItemRemoved: (String value) {
+		debugPrint('Eliminado: $value');
+	},
+)
 - `dart format .` to keep formatting consistent.
 - `flutter analyze` to validate against `analysis_options.yaml`.
+```

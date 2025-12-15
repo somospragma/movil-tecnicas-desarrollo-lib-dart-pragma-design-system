@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2025-12-15
+
+### Added
+
+- `PragmaDropdownListWidget`, a multi-select dropdown that mirrors the tone-on-tone overlay from `PragmaDropdownWidget` while adding checkboxes, optional icons, removable rows, and custom option builders.
+- Shared `PragmaDropdownOption` file plus a new dropdown-list showcase, README section, and widget tests that validate selection callbacks and removal gestures.
+
 ## [0.1.0] - 2025-12-15
 
 ### Added

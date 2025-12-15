@@ -308,6 +308,8 @@ class ShowcaseScreen extends StatelessWidget {
           const SizedBox(height: PragmaSpacing.xl),
           const _DropdownPlayground(),
           const SizedBox(height: PragmaSpacing.xl),
+          const _DropdownListPlayground(),
+          const SizedBox(height: PragmaSpacing.xl),
           const _AvatarPlayground(),
           const SizedBox(height: PragmaSpacing.xl),
           const _BreadcrumbPlayground(),
@@ -737,6 +739,141 @@ class _DropdownPlaygroundState extends State<_DropdownPlayground> {
                 options: _dropdownOptions,
                 value: null,
                 onChanged: (_) {},
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _DropdownListPlayground extends StatefulWidget {
+  const _DropdownListPlayground();
+
+  @override
+  State<_DropdownListPlayground> createState() =>
+      _DropdownListPlaygroundState();
+}
+
+class _DropdownListPlaygroundState extends State<_DropdownListPlayground> {
+  Set<String> _selectedValues = <String>{'ux', 'ios'};
+  bool _showCheckbox = true;
+  bool _showIcons = true;
+  bool _showRemoveAction = true;
+
+  void _handleSelectionChanged(List<String> values) {
+    setState(() => _selectedValues = values.toSet());
+  }
+
+  void _handleRemove(String value) {
+    setState(() => _selectedValues.remove(value));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+    final ColorScheme scheme = Theme.of(context).colorScheme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text('PragmaDropdownListWidget', style: textTheme.headlineSmall),
+        const SizedBox(height: PragmaSpacing.sm),
+        Wrap(
+          spacing: PragmaSpacing.lg,
+          runSpacing: PragmaSpacing.lg,
+          children: <Widget>[
+            SizedBox(
+              width: 360,
+              child: PragmaDropdownListWidget<String>(
+                label: 'Equipo colaborador',
+                placeholder: 'Selecciona perfiles',
+                options: _dropdownListOptions,
+                initialSelectedValues: _selectedValues.toList(),
+                showCheckbox: _showCheckbox,
+                showOptionIcons: _showIcons,
+                showRemoveAction: _showRemoveAction,
+                onSelectionChanged: _handleSelectionChanged,
+                onItemRemoved: _handleRemove,
+              ),
+            ),
+            SizedBox(
+              width: 360,
+              child: PragmaDropdownListWidget<String>(
+                label: 'Resumen de equipo',
+                placeholder: 'Equipo sin asignar',
+                options: _dropdownListOptions,
+                initialSelectedValues: _selectedValues.toList(),
+                showCheckbox: false,
+                showOptionIcons: false,
+                showRemoveAction: true,
+                summaryBuilder: (
+                  BuildContext context,
+                  List<PragmaDropdownOption<String>> selected,
+                ) {
+                  return Text(
+                    '${selected.length} perfiles seleccionados',
+                    style: textTheme.bodyLarge,
+                  );
+                },
+                optionBuilder: (
+                  BuildContext context,
+                  PragmaDropdownOption<String> option,
+                  bool isSelected,
+                ) {
+                  final Color iconColor =
+                      isSelected ? scheme.surface : scheme.primary;
+                  return Row(
+                    children: <Widget>[
+                      Icon(
+                        isSelected ? Icons.check_circle : Icons.circle_outlined,
+                        size: 16,
+                        color: iconColor,
+                      ),
+                      const SizedBox(width: PragmaSpacing.xs),
+                      Text(option.label),
+                    ],
+                  );
+                },
+                onSelectionChanged: _handleSelectionChanged,
+                onItemRemoved: _handleRemove,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: PragmaSpacing.md),
+        Wrap(
+          spacing: PragmaSpacing.md,
+          runSpacing: PragmaSpacing.md,
+          children: <Widget>[
+            SizedBox(
+              width: 280,
+              child: SwitchListTile.adaptive(
+                contentPadding: EdgeInsets.zero,
+                title: const Text('Mostrar checkbox'),
+                value: _showCheckbox,
+                onChanged: (bool value) =>
+                    setState(() => _showCheckbox = value),
+              ),
+            ),
+            SizedBox(
+              width: 280,
+              child: SwitchListTile.adaptive(
+                contentPadding: EdgeInsets.zero,
+                title: const Text('Mostrar iconos'),
+                value: _showIcons,
+                onChanged: (bool value) => setState(() => _showIcons = value),
+              ),
+            ),
+            SizedBox(
+              width: 280,
+              child: SwitchListTile.adaptive(
+                contentPadding: EdgeInsets.zero,
+                title: const Text('Acción de eliminar'),
+                value: _showRemoveAction,
+                onChanged: (bool value) =>
+                    setState(() => _showRemoveAction = value),
               ),
             ),
           ],
@@ -1252,6 +1389,35 @@ const List<Map<String, dynamic>> _componentCatalog = <Map<String, dynamic>>[
       'https://cdn.pragma.co/components/scalebox/cover.png',
     ],
   },
+];
+
+const List<PragmaDropdownOption<String>> _dropdownListOptions =
+    <PragmaDropdownOption<String>>[
+  PragmaDropdownOption<String>(
+    label: 'UX Research',
+    value: 'ux',
+    icon: Icons.psychology_alt_outlined,
+  ),
+  PragmaDropdownOption<String>(
+    label: 'Product Design',
+    value: 'design',
+    icon: Icons.design_services_outlined,
+  ),
+  PragmaDropdownOption<String>(
+    label: 'Product Manager',
+    value: 'pm',
+    icon: Icons.view_kanban,
+  ),
+  PragmaDropdownOption<String>(
+    label: 'Mobile iOS',
+    value: 'ios',
+    icon: Icons.phone_iphone,
+  ),
+  PragmaDropdownOption<String>(
+    label: 'Mobile Android',
+    value: 'android',
+    icon: Icons.android,
+  ),
 ];
 
 const List<PragmaDropdownOption<String>> _dropdownOptions =

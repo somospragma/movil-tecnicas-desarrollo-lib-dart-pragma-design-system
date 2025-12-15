@@ -2,21 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../tokens/pragma_border_radius.dart';
 import '../tokens/pragma_spacing.dart';
-
-/// Entry that describes an option inside `PragmaDropdownWidget`.
-class PragmaDropdownOption<T> {
-  const PragmaDropdownOption({
-    required this.label,
-    required this.value,
-    this.icon,
-    this.enabled = true,
-  });
-
-  final String label;
-  final T value;
-  final IconData? icon;
-  final bool enabled;
-}
+import 'pragma_dropdown_option.dart';
 
 /// Dropdown built with Material 3 primitives but tuned with Pragma tokens.
 class PragmaDropdownWidget<T> extends StatelessWidget {
