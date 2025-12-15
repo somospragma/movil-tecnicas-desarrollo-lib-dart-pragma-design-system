@@ -112,7 +112,7 @@ class ModelFieldState {
     if (errorText == null) {
       return this;
     }
-    return copyWith(errorText: null);
+    return copyWith();
   }
 
   /// Convenience getter to know if there is an error to display.

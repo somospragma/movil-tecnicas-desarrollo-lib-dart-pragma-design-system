@@ -104,6 +104,8 @@ class ShowcaseScreen extends StatelessWidget {
           const SizedBox(height: PragmaSpacing.lg),
           for (final _PaletteSection section in _paletteSections)
             _PaletteSectionView(section: section),
+          const SizedBox(height: PragmaSpacing.lg),
+          const _ColorTokenRowPlayground(),
           const SizedBox(height: PragmaSpacing.xxl),
           Text('Componentes base', style: textTheme.headlineSmall),
           const SizedBox(height: PragmaSpacing.md),
@@ -964,7 +966,7 @@ class _ToastPlaygroundState extends State<_ToastPlayground> {
               SizedBox(
                 width: 220,
                 child: DropdownButtonFormField<PragmaToastVariant>(
-                  value: _variant,
+                  initialValue: _variant,
                   decoration: const InputDecoration(labelText: 'Variant'),
                   items: PragmaToastVariant.values
                       .map(
@@ -985,7 +987,7 @@ class _ToastPlaygroundState extends State<_ToastPlayground> {
               SizedBox(
                 width: 220,
                 child: DropdownButtonFormField<PragmaToastAlignment>(
-                  value: _alignment,
+                  initialValue: _alignment,
                   decoration: const InputDecoration(labelText: 'Alignment'),
                   items: PragmaToastAlignment.values
                       .map(
@@ -1675,6 +1677,71 @@ class _ComponentDocCard extends StatelessWidget {
                 }).toList(),
               ),
             ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ColorTokenRowPlayground extends StatefulWidget {
+  const _ColorTokenRowPlayground();
+
+  @override
+  State<_ColorTokenRowPlayground> createState() =>
+      _ColorTokenRowPlaygroundState();
+}
+
+class _ColorTokenRowPlaygroundState extends State<_ColorTokenRowPlayground> {
+  late final List<ModelColorToken> _tokens;
+
+  @override
+  void initState() {
+    super.initState();
+    _tokens = <ModelColorToken>[
+      ModelColorToken(label: 'Primary', color: '#6750A4'),
+      ModelColorToken(label: 'Secondary', color: '#625B71'),
+      ModelColorToken(label: 'Tertiary', color: '#7D5260'),
+      ModelColorToken(label: 'Neutral', color: '#1C1B1F'),
+    ];
+  }
+
+  void _updateToken(int index, ModelColorToken updated) {
+    setState(() => _tokens[index] = updated);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+    final ColorScheme scheme = Theme.of(context).colorScheme;
+
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(PragmaSpacing.md),
+        side: BorderSide(color: scheme.outlineVariant),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(PragmaSpacing.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text('Editor rápido de tokens', style: textTheme.titleLarge),
+            const SizedBox(height: PragmaSpacing.xs),
+            Text(
+              'Modifica el valor HEX y observa cómo los previews reflejan el color.',
+              style: textTheme.bodyMedium
+                  ?.copyWith(color: scheme.onSurfaceVariant),
+            ),
+            const SizedBox(height: PragmaSpacing.md),
+            ...List<Widget>.generate(_tokens.length, (int index) {
+              return PragmaColorTokenRowWidget(
+                key: ValueKey('color-token-row-$index'),
+                token: _tokens[index],
+                onChanged: (ModelColorToken updated) =>
+                    _updateToken(index, updated),
+              );
+            }),
           ],
         ),
       ),

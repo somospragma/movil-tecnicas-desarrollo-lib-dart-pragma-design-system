@@ -13,6 +13,7 @@ enum PragmaToastVariant { success, error, alert, information }
 enum PragmaToastAlignment { topCenter, topRight }
 
 /// Configuration object describing the toast content and behavior.
+@immutable
 class PragmaToastConfig {
   const PragmaToastConfig({
     required this.title,
@@ -149,10 +150,6 @@ class PragmaToastService {
       context,
       rootOverlay: true,
     );
-    if (overlay == null) {
-      throw StateError(
-          'PragmaToastService.show requires an Overlay in context');
-    }
     final _ToastOverlayKey key = _ToastOverlayKey(overlay, alignment);
     final _PragmaToastQueue queue = _queues.putIfAbsent(key, () {
       return _PragmaToastQueue(
@@ -219,8 +216,9 @@ class PragmaToastService {
   }
 }
 
+@immutable
 class _ToastOverlayKey {
-  _ToastOverlayKey(this.overlay, this.alignment);
+  const _ToastOverlayKey(this.overlay, this.alignment);
 
   final OverlayState overlay;
   final PragmaToastAlignment alignment;
@@ -551,7 +549,6 @@ class _ToastAlignmentMetrics {
           crossAxisAlignment: CrossAxisAlignment.end,
         );
       case PragmaToastAlignment.topCenter:
-      default:
         return const _ToastAlignmentMetrics(
           alignment: Alignment.topCenter,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -612,7 +609,6 @@ class PragmaToastWidget extends StatelessWidget {
                 vertical: PragmaSpacing.md,
               ),
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   if (iconData != null)
                     GestureDetector(
@@ -750,7 +746,6 @@ class _ToastPalette {
           label: 'Alert',
         );
       case PragmaToastVariant.information:
-      default:
         return _ToastPalette(
           gradient: <Color>[scheme.primary, scheme.primaryContainer],
           glow: scheme.primary.withValues(alpha: 0.4),

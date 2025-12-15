@@ -110,7 +110,6 @@ void main() {
     final PragmaToastHandle handle = PragmaToastService.showToast(
       context: context,
       title: 'Temporal',
-      duration: const Duration(seconds: 5),
     );
 
     await tester.pump();
