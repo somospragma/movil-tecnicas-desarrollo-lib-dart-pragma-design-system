@@ -6,7 +6,7 @@ Flutter library focused on mobile experiences that bundles Pragma's design token
 
 - Consistent color, typography, spacing, and **responsive grid** tokens.
 - `PragmaTheme` with light/dark variants and Material 3 enabled by default.
-- Accessible components (`PragmaButton`, `PragmaCard`, `PragmaIconButton`, `PragmaAccordionWidget`).
+- Accessible components (`PragmaButton`, `PragmaCard`, `PragmaIconButtonWidget`, `PragmaAccordionWidget`).
 - `PragmaGridTokens`, viewport helpers, and the `PragmaGridContainer` widget to debug layouts.
 - Component modeling (`ModelPragmaComponent`, `ModelAnatomyAttribute`) to sync documentation and showcases from JSON.
 - Example app ready to run and validate (includes a "Grid debugger" page).
@@ -17,7 +17,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-	pragma_design_system: ^0.1.1
+	pragma_design_system: ^0.1.2
 ```
 
 Then run:
@@ -83,6 +83,23 @@ PragmaButton.icon(
 	label: 'Ver detalles',
 	icon: Icons.open_in_new,
 	hierarchy: PragmaButtonHierarchy.tertiary,
+	onPressed: () {},
+)
+```
+
+### Icon button quick sample
+
+```dart
+PragmaIconButtonWidget(
+	icon: Icons.add,
+	style: PragmaIconButtonStyle.filledLight,
+	onPressed: () {},
+)
+
+PragmaIconButtonWidget(
+	icon: Icons.close,
+	style: PragmaIconButtonStyle.outlinedDark,
+	size: PragmaIconButtonSize.compact,
 	onPressed: () {},
 )
 ```

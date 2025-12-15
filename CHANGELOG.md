@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.1] - 2025-12-15
 
+## [0.1.2] - 2025-12-15
+
+### Added
+
+- `PragmaIconButtonWidget`, a spec-driven icon button with filled/outlined variants, light/dark tones, and regular/compact sizes plus hover/pressed/disabled states.
+- Example playground and README quick sample that showcase the new widget while encouraging migration away from the legacy `PragmaIconButton` (now deprecated).
+- Widget tests that validate palette resolution, disabled styling, and tap callbacks for the new component.
+
 ### Added
 
 - `PragmaDropdownListWidget`, a multi-select dropdown that mirrors the tone-on-tone overlay from `PragmaDropdownWidget` while adding checkboxes, optional icons, removable rows, and custom option builders.

@@ -139,16 +139,17 @@ class ShowcaseScreen extends StatelessWidget {
                 hierarchy: PragmaButtonHierarchy.tertiary,
                 onPressed: _noop,
               ),
-              PragmaIconButton(
+              const PragmaIconButtonWidget(
                 icon: Icons.favorite,
-                onPressed: () {},
+                onPressed: _noop,
                 tooltip: 'Favorito',
+                style: PragmaIconButtonStyle.filledLight,
               ),
-              const PragmaIconButton(
+              const PragmaIconButtonWidget(
                 icon: Icons.palette,
-                onPressed: null,
                 tooltip: 'Deshabilitado',
-                variant: PragmaIconButtonVariant.ghost,
+                style: PragmaIconButtonStyle.outlinedLight,
+                onPressed: null,
               ),
               const PragmaAvatarWidget(
                 radius: PragmaSpacing.md,
@@ -313,6 +314,8 @@ class ShowcaseScreen extends StatelessWidget {
           const _AvatarPlayground(),
           const SizedBox(height: PragmaSpacing.xl),
           const _BreadcrumbPlayground(),
+          const SizedBox(height: PragmaSpacing.xl),
+          const _IconButtonPlayground(),
           const SizedBox(height: PragmaSpacing.xl),
           Text('Componentes documentados', style: textTheme.headlineSmall),
           const SizedBox(height: PragmaSpacing.sm),
@@ -1085,6 +1088,134 @@ class _BreadcrumbPlaygroundState extends State<_BreadcrumbPlayground> {
           Text(
             'Active page: ${_labels[_activeIndex]}',
             style: theme.textTheme.labelLarge,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _IconButtonPlayground extends StatefulWidget {
+  const _IconButtonPlayground();
+
+  @override
+  State<_IconButtonPlayground> createState() => _IconButtonPlaygroundState();
+}
+
+class _IconButtonPlaygroundState extends State<_IconButtonPlayground> {
+  PragmaIconButtonStyle _style = PragmaIconButtonStyle.filledLight;
+  PragmaIconButtonSize _size = PragmaIconButtonSize.regular;
+  bool _disabled = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+
+    return PragmaCard.section(
+      headline: 'PragmaIconButtonWidget',
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'Explora variantes y tamaños para superficies claras u oscuras.',
+            style: textTheme.bodyMedium,
+          ),
+          const SizedBox(height: PragmaSpacing.sm),
+          Wrap(
+            spacing: PragmaSpacing.md,
+            runSpacing: PragmaSpacing.sm,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: <Widget>[
+              SizedBox(
+                width: 220,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text('Style', style: textTheme.labelSmall),
+                    DropdownButton<PragmaIconButtonStyle>(
+                      isExpanded: true,
+                      value: _style,
+                      items: PragmaIconButtonStyle.values
+                          .map((PragmaIconButtonStyle value) {
+                        return DropdownMenuItem<PragmaIconButtonStyle>(
+                          value: value,
+                          child: Text(value.name),
+                        );
+                      }).toList(),
+                      onChanged: (PragmaIconButtonStyle? value) {
+                        if (value != null) {
+                          setState(() => _style = value);
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                width: 160,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text('Size', style: textTheme.labelSmall),
+                    DropdownButton<PragmaIconButtonSize>(
+                      isExpanded: true,
+                      value: _size,
+                      items: PragmaIconButtonSize.values
+                          .map((PragmaIconButtonSize value) {
+                        return DropdownMenuItem<PragmaIconButtonSize>(
+                          value: value,
+                          child: Text(value.name),
+                        );
+                      }).toList(),
+                      onChanged: (PragmaIconButtonSize? value) {
+                        if (value != null) {
+                          setState(() => _size = value);
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  const Text('Disabled'),
+                  Switch(
+                    value: _disabled,
+                    onChanged: (bool value) =>
+                        setState(() => _disabled = value),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: PragmaSpacing.md),
+          Wrap(
+            spacing: PragmaSpacing.md,
+            runSpacing: PragmaSpacing.md,
+            children: <Widget>[
+              PragmaIconButtonWidget(
+                icon: Icons.add,
+                tooltip: 'Añadir',
+                style: _style,
+                size: _size,
+                onPressed: _disabled ? null : _noop,
+              ),
+              PragmaIconButtonWidget(
+                icon: Icons.remove,
+                tooltip: 'Quitar',
+                style: PragmaIconButtonStyle.outlinedDark,
+                size: _size,
+                onPressed: _disabled ? null : _noop,
+              ),
+              PragmaIconButtonWidget(
+                icon: Icons.lightbulb_outline,
+                tooltip: 'Idea',
+                style: PragmaIconButtonStyle.filledDark,
+                size: PragmaIconButtonSize.regular,
+                onPressed: _disabled ? null : _noop,
+              ),
+            ],
           ),
         ],
       ),

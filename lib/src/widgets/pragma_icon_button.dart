@@ -4,8 +4,10 @@ import '../tokens/pragma_spacing.dart';
 
 enum PragmaIconButtonVariant { solid, tonal, ghost }
 
-/// IconButton con superficies personalizadas para el Design System.
+/// Legacy icon button. Prefer using [PragmaIconButtonWidget].
+@Deprecated('Use PragmaIconButtonWidget instead. Will be removed in 0.2.0.')
 class PragmaIconButton extends StatelessWidget {
+  @Deprecated('Use PragmaIconButtonWidget instead. Will be removed in 0.2.0.')
   const PragmaIconButton({
     required this.icon,
     required this.onPressed,
