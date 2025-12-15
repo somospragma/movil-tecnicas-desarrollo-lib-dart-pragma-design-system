@@ -6,7 +6,8 @@ Flutter library focused on mobile experiences that bundles Pragma's design token
 
 - Consistent color, typography, spacing, and **responsive grid** tokens.
 - `PragmaTheme` with light/dark variants and Material 3 enabled by default.
-- Accessible components (`PragmaButton`, `PragmaCard`, `PragmaIconButtonWidget`, `PragmaInputWidget`, `PragmaToastWidget`, `PragmaAccordionWidget`, `PragmaColorTokenRowWidget`).
+- Accessible components (`PragmaButton`, `PragmaCard`, `PragmaIconButtonWidget`, `PragmaInputWidget`, `PragmaToastWidget`, `PragmaAccordionWidget`, `PragmaColorTokenRowWidget`, `PragmaThemeEditorWidget`).
+- Theme lab sample that lets you edit colors/typography in real time and export a JSON payload backed by `ModelThemePragma`.
 - `PragmaGridTokens`, viewport helpers, and the `PragmaGridContainer` widget to debug layouts.
 - Component modeling (`ModelPragmaComponent`, `ModelAnatomyAttribute`) to sync documentation and showcases from JSON.
 - Example app ready to run and validate (includes a "Grid debugger" page).
@@ -54,9 +55,9 @@ class PragmaApp extends StatelessWidget {
 - **Spacing:** `PragmaSpacing` concentrates 4pt-system values and handy utilities.
 - **Radius:** `PragmaBorderRadiusTokens` and `PragmaBorderRadius` keep rounded corners consistent in 4/8dp steps.
 - **Opacity:** `PragmaOpacityTokens` and `PragmaOpacity` constrain overlays to 8/30/60 intervals using `Color.withValues` for Flutter 3.22+.
-- **Domain models:** `ModelPragmaComponent`, `ModelAnatomyAttribute`, `ModelFieldState`, and `ModelColorToken` serialize the documentation sourced from Figma, power the input widgets, and guarantee JSON roundtrips.
+- **Domain models:** `ModelPragmaComponent`, `ModelAnatomyAttribute`, `ModelFieldState`, `ModelColorToken`, and `ModelThemePragma` serialize the documentation sourced from Figma, power the input widgets, and guarantee JSON roundtrips.
 - **Grid:** `PragmaGridTokens`, `getGridConfigFromContext`, `PragmaGridContainer`, and `PragmaScaleBox` help replicate the official grid, respect gutters, and scale full mockups.
-- **Components:** Widgets such as `PragmaPrimaryButton`, `PragmaSecondaryButton`, `PragmaButton.icon`, `PragmaCard`, `PragmaCardWidget`, `PragmaDropdownWidget`, `PragmaInputWidget`, `PragmaToastWidget`, `PragmaAvatarWidget`, `PragmaBreadcrumbWidget`, `PragmaAccordionWidget`, or `PragmaColorTokenRowWidget` ship consistent states and elevation.
+- **Components:** Widgets such as `PragmaPrimaryButton`, `PragmaSecondaryButton`, `PragmaButton.icon`, `PragmaCard`, `PragmaCardWidget`, `PragmaDropdownWidget`, `PragmaInputWidget`, `PragmaToastWidget`, `PragmaAvatarWidget`, `PragmaBreadcrumbWidget`, `PragmaAccordionWidget`, `PragmaColorTokenRowWidget`, or `PragmaThemeEditorWidget` ship consistent states and elevation.
 
 ### Avatar quick sample
 
@@ -140,6 +141,21 @@ PragmaColorTokenRowWidget(
 	token: token,
 	onChanged: (ModelColorToken updated) {
 		token = updated;
+	},
+);
+```
+
+### Theme editor quick sample
+
+```dart
+ModelThemePragma theme = ModelThemePragma();
+
+PragmaThemeEditorWidget(
+	theme: theme,
+	onChanged: (ModelThemePragma updated) {
+		theme = updated;
+		final ThemeData data = PragmaThemeBuilder.buildTheme(updated);
+		// Usa [data] para recargar tu MaterialApp o persistir el JSON generado.
 	},
 );
 ```

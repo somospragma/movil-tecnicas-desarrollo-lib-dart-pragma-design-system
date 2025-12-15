@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `ModelColorToken`, an immutable model with JSON helpers plus unit tests that guarantee the roundtrip of label and hexadecimal values.
 - `PragmaColorTokenRowWidget`, a row-based editor that previews the color on both sides, exposes a sanitized hex input, and is showcased inside the example app together with README docs.
+- `ModelThemePragma`, `PragmaThemeBuilder`, and `PragmaThemeEditorWidget`, which allow squads to craft custom themes, preview them with live components, export JSON, and explore everything inside the new Theme Lab screen on the example app.
 
 ## [0.1.5] - 2025-12-15
 

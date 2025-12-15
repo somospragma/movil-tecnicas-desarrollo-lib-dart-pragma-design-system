@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pragma_design_system/pragma_design_system.dart';
 
+import 'theme_lab_page.dart';
+
 // Consumimos la librería local directamente para iterar sin publicar a pub.dev.
 
 void main() {
@@ -86,6 +88,11 @@ class ShowcaseScreen extends StatelessWidget {
             tooltip: 'Grid debugger',
             icon: const Icon(Icons.grid_4x4_outlined),
             onPressed: () => _openGridDebugger(context),
+          ),
+          IconButton(
+            tooltip: 'Theme lab',
+            icon: const Icon(Icons.palette_outlined),
+            onPressed: () => _openThemeLab(context),
           ),
         ],
       ),
@@ -343,6 +350,14 @@ void _openGridDebugger(BuildContext context) {
   Navigator.of(context).push(
     MaterialPageRoute<void>(
       builder: (_) => const GridDebuggerPage(),
+    ),
+  );
+}
+
+void _openThemeLab(BuildContext context) {
+  Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => const ThemeLabPage(),
     ),
   );
 }
