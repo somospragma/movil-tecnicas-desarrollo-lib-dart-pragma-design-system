@@ -97,6 +97,7 @@ class PragmaCardWidget extends StatelessWidget {
         onTap: onTap,
         splashColor: colors.foreground.withValues(alpha: 0.12),
         highlightColor: colors.foreground.withValues(alpha: 0.08),
+        borderRadius: borderRadius,
         child: interactiveChild,
       );
     }
@@ -270,6 +271,7 @@ class _PragmaCardActions extends StatelessWidget {
     return Align(
       alignment: Alignment.centerRight,
       child: Wrap(
+        alignment: WrapAlignment.end,
         spacing: PragmaSpacing.sm,
         runSpacing: PragmaSpacing.xs,
         children: actions,

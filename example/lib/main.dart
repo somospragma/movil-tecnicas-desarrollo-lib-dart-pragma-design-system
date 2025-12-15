@@ -200,12 +200,18 @@ class ShowcaseScreen extends StatelessWidget {
                 child: PragmaCardWidget(
                   title: 'Actividad semanal',
                   subtitle: 'Actualizado hace 5 min',
-                  metadata: const Wrap(
+                  metadata: Wrap(
                     spacing: PragmaSpacing.xs,
                     runSpacing: PragmaSpacing.xs,
                     children: <Widget>[
-                      Chip(label: Text('Squad Atlas')),
-                      Chip(label: Text('Mobile')),
+                      Chip(
+                        label: const Text('Squad Atlas'),
+                        backgroundColor: colorScheme.surfaceContainerHighest,
+                      ),
+                      Chip(
+                        label: const Text('Mobile'),
+                        backgroundColor: colorScheme.surfaceContainerHighest,
+                      ),
                     ],
                   ),
                   body: Column(
