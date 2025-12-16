@@ -102,6 +102,8 @@ class ShowcaseScreen extends StatelessWidget {
           vertical: PragmaSpacing.xl,
         ),
         children: <Widget>[
+          const PragmaLogoWidget(width: 220),
+          const SizedBox(height: PragmaSpacing.md),
           Text('Paleta cromática', style: textTheme.headlineSmall),
           const SizedBox(height: PragmaSpacing.xs),
           Text(

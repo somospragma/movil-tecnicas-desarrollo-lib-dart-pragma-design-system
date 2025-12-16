@@ -6,7 +6,7 @@ Flutter library focused on mobile experiences that bundles Pragma's design token
 
 - Consistent color, typography, spacing, and **responsive grid** tokens.
 - `PragmaTheme` with light/dark variants and Material 3 enabled by default.
-- Accessible components (`PragmaButton`, `PragmaCard`, `PragmaIconButtonWidget`, `PragmaInputWidget`, `PragmaToastWidget`, `PragmaAccordionWidget`, `PragmaColorTokenRowWidget`, `PragmaThemeEditorWidget`).
+- Accessible components (`PragmaButton`, `PragmaCard`, `PragmaIconButtonWidget`, `PragmaInputWidget`, `PragmaToastWidget`, `PragmaAccordionWidget`, `PragmaColorTokenRowWidget`, `PragmaThemeEditorWidget`, `PragmaLogoWidget`).
 - Theme lab sample that lets you edit colors/typography in real time and export a JSON payload backed by `ModelThemePragma`.
 - `PragmaGridTokens`, viewport helpers, and the `PragmaGridContainer` widget to debug layouts.
 - Component modeling (`ModelPragmaComponent`, `ModelAnatomyAttribute`) to sync documentation and showcases from JSON.
@@ -18,7 +18,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-	pragma_design_system: ^0.1.6
+	pragma_design_system: ^1.0.0
 ```
 
 Then run:
@@ -57,7 +57,7 @@ class PragmaApp extends StatelessWidget {
 - **Opacity:** `PragmaOpacityTokens` and `PragmaOpacity` constrain overlays to 8/30/60 intervals using `Color.withValues` for Flutter 3.22+.
 - **Domain models:** `ModelPragmaComponent`, `ModelAnatomyAttribute`, `ModelFieldState`, `ModelColorToken`, and `ModelThemePragma` serialize the documentation sourced from Figma, power the input widgets, and guarantee JSON roundtrips.
 - **Grid:** `PragmaGridTokens`, `getGridConfigFromContext`, `PragmaGridContainer`, and `PragmaScaleBox` help replicate the official grid, respect gutters, and scale full mockups.
-- **Components:** Widgets such as `PragmaPrimaryButton`, `PragmaSecondaryButton`, `PragmaButton.icon`, `PragmaCard`, `PragmaCardWidget`, `PragmaDropdownWidget`, `PragmaInputWidget`, `PragmaToastWidget`, `PragmaAvatarWidget`, `PragmaBreadcrumbWidget`, `PragmaAccordionWidget`, `PragmaColorTokenRowWidget`, or `PragmaThemeEditorWidget` ship consistent states and elevation.
+- **Components:** Widgets such as `PragmaPrimaryButton`, `PragmaSecondaryButton`, `PragmaButton.icon`, `PragmaCard`, `PragmaCardWidget`, `PragmaDropdownWidget`, `PragmaInputWidget`, `PragmaToastWidget`, `PragmaAvatarWidget`, `PragmaBreadcrumbWidget`, `PragmaAccordionWidget`, `PragmaColorTokenRowWidget`, `PragmaThemeEditorWidget`, or `PragmaLogoWidget` ship consistent states and elevation.
 
 ### Avatar quick sample
 
@@ -145,6 +145,20 @@ PragmaColorTokenRowWidget(
 );
 ```
 
+### Logo quick sample
+
+```dart
+PragmaLogoWidget(
+	width: 200,
+	variant: PragmaLogoVariant.wordmark,
+);
+
+PragmaLogoWidget(
+	width: 96,
+	variant: PragmaLogoVariant.isotypeCircle,
+);
+```
+
 ### Theme editor quick sample
 
 ```dart
@@ -204,8 +218,11 @@ Read [doc/component_modeling.md](doc/component_modeling.md) to structure JSON pa
 
 Explore `lib/src` for additional utilities, run the example app, and check [doc/grid_utilities.md](doc/grid_utilities.md) to adopt the grid helpers.
 
+Review [doc/logo.md](doc/logo.md) for asset usage guidelines and [doc/fonts.md](doc/fonts.md) for typography, licensing, and offline distribution tips.
+
 ## Typography and license
 
+- See [doc/fonts.md](doc/fonts.md) for the complete typography contract plus license highlights.
 - The official typeface is [Poppins](https://fonts.google.com/specimen/Poppins) and `PragmaTypography` applies it through `GoogleFonts.poppins`.
 - The family ships under the **SIL Open Font License 1.1**; see the full text in [licenses/Poppins-OFL.txt](licenses/Poppins-OFL.txt).
 - If your app must work offline on first launch, bundle the `.ttf` files in your assets and disable runtime fetching.

@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] - 2025-12-17
+
+### Added
+
+- Documentation drop for the 1.0.0 release: `doc/logo.md` compiles all official asset variants, usage rules, and `PragmaLogoWidget` guidance, while `doc/fonts.md` captures typography expectations, licensing, and offline bundling steps.
+- README updated with the new references plus refreshed dependency instructions pointing to the stable 1.0.0 tag.
+
+## [0.1.7] - 2025-12-16
+
+### Added
+
+- `PragmaLogoWidget`, a projector-style logo renderer powered by `PragmaScaleBox` that automatically selects the light/dark asset, scales from a configurable width, and keeps margins proportional to each variant.
+- Logo assets registered in `pubspec.yaml`, README quick samples, unit/widget tests, and an example showcase block at the top of the main screen.
+
 ## [0.1.6] - 2025-12-15
 
 ### Added
