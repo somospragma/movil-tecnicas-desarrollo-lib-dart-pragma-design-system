@@ -287,7 +287,7 @@ class _PragmaToastQueue extends ChangeNotifier {
     toast.markClosing();
   }
 
-  bool contains(int id) => _toasts.any((_) => _.id == id);
+  bool contains(int id) => _toasts.any((_ActiveToast value) => value.id == id);
 
   void finalizeRemoval(_ActiveToast toast) {
     final bool removed = _toasts.remove(toast);
