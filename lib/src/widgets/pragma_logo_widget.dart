@@ -47,21 +47,24 @@ class PragmaLogoWidget extends StatelessWidget {
     final EdgeInsetsGeometry resolvedMargin =
         margin ?? config.marginForWidth(width);
 
-    return Padding(
-      padding: resolvedMargin,
-      child: SizedBox(
-        width: width,
-        child: Semantics(
-          label: semanticLabel ?? 'Pragma logo',
-          image: true,
-          child: PragmaScaleBox(
-            designSize: config.designSize,
-            alignment: alignment,
-            child: Image.asset(
-              assetPath,
-              fit: BoxFit.contain,
+    return UnconstrainedBox(
+      alignment: alignment,
+      child: Padding(
+        padding: resolvedMargin,
+        child: SizedBox(
+          width: width,
+          child: Semantics(
+            label: semanticLabel ?? 'Pragma logo',
+            image: true,
+            child: PragmaScaleBox(
+              designSize: config.designSize,
               alignment: alignment,
-              filterQuality: FilterQuality.high,
+              child: Image.asset(
+                assetPath,
+                fit: BoxFit.contain,
+                alignment: alignment,
+                filterQuality: FilterQuality.high,
+              ),
             ),
           ),
         ),

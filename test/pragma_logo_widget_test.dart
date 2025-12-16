@@ -16,11 +16,18 @@ void main() {
       ),
     );
 
-    final Image image = tester.widget<Image>(find.byType(Image));
+    final Finder logoFinder = find.byType(PragmaLogoWidget);
+    final Image image = tester.widget<Image>(find.descendant(
+      of: logoFinder,
+      matching: find.byType(Image),
+    ));
     final AssetImage assetImage = image.image as AssetImage;
     expect(assetImage.assetName, 'assets/logo_light/logo.png');
 
-    final Padding padding = tester.widget<Padding>(find.byType(Padding));
+    final Padding padding = tester.widget<Padding>(find.descendant(
+      of: logoFinder,
+      matching: find.byType(Padding),
+    ));
     expect(padding.padding.horizontal, closeTo(180 * 0.08 * 2, 0.001));
   });
 
@@ -38,11 +45,18 @@ void main() {
       ),
     );
 
-    final Image image = tester.widget<Image>(find.byType(Image));
+    final Finder logoFinder = find.byType(PragmaLogoWidget);
+    final Image image = tester.widget<Image>(find.descendant(
+      of: logoFinder,
+      matching: find.byType(Image),
+    ));
     final AssetImage assetImage = image.image as AssetImage;
     expect(assetImage.assetName, 'assets/logo_dark/circle_isotype_white.png');
 
-    final Padding padding = tester.widget<Padding>(find.byType(Padding));
+    final Padding padding = tester.widget<Padding>(find.descendant(
+      of: logoFinder,
+      matching: find.byType(Padding),
+    ));
     expect(padding.padding.horizontal / 2, closeTo(80 * 0.04, 0.001));
   });
 }

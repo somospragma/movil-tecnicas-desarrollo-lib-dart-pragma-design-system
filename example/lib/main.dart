@@ -103,9 +103,9 @@ class ShowcaseScreen extends StatelessWidget {
         ),
         children: <Widget>[
           const PragmaLogoWidget(width: 220),
-          const SizedBox(height: PragmaSpacing.md),
+          const SizedBox(height: PragmaSpacing.lg),
           Text('Paleta cromática', style: textTheme.headlineSmall),
-          const SizedBox(height: PragmaSpacing.xs),
+          const SizedBox(height: PragmaSpacing.md),
           Text(
             'Visualiza los tokens de color incluidos en la librería y cómo se agrupan por intención.',
             style: textTheme.bodyMedium?.copyWith(color: onSurfaceVariant),
@@ -115,7 +115,7 @@ class ShowcaseScreen extends StatelessWidget {
             _PaletteSectionView(section: section),
           const SizedBox(height: PragmaSpacing.lg),
           const _ColorTokenRowPlayground(),
-          const SizedBox(height: PragmaSpacing.xxl),
+          const SizedBox(height: PragmaSpacing.lg),
           Text('Componentes base', style: textTheme.headlineSmall),
           const SizedBox(height: PragmaSpacing.md),
           Wrap(
@@ -176,7 +176,7 @@ class ShowcaseScreen extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: PragmaSpacing.xl),
+          const SizedBox(height: PragmaSpacing.lg),
           PragmaCard.section(
             headline: 'Estado de diseño',
             action: PragmaButton.icon(
@@ -200,9 +200,9 @@ class ShowcaseScreen extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: PragmaSpacing.xl),
+          const SizedBox(height: PragmaSpacing.lg),
           Text('PragmaCardWidget', style: textTheme.headlineSmall),
-          const SizedBox(height: PragmaSpacing.sm),
+          const SizedBox(height: PragmaSpacing.md),
           Wrap(
             spacing: PragmaSpacing.lg,
             runSpacing: PragmaSpacing.lg,
@@ -297,9 +297,9 @@ class ShowcaseScreen extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: PragmaSpacing.xl),
+          const SizedBox(height: PragmaSpacing.lg),
           Text('PragmaAccordionWidget', style: textTheme.headlineSmall),
-          const SizedBox(height: PragmaSpacing.sm),
+          const SizedBox(height: PragmaSpacing.md),
           PragmaAccordionWidget(
             text: 'Resumen del sprint',
             icon: Icons.calendar_today_outlined,
@@ -317,23 +317,23 @@ class ShowcaseScreen extends StatelessWidget {
             child:
                 Text('Este panel permanece cerrado hasta habilitar el flujo.'),
           ),
-          const SizedBox(height: PragmaSpacing.xl),
+          const SizedBox(height: PragmaSpacing.lg),
           const _InputPlayground(),
-          const SizedBox(height: PragmaSpacing.xl),
+          const SizedBox(height: PragmaSpacing.lg),
           const _ToastPlayground(),
-          const SizedBox(height: PragmaSpacing.xl),
+          const SizedBox(height: PragmaSpacing.lg),
           const _DropdownPlayground(),
-          const SizedBox(height: PragmaSpacing.xl),
+          const SizedBox(height: PragmaSpacing.lg),
           const _DropdownListPlayground(),
-          const SizedBox(height: PragmaSpacing.xl),
+          const SizedBox(height: PragmaSpacing.lg),
           const _AvatarPlayground(),
-          const SizedBox(height: PragmaSpacing.xl),
+          const SizedBox(height: PragmaSpacing.lg),
           const _BreadcrumbPlayground(),
-          const SizedBox(height: PragmaSpacing.xl),
+          const SizedBox(height: PragmaSpacing.lg),
           const _IconButtonPlayground(),
-          const SizedBox(height: PragmaSpacing.xl),
+          const SizedBox(height: PragmaSpacing.lg),
           Text('Componentes documentados', style: textTheme.headlineSmall),
-          const SizedBox(height: PragmaSpacing.sm),
+          const SizedBox(height: PragmaSpacing.md),
           Column(
             children:
                 documentedComponents.map((ModelPragmaComponent component) {
@@ -559,12 +559,12 @@ class _MockupPhone extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: PragmaSpacing.lg),
           Text(
             'Componentes sincronizados',
             style: Theme.of(context).textTheme.headlineSmall,
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: PragmaSpacing.md),
           Text(
             'Este mockup respeta los márgenes y grilla de mobile, pero puede '
             'mostrarse en cualquier viewport gracias al escalado automático.',
@@ -775,7 +775,7 @@ class _InputPlaygroundState extends State<_InputPlayground> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text('PragmaInputWidget', style: textTheme.headlineSmall),
-        const SizedBox(height: PragmaSpacing.sm),
+        const SizedBox(height: PragmaSpacing.md),
         Wrap(
           spacing: PragmaSpacing.lg,
           runSpacing: PragmaSpacing.lg,
@@ -1078,7 +1078,7 @@ class _DropdownPlaygroundState extends State<_DropdownPlayground> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text('PragmaDropdownWidget', style: textTheme.headlineSmall),
-        const SizedBox(height: PragmaSpacing.sm),
+        const SizedBox(height: PragmaSpacing.md),
         Wrap(
           spacing: PragmaSpacing.lg,
           runSpacing: PragmaSpacing.lg,
@@ -1158,7 +1158,7 @@ class _DropdownListPlaygroundState extends State<_DropdownListPlayground> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text('PragmaDropdownListWidget', style: textTheme.headlineSmall),
-        const SizedBox(height: PragmaSpacing.sm),
+        const SizedBox(height: PragmaSpacing.md),
         Wrap(
           spacing: PragmaSpacing.lg,
           runSpacing: PragmaSpacing.lg,
@@ -1825,6 +1825,8 @@ class _PaletteGroupTable extends StatelessWidget {
             ),
             child: DataTable(
               columnSpacing: PragmaSpacing.xl,
+              dataRowMinHeight: PragmaSpacing.xl,
+              dataRowMaxHeight: PragmaSpacing.xl + (PragmaSpacing.xxxs * 2),
               headingRowColor: WidgetStatePropertyAll<Color>(
                 scheme.surfaceContainerHighest,
               ),
@@ -1841,10 +1843,20 @@ class _PaletteGroupTable extends StatelessWidget {
                   .map(
                     (_PaletteColor color) => DataRow(
                       cells: <DataCell>[
-                        DataCell(_ColorPreview(color: color.color)),
-                        DataCell(Text(color.name)),
-                        DataCell(Text(color.hex)),
-                        DataCell(Text(color.token)),
+                        DataCell(
+                          _PaletteCell(
+                            child: _ColorPreview(color: color.color),
+                          ),
+                        ),
+                        DataCell(
+                          _PaletteCell(child: Text(color.name)),
+                        ),
+                        DataCell(
+                          _PaletteCell(child: Text(color.hex)),
+                        ),
+                        DataCell(
+                          _PaletteCell(child: Text(color.token)),
+                        ),
                       ],
                     ),
                   )
@@ -1857,6 +1869,20 @@ class _PaletteGroupTable extends StatelessWidget {
   }
 }
 
+class _PaletteCell extends StatelessWidget {
+  const _PaletteCell({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: PragmaSpacing.xxxs),
+      child: child,
+    );
+  }
+}
+
 class _ColorPreview extends StatelessWidget {
   const _ColorPreview({required this.color});
 
@@ -1864,13 +1890,13 @@ class _ColorPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 56,
-      height: 56,
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Theme.of(context).dividerColor),
+    return SizedBox.square(
+      dimension: PragmaSpacing.xl,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(PragmaSpacing.sm),
+        ),
       ),
     );
   }

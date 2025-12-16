@@ -54,6 +54,7 @@ class PragmaApp extends StatelessWidget {
 - **Typography:** `PragmaTypography` defines responsive scales built on top of Google Fonts.
 - **Spacing:** `PragmaSpacing` concentrates 4pt-system values and handy utilities.
 - **Radius:** `PragmaBorderRadiusTokens` and `PragmaBorderRadius` keep rounded corners consistent in 4/8dp steps.
+- Rounded-corner guidance lives in [doc/rounded_corners.md](doc/rounded_corners.md), covering increments, implementation, and heuristics per component size.
 - **Opacity:** `PragmaOpacityTokens` and `PragmaOpacity` constrain overlays to 8/30/60 intervals using `Color.withValues` for Flutter 3.22+.
 - **Domain models:** `ModelPragmaComponent`, `ModelAnatomyAttribute`, `ModelFieldState`, `ModelColorToken`, and `ModelThemePragma` serialize the documentation sourced from Figma, power the input widgets, and guarantee JSON roundtrips.
 - **Grid:** `PragmaGridTokens`, `getGridConfigFromContext`, `PragmaGridContainer`, and `PragmaScaleBox` help replicate the official grid, respect gutters, and scale full mockups.

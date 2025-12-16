@@ -142,11 +142,10 @@ class _PragmaColorTokenRowWidgetState extends State<PragmaColorTokenRowWidget> {
         key: PragmaColorTokenRowWidget.previewKey,
         duration: const Duration(milliseconds: 200),
         width: widget.previewSize.width,
-        height: widget.previewSize.height,
+        height: widget.previewSize.width,
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(PragmaSpacing.sm),
-          border: Border.all(),
         ),
       ),
     );

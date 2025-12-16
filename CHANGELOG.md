@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Documentation drop for the 1.0.0 release: `doc/logo.md` compiles all official asset variants, usage rules, and `PragmaLogoWidget` guidance, while `doc/fonts.md` captures typography expectations, licensing, and offline bundling steps.
+- Rounded-corner guide (`doc/rounded_corners.md`) detailing each border-radius token, design references, and implementation shortcuts through `PragmaBorderRadius`.
 - README updated with the new references plus refreshed dependency instructions pointing to the stable 1.0.0 tag.
 
 ## [0.1.7] - 2025-12-16
