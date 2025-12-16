@@ -14,7 +14,8 @@ enum PragmaLogoVariant {
 /// their proportions thanks to [PragmaScaleBox].
 class PragmaLogoWidget extends StatelessWidget {
   const PragmaLogoWidget({
-    required this.width, super.key,
+    required this.width,
+    super.key,
     this.variant = PragmaLogoVariant.wordmark,
     this.margin,
     this.alignment = Alignment.centerLeft,
@@ -105,7 +106,6 @@ class _PragmaLogoConfig {
           verticalMarginFactor: 0.035,
         );
       case PragmaLogoVariant.wordmark:
-      default:
         return const _PragmaLogoConfig(
           designSize: Size(256, 64),
           lightAsset: 'assets/logo_light/logo.png',
