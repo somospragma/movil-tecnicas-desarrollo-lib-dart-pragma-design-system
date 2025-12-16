@@ -102,7 +102,7 @@ class ShowcaseScreen extends StatelessWidget {
           vertical: PragmaSpacing.xl,
         ),
         children: <Widget>[
-          const PragmaLogoWidget(width: 220),
+          const _LogoShowcase(),
           const SizedBox(height: PragmaSpacing.lg),
           Text('Paleta cromática', style: textTheme.headlineSmall),
           const SizedBox(height: PragmaSpacing.md),
@@ -1707,6 +1707,71 @@ class _ColorTokenRowPlayground extends StatefulWidget {
   @override
   State<_ColorTokenRowPlayground> createState() =>
       _ColorTokenRowPlaygroundState();
+}
+
+class _LogoShowcase extends StatefulWidget {
+  const _LogoShowcase();
+
+  @override
+  State<_LogoShowcase> createState() => _LogoShowcaseState();
+}
+
+class _LogoShowcaseState extends State<_LogoShowcase> {
+  PragmaLogoVariant _variant = PragmaLogoVariant.wordmark;
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
+    return PragmaCard.section(
+      headline: 'PragmaLogoWidget',
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'Visualiza las variantes oficiales y cómo responden al tema. El widget detecta automáticamente si debe usar el asset claro u oscuro.',
+            style: theme.textTheme.bodyMedium,
+          ),
+          const SizedBox(height: PragmaSpacing.md),
+          PragmaLogoWidget(
+            width: 220,
+            variant: _variant,
+            alignment: Alignment.centerLeft,
+          ),
+          const SizedBox(height: PragmaSpacing.md),
+          SegmentedButton<PragmaLogoVariant>(
+            segments: PragmaLogoVariant.values
+                .map(
+                  (PragmaLogoVariant variant) =>
+                      ButtonSegment<PragmaLogoVariant>(
+                    value: variant,
+                    label: Text(_labelForVariant(variant)),
+                  ),
+                )
+                .toList(),
+            selected: <PragmaLogoVariant>{_variant},
+            showSelectedIcon: false,
+            onSelectionChanged: (Set<PragmaLogoVariant> selection) {
+              setState(() => _variant = selection.first);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _labelForVariant(PragmaLogoVariant variant) {
+    switch (variant) {
+      case PragmaLogoVariant.wordmark:
+        return 'Wordmark';
+      case PragmaLogoVariant.app:
+        return 'App logo';
+      case PragmaLogoVariant.isotypeCircle:
+        return 'Isotipo circular';
+      case PragmaLogoVariant.isotypeCircles:
+        return 'Isotipo círculos';
+    }
+  }
 }
 
 class _ColorTokenRowPlaygroundState extends State<_ColorTokenRowPlayground> {
