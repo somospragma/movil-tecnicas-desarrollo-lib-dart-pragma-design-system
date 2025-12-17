@@ -33,6 +33,7 @@ export 'src/widgets/pragma_dropdown_widget.dart';
 export 'src/widgets/pragma_icon_button.dart';
 export 'src/widgets/pragma_icon_button_widget.dart';
 export 'src/widgets/pragma_input_widget.dart';
+export 'src/widgets/pragma_loading_widget.dart';
 export 'src/widgets/pragma_logo_widget.dart';
 export 'src/widgets/pragma_theme_editor_widget.dart';
 export 'src/widgets/pragma_toast_widget.dart';

@@ -328,6 +328,8 @@ class ShowcaseScreen extends StatelessWidget {
           const SizedBox(height: PragmaSpacing.lg),
           const _ToastPlayground(),
           const SizedBox(height: PragmaSpacing.lg),
+          const _LoadingShowcase(),
+          const SizedBox(height: PragmaSpacing.lg),
           const _DropdownPlayground(),
           const SizedBox(height: PragmaSpacing.lg),
           const _DropdownListPlayground(),
@@ -1073,6 +1075,77 @@ class _ToastPlaygroundState extends State<_ToastPlayground> {
             icon: Icons.play_arrow,
             hierarchy: PragmaButtonHierarchy.primary,
             onPressed: () => _showToast(context),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LoadingShowcase extends StatefulWidget {
+  const _LoadingShowcase();
+
+  @override
+  State<_LoadingShowcase> createState() => _LoadingShowcaseState();
+}
+
+class _LoadingShowcaseState extends State<_LoadingShowcase> {
+  double _value = 0.72;
+  bool _showLabels = true;
+
+  @override
+  Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+
+    return PragmaCard.section(
+      headline: 'PragmaLoadingWidget',
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'Replica los indicadores morados con resplandor suave para estados '
+            'determinísticos.',
+            style: textTheme.bodyMedium,
+          ),
+          const SizedBox(height: PragmaSpacing.md),
+          Wrap(
+            spacing: PragmaSpacing.lg,
+            runSpacing: PragmaSpacing.lg,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: <Widget>[
+              PragmaLoadingWidget(
+                value: _value,
+                caption: 'Circular',
+                size: 136,
+                strokeWidth: 14,
+                showPercentageLabel: _showLabels,
+              ),
+              SizedBox(
+                width: 280,
+                child: PragmaLoadingWidget(
+                  variant: PragmaLoadingVariant.linear,
+                  value: _value,
+                  caption: 'Progress bar',
+                  showPercentageLabel: _showLabels,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: PragmaSpacing.md),
+          Text('Valor ${(_value * 100).round()}%', style: textTheme.labelLarge),
+          Slider(
+            value: _value,
+            min: 0,
+            max: 1,
+            divisions: 20,
+            label: '${(_value * 100).round()}%',
+            onChanged: (double value) => setState(() => _value = value),
+          ),
+          SwitchListTile.adaptive(
+            contentPadding: EdgeInsets.zero,
+            title: const Text('Mostrar porcentaje integrado'),
+            value: _showLabels,
+            onChanged: (bool value) => setState(() => _showLabels = value),
           ),
         ],
       ),

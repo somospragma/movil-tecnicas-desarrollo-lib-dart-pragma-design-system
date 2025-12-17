@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2025-12-17
+
+### Added
+
+- `PragmaLoadingWidget`, un indicador determinístico con modos circular y lineal que aplica degradados morados y resplandor neón configurable.
+- Playground en la app de ejemplo que conecta slider + switch para validar el relleno y las etiquetas en tiempo real.
+- Documentación en `doc/loading.md` y snippet en el README para acelerar la adopción del componente.
+
+### Changed
+
+- Versión del paquete actualizada a `1.1.1` y referencias de instalación sincronizadas.
+
 ## [1.1.0] - 2025-12-17
 
 ### Added
