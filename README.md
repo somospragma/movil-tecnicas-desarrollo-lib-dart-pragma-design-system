@@ -8,6 +8,7 @@ Flutter library focused on mobile experiences that bundles Pragma's design token
 - `PragmaTheme` with light/dark variants and Material 3 enabled by default.
 - Glow-based loading components (`PragmaLoadingWidget`) with circular and linear variants.
 - Multi-state tables (`PragmaTableWidget`) with hover glow, tone presets, and compact density.
+- Search-first input (`PragmaSearchWidget`) with neon glow, tone presets, size options, and dropdown-ready callbacks.
 - Accessible components (`PragmaButton`, `PragmaCard`, `PragmaIconButtonWidget`, `PragmaInputWidget`, `PragmaToastWidget`, `PragmaAccordionWidget`, `PragmaColorTokenRowWidget`, `PragmaThemeEditorWidget`, `PragmaLogoWidget`).
 - Theme lab sample that lets you edit colors/typography in real time and export a JSON payload backed by `ModelThemePragma`.
 - `PragmaGridTokens`, viewport helpers, and the `PragmaGridContainer` widget to debug layouts.
@@ -20,7 +21,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-	pragma_design_system: ^1.1.3
+	pragma_design_system: ^1.1.4
 ```
 
 Then run:
@@ -57,6 +58,7 @@ class PragmaApp extends StatelessWidget {
 - **Spacing:** `PragmaSpacing` concentrates 4pt-system values and handy utilities.
 - **Radius:** `PragmaBorderRadiusTokens` and `PragmaBorderRadius` keep rounded corners consistent in 4/8dp steps.
 - Rounded-corner guidance lives in [doc/rounded_corners.md](doc/rounded_corners.md), covering increments, implementation, and heuristics per component size.
+- Glow search guidance vive en [doc/search.md](doc/search.md), explicando anatomia, estados y patrones con dropdown list.
 - **Opacity:** `PragmaOpacityTokens` and `PragmaOpacity` constrain overlays to 8/30/60 intervals using `Color.withValues` for Flutter 3.22+.
 - **Domain models:** `ModelPragmaComponent`, `ModelAnatomyAttribute`, `ModelFieldState`, `ModelColorToken`, and `ModelThemePragma` serialize the documentation sourced from Figma, power the input widgets, and guarantee JSON roundtrips.
 - **Grid:** `PragmaGridTokens`, `getGridConfigFromContext`, `PragmaGridContainer`, and `PragmaScaleBox` help replicate the official grid, respect gutters, and scale full mockups.
@@ -128,6 +130,29 @@ PragmaInputWidget(
 		controller
 			..setValidation(isDirty: true, isValid: value.isNotEmpty)
 			..setError(value.isEmpty ? 'Dato requerido' : null);
+	},
+);
+```
+
+### Search quick sample
+
+```dart
+final TextEditingController searchController = TextEditingController();
+
+PragmaSearchWidget(
+	controller: searchController,
+	placeholder: 'Busca squads o features',
+	tone: PragmaSearchTone.dark,
+	size: PragmaSearchSize.large,
+	infoText: 'Escribe una palabra clave o abre el dropdown list',
+	onChanged: (String value) {
+		// Actualiza sugerencias o dropdown list
+	},
+	onSubmitted: (String value) {
+		debugPrint('Buscar: $value');
+	},
+	onClear: () {
+		debugPrint('Busqueda reiniciada');
 	},
 );
 ```

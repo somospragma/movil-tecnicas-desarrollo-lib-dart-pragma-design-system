@@ -334,6 +334,8 @@ class ShowcaseScreen extends StatelessWidget {
           const SizedBox(height: PragmaSpacing.lg),
           const _TableShowcase(),
           const SizedBox(height: PragmaSpacing.lg),
+          const _SearchShowcase(),
+          const SizedBox(height: PragmaSpacing.lg),
           const _DropdownPlayground(),
           const SizedBox(height: PragmaSpacing.lg),
           const _DropdownListPlayground(),
@@ -1503,6 +1505,216 @@ class _TableMemberCell extends StatelessWidget {
   }
 }
 
+class _SearchShowcase extends StatefulWidget {
+  const _SearchShowcase();
+
+  @override
+  State<_SearchShowcase> createState() => _SearchShowcaseState();
+}
+
+class _SearchShowcaseState extends State<_SearchShowcase> {
+  final TextEditingController _darkController = TextEditingController();
+  final TextEditingController _lightController = TextEditingController();
+  PragmaSearchSize _size = PragmaSearchSize.large;
+  bool _disabled = false;
+  bool _showInfo = true;
+
+  @override
+  void dispose() {
+    _darkController.dispose();
+    _lightController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+    final List<String> darkSuggestions = _filtered(_darkController.text);
+    final List<String> lightSuggestions = _filtered(_lightController.text);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text('PragmaSearchWidget', style: textTheme.headlineSmall),
+        const SizedBox(height: PragmaSpacing.md),
+        PragmaCard.section(
+          headline: 'Búsqueda con glow',
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                'Explora los estados default/hover/filled usando los tonos light y dark. '
+                'Al escribir mostramos sugerencias tipo “dropdown list” para simular el flujo del spec.',
+                style: textTheme.bodyMedium,
+              ),
+              const SizedBox(height: PragmaSpacing.sm),
+              SegmentedButton<PragmaSearchSize>(
+                segments: const <ButtonSegment<PragmaSearchSize>>[
+                  ButtonSegment<PragmaSearchSize>(
+                    value: PragmaSearchSize.small,
+                    label: Text('Small'),
+                  ),
+                  ButtonSegment<PragmaSearchSize>(
+                    value: PragmaSearchSize.large,
+                    label: Text('Large'),
+                  ),
+                ],
+                selected: <PragmaSearchSize>{_size},
+                onSelectionChanged: (Set<PragmaSearchSize> values) {
+                  setState(() => _size = values.first);
+                },
+              ),
+              SwitchListTile.adaptive(
+                contentPadding: EdgeInsets.zero,
+                title: const Text('Deshabilitar campo'),
+                value: _disabled,
+                onChanged: (bool value) => setState(() => _disabled = value),
+              ),
+              SwitchListTile.adaptive(
+                contentPadding: EdgeInsets.zero,
+                title: const Text('Mostrar texto informativo'),
+                value: _showInfo,
+                onChanged: (bool value) => setState(() => _showInfo = value),
+              ),
+              const SizedBox(height: PragmaSpacing.md),
+              Wrap(
+                spacing: PragmaSpacing.lg,
+                runSpacing: PragmaSpacing.lg,
+                children: <Widget>[
+                  _buildSearchColumn(
+                    context: context,
+                    title: 'Dark preset',
+                    controller: _darkController,
+                    tone: PragmaSearchTone.dark,
+                    suggestions: darkSuggestions,
+                  ),
+                  _buildSearchColumn(
+                    context: context,
+                    title: 'Light preset',
+                    controller: _lightController,
+                    tone: PragmaSearchTone.light,
+                    suggestions: lightSuggestions,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSearchColumn({
+    required BuildContext context,
+    required String title,
+    required TextEditingController controller,
+    required PragmaSearchTone tone,
+    required List<String> suggestions,
+  }) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+
+    return SizedBox(
+      width: 360,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(title, style: textTheme.titleSmall),
+          const SizedBox(height: PragmaSpacing.xs),
+          PragmaSearchWidget(
+            controller: controller,
+            placeholder: 'Placeholder text here...',
+            tone: tone,
+            size: _size,
+            enabled: !_disabled,
+            infoText: _showInfo
+                ? 'Usa palabras clave o despliega opciones con Dropdown list.'
+                : null,
+            onChanged: (_) => setState(() {}),
+            onSubmitted: (String value) => _announceSearch(context, value),
+            onClear: () => _announceSearch(context, ''),
+          ),
+          if (suggestions.isNotEmpty) ...<Widget>[
+            const SizedBox(height: PragmaSpacing.xs),
+            _SearchSuggestionPanel(
+              items: suggestions,
+              onSelected: (String value) {
+                controller
+                  ..text = value
+                  ..selection = TextSelection.collapsed(offset: value.length);
+                setState(() {});
+                _announceSearch(context, value);
+              },
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  List<String> _filtered(String query) {
+    if (query.trim().isEmpty) {
+      return const <String>[];
+    }
+    final String normalized = query.toLowerCase();
+    return _searchTopics
+        .where((String topic) => topic.toLowerCase().contains(normalized))
+        .take(4)
+        .toList(growable: false);
+  }
+
+  void _announceSearch(BuildContext context, String query) {
+    if (!mounted) {
+      return;
+    }
+    final String message =
+        query.isEmpty ? 'Búsqueda reiniciada' : 'Buscar "$query"';
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(content: Text(message), duration: const Duration(seconds: 1)),
+      );
+  }
+}
+
+class _SearchSuggestionPanel extends StatelessWidget {
+  const _SearchSuggestionPanel({
+    required this.items,
+    required this.onSelected,
+  });
+
+  final List<String> items;
+  final ValueChanged<String> onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme scheme = theme.colorScheme;
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(PragmaSpacing.sm),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(PragmaBorderRadius.l),
+        color: scheme.surfaceContainerLowest,
+        border: Border.all(color: scheme.primary.withValues(alpha: 0.35)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: items
+            .map(
+              (String item) => ListTile(
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+                leading: const Icon(Icons.search, size: 16),
+                title: Text(item),
+                onTap: () => onSelected(item),
+              ),
+            )
+            .toList(growable: false),
+      ),
+    );
+  }
+}
+
 class _DropdownPlaygroundState extends State<_DropdownPlayground> {
   String? _selectedRole;
 
@@ -2538,6 +2750,19 @@ const List<PragmaDropdownOption<String>> _dropdownOptions =
     label: 'Android Engineer',
     value: 'android',
   ),
+];
+
+const List<String> _searchTopics = <String>[
+  'Discovery Lab',
+  'Growth Squad',
+  'Research Guild',
+  'Design System backlog',
+  'Mobile Core initiatives',
+  'Onboarding Web',
+  'Analytics Squad',
+  'QA Automation',
+  'Payments Platform',
+  'Content Studio',
 ];
 
 const List<_PaletteSection> _paletteSections = <_PaletteSection>[
