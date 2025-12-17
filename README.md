@@ -18,7 +18,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-	pragma_design_system: ^1.0.2
+	pragma_design_system: ^1.1.0
 ```
 
 Then run:
@@ -58,7 +58,7 @@ class PragmaApp extends StatelessWidget {
 - **Opacity:** `PragmaOpacityTokens` and `PragmaOpacity` constrain overlays to 8/30/60 intervals using `Color.withValues` for Flutter 3.22+.
 - **Domain models:** `ModelPragmaComponent`, `ModelAnatomyAttribute`, `ModelFieldState`, `ModelColorToken`, and `ModelThemePragma` serialize the documentation sourced from Figma, power the input widgets, and guarantee JSON roundtrips.
 - **Grid:** `PragmaGridTokens`, `getGridConfigFromContext`, `PragmaGridContainer`, and `PragmaScaleBox` help replicate the official grid, respect gutters, and scale full mockups.
-- **Components:** Widgets such as `PragmaPrimaryButton`, `PragmaSecondaryButton`, `PragmaButton.icon`, `PragmaCard`, `PragmaCardWidget`, `PragmaDropdownWidget`, `PragmaInputWidget`, `PragmaToastWidget`, `PragmaAvatarWidget`, `PragmaBreadcrumbWidget`, `PragmaAccordionWidget`, `PragmaColorTokenRowWidget`, `PragmaThemeEditorWidget`, or `PragmaLogoWidget` ship consistent states and elevation.
+- **Components:** Widgets such as `PragmaPrimaryButton`, `PragmaSecondaryButton`, `PragmaButton.icon`, `PragmaCard`, `PragmaCardWidget`, `PragmaDropdownWidget`, `PragmaInputWidget`, `PragmaToastWidget`, `PragmaAvatarWidget`, `PragmaBreadcrumbWidget`, `PragmaAccordionWidget`, `PragmaColorTokenRowWidget`, `PragmaThemeEditorWidget`, `PragmaLogoWidget`, or `PragmaCalendarWidget` ship consistent states and elevation.
 
 ### Avatar quick sample
 
@@ -157,6 +157,22 @@ PragmaLogoWidget(
 PragmaLogoWidget(
 	width: 96,
 	variant: PragmaLogoVariant.isotypeCircle,
+);
+```
+
+### Calendar quick sample
+
+```dart
+final PragmaCalendarController controller = PragmaCalendarController(
+	initialMonth: DateTime.now(),
+);
+
+PragmaCalendarWidget(
+	controller: controller,
+	selectionMode: PragmaCalendarSelectionMode.range,
+	onSelectionChanged: (PragmaCalendarSelection value) {
+		debugPrint('Rango: ${value.start} -> ${value.end}');
+	},
 );
 ```
 

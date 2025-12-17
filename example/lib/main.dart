@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pragma_design_system/pragma_design_system.dart';
 
+import 'calendar_demo_page.dart';
 import 'theme_lab_page.dart';
 
 // Consumimos la librería local directamente para iterar sin publicar a pub.dev.
@@ -88,6 +89,11 @@ class ShowcaseScreen extends StatelessWidget {
             tooltip: 'Grid debugger',
             icon: const Icon(Icons.grid_4x4_outlined),
             onPressed: () => _openGridDebugger(context),
+          ),
+          IconButton(
+            tooltip: 'Calendar demo',
+            icon: const Icon(Icons.event_note_outlined),
+            onPressed: () => _openCalendarDemo(context),
           ),
           IconButton(
             tooltip: 'Theme lab',
@@ -352,6 +358,14 @@ void _openGridDebugger(BuildContext context) {
   Navigator.of(context).push(
     MaterialPageRoute<void>(
       builder: (_) => const GridDebuggerPage(),
+    ),
+  );
+}
+
+void _openCalendarDemo(BuildContext context) {
+  Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => const CalendarDemoPage(),
     ),
   );
 }

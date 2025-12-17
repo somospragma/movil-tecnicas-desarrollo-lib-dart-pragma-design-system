@@ -23,6 +23,7 @@ export 'src/widgets/pragma_accordion_widget.dart';
 export 'src/widgets/pragma_avatar_widget.dart';
 export 'src/widgets/pragma_breadcrumb_widget.dart';
 export 'src/widgets/pragma_button.dart';
+export 'src/widgets/pragma_calendar_widget.dart';
 export 'src/widgets/pragma_card.dart';
 export 'src/widgets/pragma_card_widget.dart';
 export 'src/widgets/pragma_color_token_row_widget.dart';
