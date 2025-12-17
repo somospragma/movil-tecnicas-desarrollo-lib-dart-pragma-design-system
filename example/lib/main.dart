@@ -330,6 +330,8 @@ class ShowcaseScreen extends StatelessWidget {
           const SizedBox(height: PragmaSpacing.lg),
           const _TagShowcase(),
           const SizedBox(height: PragmaSpacing.lg),
+          const _RadioButtonShowcase(),
+          const SizedBox(height: PragmaSpacing.lg),
           const _ToastPlayground(),
           const SizedBox(height: PragmaSpacing.lg),
           const _LoadingShowcase(),
@@ -1225,6 +1227,150 @@ class _TagShowcaseState extends State<_TagShowcase> {
       ),
     );
   }
+}
+
+class _RadioButtonShowcase extends StatefulWidget {
+  const _RadioButtonShowcase();
+
+  @override
+  State<_RadioButtonShowcase> createState() => _RadioButtonShowcaseState();
+}
+
+class _RadioButtonShowcaseState extends State<_RadioButtonShowcase> {
+  String _selected = 'design';
+  bool _disabled = false;
+  bool _dense = false;
+  bool _showDescription = true;
+
+  List<_RadioOption> get _options => <_RadioOption>[
+        const _RadioOption(
+          value: 'design',
+          label: 'Diseño lider',
+          description: 'Aprueba specs y prioriza componentes.',
+        ),
+        const _RadioOption(
+          value: 'product',
+          label: 'Product management',
+          description: 'Gestiona roadmap y stakeholders.',
+        ),
+        const _RadioOption(
+          value: 'tech',
+          label: 'Engineering',
+          description: 'Activa despliegues y monitorea builds.',
+        ),
+        const _RadioOption(
+          value: 'readonly',
+          label: 'Solo lectura',
+          description: 'Consulta métricas y descargas.',
+        ),
+      ];
+
+  @override
+  Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+    final ColorScheme scheme = Theme.of(context).colorScheme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text('PragmaRadioButtonWidget', style: textTheme.headlineSmall),
+        const SizedBox(height: PragmaSpacing.md),
+        PragmaCard.section(
+          headline: 'Roles mutuamente excluyentes',
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                'Elige un responsable por recurso y valida estados unselected/selected/hover/disabled.',
+                style: textTheme.bodyMedium,
+              ),
+              const SizedBox(height: PragmaSpacing.md),
+              Wrap(
+                spacing: PragmaSpacing.lg,
+                runSpacing: PragmaSpacing.lg,
+                children: <Widget>[
+                  SizedBox(
+                    width: 420,
+                    child: Column(
+                      children: _options
+                          .map(
+                            (_RadioOption option) =>
+                                PragmaRadioButtonWidget<String>(
+                              value: option.value,
+                              groupValue: _selected,
+                              label: option.label,
+                              description:
+                                  _showDescription ? option.description : null,
+                              dense: _dense,
+                              enabled: !_disabled,
+                              onChanged: _disabled
+                                  ? null
+                                  : (String? value) {
+                                      if (value != null) {
+                                        setState(() => _selected = value);
+                                      }
+                                    },
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 320,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        SwitchListTile.adaptive(
+                          contentPadding: EdgeInsets.zero,
+                          title: const Text('Mostrar descripción'),
+                          value: _showDescription,
+                          onChanged: (bool value) =>
+                              setState(() => _showDescription = value),
+                        ),
+                        SwitchListTile.adaptive(
+                          contentPadding: EdgeInsets.zero,
+                          title: const Text('Modo denso'),
+                          value: _dense,
+                          onChanged: (bool value) =>
+                              setState(() => _dense = value),
+                        ),
+                        SwitchListTile.adaptive(
+                          contentPadding: EdgeInsets.zero,
+                          title: const Text('Deshabilitar radios'),
+                          value: _disabled,
+                          onChanged: (bool value) =>
+                              setState(() => _disabled = value),
+                        ),
+                        const SizedBox(height: PragmaSpacing.sm),
+                        Text(
+                          'Seleccionado: $_selected',
+                          style: textTheme.labelLarge?.copyWith(
+                            color: scheme.primary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _RadioOption {
+  const _RadioOption({
+    required this.value,
+    required this.label,
+    required this.description,
+  });
+
+  final String value;
+  final String label;
+  final String description;
 }
 
 class _DropdownPlayground extends StatefulWidget {

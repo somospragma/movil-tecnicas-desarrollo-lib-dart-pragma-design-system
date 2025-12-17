@@ -11,6 +11,7 @@ Flutter library focused on mobile experiences that bundles Pragma's design token
 - Search-first input (`PragmaSearchWidget`) with neon glow, tone presets, size options, and dropdown-ready callbacks.
 - Rich text areas (`PragmaTextAreaWidget`) with multi-line support, focus glow, validation states, and optional character counter.
 - Neon tags (`PragmaTagWidget`) with gradient capsules, avatar slot, hover/pressed glow, and removable actions.
+- Radio pills (`PragmaRadioButtonWidget`) with neon stroke, optional helper text, hover/pressed glow, and disabled styling.
 - Accessible components (`PragmaButton`, `PragmaCard`, `PragmaIconButtonWidget`, `PragmaInputWidget`, `PragmaToastWidget`, `PragmaAccordionWidget`, `PragmaColorTokenRowWidget`, `PragmaThemeEditorWidget`, `PragmaLogoWidget`).
 - Theme lab sample that lets you edit colors/typography in real time and export a JSON payload backed by `ModelThemePragma`.
 - `PragmaGridTokens`, viewport helpers, and the `PragmaGridContainer` widget to debug layouts.
@@ -23,7 +24,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-	pragma_design_system: ^1.2.1
+	pragma_design_system: ^1.2.2
 ```
 
 Then run:
@@ -63,6 +64,7 @@ class PragmaApp extends StatelessWidget {
 - Glow search guidance vive en [doc/search.md](doc/search.md), explicando anatomia, estados y patrones con dropdown list.
 - Text area guidance vive en [doc/textarea.md](doc/textarea.md), detallando anatomía, estados focus/error/success y mejores prácticas para copy largo.
 - Tag guidance vive en [doc/tags.md](doc/tags.md), cubriendo anatomía, estados active/hover/pressed/disabled y flujos para remover participantes.
+- Radio guidance vive en [doc/radio_button.md](doc/radio_button.md), describiendo anatomía, tokens y combinaciones unselected/hover/disabled para grupos exclusivos.
 - **Opacity:** `PragmaOpacityTokens` and `PragmaOpacity` constrain overlays to 8/30/60 intervals using `Color.withValues` for Flutter 3.22+.
 - **Domain models:** `ModelPragmaComponent`, `ModelAnatomyAttribute`, `ModelFieldState`, `ModelColorToken`, and `ModelThemePragma` serialize the documentation sourced from Figma, power the input widgets, and guarantee JSON roundtrips.
 - **Grid:** `PragmaGridTokens`, `getGridConfigFromContext`, `PragmaGridContainer`, and `PragmaScaleBox` help replicate the official grid, respect gutters, and scale full mockups.
@@ -197,6 +199,39 @@ PragmaTagWidget(
 		debugPrint('Eliminar tag de Eugenia');
 	},
 );
+```
+
+### Radio button quick sample
+
+```dart
+class _AccessLevelField extends StatelessWidget {
+	const _AccessLevelField({required this.value, required this.onChanged});
+
+	final String value;
+	final ValueChanged<String?> onChanged;
+
+	@override
+	Widget build(BuildContext context) {
+		return Column(
+			children: <Widget>[
+				PragmaRadioButtonWidget<String>(
+					value: 'full',
+					groupValue: value,
+					label: 'Acceso total',
+					description: 'Puede editar entregables y aprobar despliegues.',
+					onChanged: onChanged,
+				),
+				PragmaRadioButtonWidget<String>(
+					value: 'readonly',
+					groupValue: value,
+					label: 'Solo lectura',
+					description: 'Ideal para stakeholders o clientes.',
+					onChanged: onChanged,
+				),
+			],
+		);
+	}
+}
 ```
 
 ### Color token row quick sample
