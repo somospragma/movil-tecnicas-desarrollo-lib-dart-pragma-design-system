@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2025-12-17
+
+### Added
+
+- `PragmaTooltipWidget`, tooltip con gradientes light/dark, flechas en las cuatro direcciones, título/ícono/botón opcional y manejo de hover/focus/touch mediante overlay followers listos para mobile.
+- `PragmaPaginationWidget`, fila de paginación con cápsula degradada, flechas numeradas, resumen accesible, selector de "por página" y controles de densidad para tablas extensas.
+- `PragmaFilterWidget`, cápsulas filtrables con overlay multi-select, helper text, contador integrado y resumen de tags activos para componer toolbars.
+- `PragmaBadgeWidget`, cápsula informativa con tonos brand/success/warning/info/neutral, densidad compacta e ícono opcional para etiquetar estados.
+- `PragmaCheckboxWidget`, casilla con glow morado, modo denso, estado indeterminado y soporte accesible para "seleccionar todos".
+- `PragmaRadioButtonWidget`, botón circular con glow y helper text opcional que cubre estados hover/pressed/disabled y densidades compactas.
+- `PragmaTagWidget`, chip con gradiente morado, avatar opcional y acción de remove accesible que replica los estados active/hover/pressed/disabled del spec.
+
+### Changed
+
+- README, documentación (`doc/*.md`), showcases en `example/lib/main.dart` y exports sincronizados para cada componente, además del bump de dependencia pública a `^1.3.0` para publicar el paquete consolidado.
+
 ## [1.2.7] - 2025-12-17
 
 ### Added

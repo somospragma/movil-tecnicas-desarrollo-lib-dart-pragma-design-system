@@ -117,7 +117,6 @@ class _PragmaTooltipWidgetState extends State<PragmaTooltipWidget> {
       onEnter: (_) => _handleChildHover(true),
       onExit: (_) => _handleChildHover(false),
       child: Listener(
-        behavior: HitTestBehavior.deferToChild,
         onPointerDown: _handlePointerDown,
         child: CompositedTransformTarget(
           link: _layerLink,
@@ -189,10 +188,7 @@ class _PragmaTooltipWidgetState extends State<PragmaTooltipWidget> {
       _startAutoHideTimer(fromTap: fromTap);
       return;
     }
-    final OverlayState? overlay = Overlay.of(context, rootOverlay: false);
-    if (overlay == null) {
-      return;
-    }
+    final OverlayState overlay = Overlay.of(context);
     _overlayEntry = OverlayEntry(
       builder: (BuildContext overlayContext) {
         return _PragmaTooltipOverlay(
@@ -683,28 +679,28 @@ class _TooltipAnchors {
     const double gap = 8;
     switch (placement) {
       case PragmaTooltipPlacement.top:
-        return _TooltipAnchors(
+        return const _TooltipAnchors(
           targetAnchor: Alignment.topCenter,
           followerAnchor: Alignment.bottomCenter,
-          offset: const Offset(0, -gap),
+          offset: Offset(0, -gap),
         );
       case PragmaTooltipPlacement.bottom:
-        return _TooltipAnchors(
+        return const _TooltipAnchors(
           targetAnchor: Alignment.bottomCenter,
           followerAnchor: Alignment.topCenter,
-          offset: const Offset(0, gap),
+          offset: Offset(0, gap),
         );
       case PragmaTooltipPlacement.left:
-        return _TooltipAnchors(
+        return const _TooltipAnchors(
           targetAnchor: Alignment.centerLeft,
           followerAnchor: Alignment.centerRight,
-          offset: const Offset(-gap, 0),
+          offset: Offset(-gap, 0),
         );
       case PragmaTooltipPlacement.right:
-        return _TooltipAnchors(
+        return const _TooltipAnchors(
           targetAnchor: Alignment.centerRight,
           followerAnchor: Alignment.centerLeft,
-          offset: const Offset(gap, 0),
+          offset: Offset(gap, 0),
         );
     }
   }
