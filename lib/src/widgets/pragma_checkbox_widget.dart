@@ -36,7 +36,7 @@ class _PragmaCheckboxWidgetState extends State<PragmaCheckboxWidget> {
   bool _isHovered = false;
   bool _isPressed = false;
 
-  bool get _selected => widget.value == true;
+  bool get _selected => widget.value ?? false;
   bool get _indeterminate => widget.value == null;
 
   @override
@@ -146,7 +146,7 @@ class _PragmaCheckboxWidgetState extends State<PragmaCheckboxWidget> {
 
   bool? _nextValue() {
     final bool? current = widget.value;
-    if (current == true) {
+    if (current ?? false) {
       return widget.tristate ? null : false;
     }
     if (current == false) {
@@ -245,7 +245,7 @@ class _PragmaCheckboxColors {
     final bool active = selected || indeterminate;
     Color border = active ? scheme.primary : scheme.outlineVariant;
     Color fill = active ? scheme.primary : scheme.surface;
-    Color icon = active ? Colors.white : scheme.onSurface;
+    final Color icon = active ? Colors.white : scheme.onSurface;
     List<BoxShadow>? glow;
 
     if (hovered) {
