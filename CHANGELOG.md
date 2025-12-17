@@ -12,6 +12,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2025-12-17
+
+### Added
+
+- `PragmaTextAreaWidget`, un campo multi-línea con label superior, estados helper/error/success, contador opcional y degradado morado que replica el spec. Incluye guía dedicada (`doc/textarea.md`), snippet en el README y un showcase dentro de la app de ejemplo.
+- Nuevos controles en `_TextAreaShowcase` para validar disabled, contadores, densidades y mensajes de validación directamente en `example/lib/main.dart`.
+
+### Changed
+
+- `PragmaSearchWidget` recibió un refresh visual: hover glow más notorio, gradiente dinámico, ranuras `leading`/`trailing`, etiquetas de accesibilidad y manejo robusto de controladores/focus nodes para integrarlo en flujos complejos.
+- README y exports sincronizados para exponer el nuevo widget desde `pragma_design_system.dart`, además de alinear la versión publicada (`1.2.0`).
+
 ## [1.1.5] - 2025-12-17
 
 ### Added

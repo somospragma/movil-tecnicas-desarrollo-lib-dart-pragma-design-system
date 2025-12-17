@@ -22,7 +22,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-	pragma_design_system: ^1.1.5
+	pragma_design_system: ^1.2.0
 ```
 
 Then run:
