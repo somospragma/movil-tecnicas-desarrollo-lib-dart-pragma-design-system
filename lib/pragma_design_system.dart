@@ -36,5 +36,6 @@ export 'src/widgets/pragma_input_widget.dart';
 export 'src/widgets/pragma_loading_widget.dart';
 export 'src/widgets/pragma_logo_widget.dart';
 export 'src/widgets/pragma_stepper_widget.dart';
+export 'src/widgets/pragma_table_widget.dart';
 export 'src/widgets/pragma_theme_editor_widget.dart';
 export 'src/widgets/pragma_toast_widget.dart';

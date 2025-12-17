@@ -7,6 +7,7 @@ Flutter library focused on mobile experiences that bundles Pragma's design token
 - Consistent color, typography, spacing, and **responsive grid** tokens.
 - `PragmaTheme` with light/dark variants and Material 3 enabled by default.
 - Glow-based loading components (`PragmaLoadingWidget`) with circular and linear variants.
+- Multi-state tables (`PragmaTableWidget`) with hover glow, tone presets, and compact density.
 - Accessible components (`PragmaButton`, `PragmaCard`, `PragmaIconButtonWidget`, `PragmaInputWidget`, `PragmaToastWidget`, `PragmaAccordionWidget`, `PragmaColorTokenRowWidget`, `PragmaThemeEditorWidget`, `PragmaLogoWidget`).
 - Theme lab sample that lets you edit colors/typography in real time and export a JSON payload backed by `ModelThemePragma`.
 - `PragmaGridTokens`, viewport helpers, and the `PragmaGridContainer` widget to debug layouts.
@@ -19,7 +20,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-	pragma_design_system: ^1.1.1
+	pragma_design_system: ^1.1.3
 ```
 
 Then run:
@@ -59,7 +60,7 @@ class PragmaApp extends StatelessWidget {
 - **Opacity:** `PragmaOpacityTokens` and `PragmaOpacity` constrain overlays to 8/30/60 intervals using `Color.withValues` for Flutter 3.22+.
 - **Domain models:** `ModelPragmaComponent`, `ModelAnatomyAttribute`, `ModelFieldState`, `ModelColorToken`, and `ModelThemePragma` serialize the documentation sourced from Figma, power the input widgets, and guarantee JSON roundtrips.
 - **Grid:** `PragmaGridTokens`, `getGridConfigFromContext`, `PragmaGridContainer`, and `PragmaScaleBox` help replicate the official grid, respect gutters, and scale full mockups.
-- **Components:** Widgets such as `PragmaPrimaryButton`, `PragmaSecondaryButton`, `PragmaButton.icon`, `PragmaCard`, `PragmaCardWidget`, `PragmaDropdownWidget`, `PragmaInputWidget`, `PragmaToastWidget`, `PragmaAvatarWidget`, `PragmaBreadcrumbWidget`, `PragmaAccordionWidget`, `PragmaColorTokenRowWidget`, `PragmaThemeEditorWidget`, `PragmaLogoWidget`, `PragmaCalendarWidget`, or `PragmaLoadingWidget` ship consistent states and elevation.
+- **Components:** Widgets such as `PragmaPrimaryButton`, `PragmaSecondaryButton`, `PragmaButton.icon`, `PragmaCard`, `PragmaCardWidget`, `PragmaDropdownWidget`, `PragmaInputWidget`, `PragmaToastWidget`, `PragmaAvatarWidget`, `PragmaBreadcrumbWidget`, `PragmaAccordionWidget`, `PragmaColorTokenRowWidget`, `PragmaThemeEditorWidget`, `PragmaLogoWidget`, `PragmaCalendarWidget`, `PragmaLoadingWidget`, or `PragmaTableWidget` ship consistent states and elevation.
 
 ### Avatar quick sample
 
@@ -193,6 +194,37 @@ PragmaLoadingWidget(
 );
 ```
 
+### Table quick sample
+
+```dart
+final List<PragmaTableColumn> columns = <PragmaTableColumn>[
+	const PragmaTableColumn(label: 'Nombre', flex: 3),
+	const PragmaTableColumn(label: 'Proyecto', flex: 2),
+	const PragmaTableColumn(
+		label: 'Acción',
+		flex: 1,
+		alignment: Alignment.centerRight,
+	),
+];
+
+PragmaTableWidget(
+	columns: columns,
+	rows: <PragmaTableRowData>[
+		PragmaTableRowData(
+			cells: <Widget>[
+				const Text('Andreina Yajaira Francesca Serrano'),
+				const Text('Discovery Lab'),
+				PragmaTertiaryButton(
+					label: 'Abrir',
+					size: PragmaButtonSize.small,
+					onPressed: () => debugPrint('Abrir ficha'),
+				),
+			],
+		),
+	],
+);
+```
+
 ### Theme editor quick sample
 
 ```dart
@@ -254,6 +286,7 @@ Explore `lib/src` for additional utilities, run the example app, and check [doc/
 
 Review [doc/logo.md](doc/logo.md) for asset usage guidelines and [doc/fonts.md](doc/fonts.md) for typography, licensing, and offline distribution tips.
 Check [doc/loading.md](doc/loading.md) for anatomy, gradients, and scenarios for `PragmaLoadingWidget`.
+Conoce la guía de filas, estados hover y casos de uso del componente en [doc/tables.md](doc/tables.md).
 
 ## Typography and license
 

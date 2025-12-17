@@ -332,6 +332,8 @@ class ShowcaseScreen extends StatelessWidget {
           const SizedBox(height: PragmaSpacing.lg),
           const _StepperShowcase(),
           const SizedBox(height: PragmaSpacing.lg),
+          const _TableShowcase(),
+          const SizedBox(height: PragmaSpacing.lg),
           const _DropdownPlayground(),
           const SizedBox(height: PragmaSpacing.lg),
           const _DropdownListPlayground(),
@@ -1255,6 +1257,249 @@ class _StepperShowcaseState extends State<_StepperShowcase> {
             : PragmaStepperStatus.disabled,
       ),
     ];
+  }
+}
+
+class _TableShowcase extends StatefulWidget {
+  const _TableShowcase();
+
+  @override
+  State<_TableShowcase> createState() => _TableShowcaseState();
+}
+
+class _TableShowcaseState extends State<_TableShowcase> {
+  PragmaTableRowTone _tone = PragmaTableRowTone.light;
+  bool _compact = false;
+  bool _hoverLastRow = true;
+  int? _selectedRow;
+
+  static const List<_TableMember> _members = <_TableMember>[
+    _TableMember(
+      name: 'Andreina Yajaira Francesca Serrano',
+      role: 'Discovery Research · Squad Atlas',
+      project: 'Discovery Lab',
+      icon: Icons.auto_awesome_outlined,
+    ),
+    _TableMember(
+      name: 'Samuel Valencia',
+      role: 'Engineering Manager · Squad Pulsar',
+      project: 'Onboarding Web',
+      icon: Icons.settings_backup_restore_outlined,
+    ),
+    _TableMember(
+      name: 'Gabriela Torres',
+      role: 'UX Writer · Squad Cosmos',
+      project: 'Comms Platform',
+      icon: Icons.translate_outlined,
+    ),
+    _TableMember(
+      name: 'Felipe Gaitán',
+      role: 'iOS Developer · Squad Orbit',
+      project: 'Discovery Lab',
+      icon: Icons.phone_iphone_outlined,
+    ),
+  ];
+
+  List<PragmaTableColumn> get _columns => const <PragmaTableColumn>[
+        PragmaTableColumn(label: '', flex: 1, alignment: Alignment.centerLeft),
+        PragmaTableColumn(
+            label: 'Nombre', flex: 4, alignment: Alignment.centerLeft),
+        PragmaTableColumn(
+            label: 'Proyecto', flex: 3, alignment: Alignment.centerLeft),
+        PragmaTableColumn(
+            label: 'Estado', flex: 2, alignment: Alignment.center),
+        PragmaTableColumn(
+          label: 'Acción',
+          flex: 2,
+          alignment: Alignment.centerRight,
+        ),
+      ];
+
+  @override
+  Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text('PragmaTableWidget', style: textTheme.headlineSmall),
+        const SizedBox(height: PragmaSpacing.md),
+        PragmaCard.section(
+          headline: 'Tablas multi-paso',
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                'Activa el modo oscuro/claro, reduce la densidad y simula el estado hover morado.',
+                style: textTheme.bodyMedium,
+              ),
+              const SizedBox(height: PragmaSpacing.sm),
+              SegmentedButton<PragmaTableRowTone>(
+                segments: const <ButtonSegment<PragmaTableRowTone>>[
+                  ButtonSegment<PragmaTableRowTone>(
+                    value: PragmaTableRowTone.light,
+                    label: Text('Light'),
+                  ),
+                  ButtonSegment<PragmaTableRowTone>(
+                    value: PragmaTableRowTone.dark,
+                    label: Text('Dark'),
+                  ),
+                ],
+                selected: <PragmaTableRowTone>{_tone},
+                onSelectionChanged: (Set<PragmaTableRowTone> values) {
+                  setState(() => _tone = values.first);
+                },
+              ),
+              SwitchListTile.adaptive(
+                contentPadding: EdgeInsets.zero,
+                title: const Text('Modo compacto'),
+                value: _compact,
+                onChanged: (bool value) => setState(() => _compact = value),
+              ),
+              SwitchListTile.adaptive(
+                contentPadding: EdgeInsets.zero,
+                title: const Text('Hover en la última fila'),
+                value: _hoverLastRow,
+                onChanged: (bool value) =>
+                    setState(() => _hoverLastRow = value),
+              ),
+              const SizedBox(height: PragmaSpacing.md),
+              PragmaTableWidget(
+                columns: _columns,
+                rows: _buildRows(),
+                compact: _compact,
+              ),
+              const SizedBox(height: PragmaSpacing.sm),
+              Text(
+                'Toca una fila para marcarla como seleccionada y replicar el highlight.',
+                style: textTheme.bodySmall,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  List<PragmaTableRowData> _buildRows() {
+    return List<PragmaTableRowData>.generate(_members.length, (int index) {
+      final _TableMember member = _members[index];
+      final bool isSelected = _selectedRow == index;
+      final bool isHoverRow = _hoverLastRow && index == _members.length - 1;
+
+      PragmaTableRowState state = PragmaTableRowState.idle;
+      if (isHoverRow) {
+        state = PragmaTableRowState.hover;
+      }
+      if (isSelected) {
+        state = PragmaTableRowState.selected;
+      }
+
+      return PragmaTableRowData(
+        tone: _tone,
+        state: state,
+        semanticLabel: '${member.name} asignada a ${member.project}',
+        onTap: () => _toggleSelection(index),
+        cells: <Widget>[
+          Checkbox(
+            value: isSelected,
+            onChanged: (_) => _toggleSelection(index),
+          ),
+          _TableMemberCell(member: member),
+          Text(member.project, overflow: TextOverflow.ellipsis),
+          Icon(member.icon),
+          const PragmaTertiaryButton(
+            label: 'Ver ficha',
+            size: PragmaButtonSize.small,
+            onPressed: _noop,
+          ),
+        ],
+      );
+    });
+  }
+
+  void _toggleSelection(int index) {
+    setState(() {
+      _selectedRow = _selectedRow == index ? null : index;
+    });
+  }
+}
+
+class _TableMember {
+  const _TableMember({
+    required this.name,
+    required this.role,
+    required this.project,
+    required this.icon,
+  });
+
+  final String name;
+  final String role;
+  final String project;
+  final IconData icon;
+
+  String get initials {
+    final List<String> parts = name
+        .trim()
+        .split(RegExp(r'\s+'))
+        .where((String part) => part.isNotEmpty)
+        .toList();
+    if (parts.isEmpty) {
+      return 'P';
+    }
+    if (parts.length == 1) {
+      return parts.first[0].toUpperCase();
+    }
+    final String first = parts.first[0].toUpperCase();
+    final String second = parts[1][0].toUpperCase();
+    return '$first$second';
+  }
+}
+
+class _TableMemberCell extends StatelessWidget {
+  const _TableMemberCell({required this.member});
+
+  final _TableMember member;
+
+  @override
+  Widget build(BuildContext context) {
+    final ColorScheme scheme = Theme.of(context).colorScheme;
+
+    return Row(
+      children: <Widget>[
+        CircleAvatar(
+          radius: 18,
+          backgroundColor: scheme.secondaryContainer,
+          child: Text(
+            member.initials,
+            style: const TextStyle(fontWeight: FontWeight.w600),
+          ),
+        ),
+        const SizedBox(width: PragmaSpacing.xs),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              DefaultTextStyle.merge(
+                style: const TextStyle(fontWeight: FontWeight.w600),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                child: Text(member.name),
+              ),
+              const SizedBox(height: 2),
+              DefaultTextStyle.merge(
+                style:
+                    const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                child: Text(member.role),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }
 
