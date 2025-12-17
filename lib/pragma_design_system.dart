@@ -32,6 +32,7 @@ export 'src/widgets/pragma_color_token_row_widget.dart';
 export 'src/widgets/pragma_dropdown_list_widget.dart';
 export 'src/widgets/pragma_dropdown_option.dart';
 export 'src/widgets/pragma_dropdown_widget.dart';
+export 'src/widgets/pragma_filter_widget.dart';
 export 'src/widgets/pragma_icon_button.dart';
 export 'src/widgets/pragma_icon_button_widget.dart';
 export 'src/widgets/pragma_input_widget.dart';

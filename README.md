@@ -8,6 +8,7 @@ Flutter library focused on mobile experiences that bundles Pragma's design token
 - `PragmaTheme` with light/dark variants and Material 3 enabled by default.
 - Glow-based loading components (`PragmaLoadingWidget`) with circular and linear variants.
 - Multi-state tables (`PragmaTableWidget`) with hover glow, tone presets, and compact density.
+- Filter capsules (`PragmaFilterWidget`) with multi-select overlays, helper text, tag summaries, and light/dark surfaces.
 - Search-first input (`PragmaSearchWidget`) with neon glow, tone presets, size options, and dropdown-ready callbacks.
 - Rich text areas (`PragmaTextAreaWidget`) with multi-line support, focus glow, validation states, and optional character counter.
 - Neon tags (`PragmaTagWidget`) with gradient capsules, avatar slot, hover/pressed glow, and removable actions.
@@ -26,7 +27,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-	pragma_design_system: ^1.2.4
+	pragma_design_system: ^1.2.5
 ```
 
 Then run:
@@ -68,6 +69,7 @@ class PragmaApp extends StatelessWidget {
 - Tag guidance vive en [doc/tags.md](doc/tags.md), cubriendo anatomía, estados active/hover/pressed/disabled y flujos para remover participantes.
 - Radio guidance vive en [doc/radio_button.md](doc/radio_button.md), describiendo anatomía, tokens y combinaciones unselected/hover/disabled para grupos exclusivos.
 - Checkbox guidance vive en [doc/checkbox.md](doc/checkbox.md), explicando estados unchecked/checked/indeterminate, glow morado y patrones de "seleccionar todos".
+- Filter guidance vive en [doc/filter.md](doc/filter.md), cubriendo estados default/hover/open, paneles con checkboxes y uso de tags persistentes.
 - Badge guidance vive en [doc/badge.md](doc/badge.md), detallando tonos light/dark, anatomía y casos de uso informativos.
 - **Opacity:** `PragmaOpacityTokens` and `PragmaOpacity` constrain overlays to 8/30/60 intervals using `Color.withValues` for Flutter 3.22+.
 - **Domain models:** `ModelPragmaComponent`, `ModelAnatomyAttribute`, `ModelFieldState`, `ModelColorToken`, and `ModelThemePragma` serialize the documentation sourced from Figma, power the input widgets, and guarantee JSON roundtrips.
@@ -463,6 +465,42 @@ PragmaBreadcrumbWidget(
 	],
 	type: PragmaBreadcrumbType.underline,
 )
+```
+
+### Filter quick sample
+
+```dart
+final List<PragmaFilterOption> statusOptions = <PragmaFilterOption>[
+	const PragmaFilterOption(value: 'new', label: 'Nuevo'),
+	const PragmaFilterOption(value: 'qa', label: 'QA'),
+	const PragmaFilterOption(value: 'done', label: 'Completado'),
+];
+
+class _StatusFilter extends StatefulWidget {
+	const _StatusFilter();
+
+	@override
+	State<_StatusFilter> createState() => _StatusFilterState();
+}
+
+class _StatusFilterState extends State<_StatusFilter> {
+	Set<String> statuses = <String>{'new'};
+
+	@override
+	Widget build(BuildContext context) {
+		return PragmaFilterWidget(
+			label: 'Estado',
+			options: statusOptions,
+			selectedValues: statuses,
+			helperText: 'Selecciona múltiples estados para refinar el listado.',
+			summaryLabel: 'Filtros activos',
+			onChanged: (Set<String> values) {
+				setState(() => statuses = values);
+				debugPrint('Filtros aplicados: $values');
+			},
+		);
+	}
+}
 ```
 
 See [doc/opacity_tokens.md](doc/opacity_tokens.md) for the full opacity table and `Color.withValues` examples.

@@ -12,6 +12,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.5] - 2025-12-17
+
+### Added
+
+- `PragmaFilterWidget`, filtro mejorado con overlay multi-select, helper text, contador y resumen de tags activos.
+- Showcase `_FilterShowcase` enlazado a una tabla real para alternar tono, helper text, tags y estados enabled.
+- Guía `doc/filter.md` más snippet/feature en README para documentar anatomía y patrones.
+
+### Changed
+
+- README y ejemplo sincronizados para resaltar el nuevo widget, incluyendo la entrada en el catálogo documentado.
+
 ## [1.2.4] - 2025-12-17
 
 ### Added

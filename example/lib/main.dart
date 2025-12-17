@@ -344,6 +344,8 @@ class ShowcaseScreen extends StatelessWidget {
           const SizedBox(height: PragmaSpacing.lg),
           const _TableShowcase(),
           const SizedBox(height: PragmaSpacing.lg),
+          const _FilterShowcase(),
+          const SizedBox(height: PragmaSpacing.lg),
           const _SearchShowcase(),
           const SizedBox(height: PragmaSpacing.lg),
           const _DropdownPlayground(),
@@ -2370,6 +2372,350 @@ class _TableMemberCell extends StatelessWidget {
   }
 }
 
+class _FilterShowcase extends StatefulWidget {
+  const _FilterShowcase();
+
+  @override
+  State<_FilterShowcase> createState() => _FilterShowcaseState();
+}
+
+class _FilterShowcaseState extends State<_FilterShowcase> {
+  Set<String> _selectedSquads = <String>{'atlas'};
+  Set<String> _selectedStatuses = <String>{'qa'};
+  PragmaFilterTone _tone = PragmaFilterTone.dark;
+  bool _showTags = true;
+  bool _showHelper = true;
+  bool _enabled = true;
+
+  static const List<PragmaFilterOption> _squadOptions = <PragmaFilterOption>[
+    PragmaFilterOption(value: 'atlas', label: 'Squad Atlas', meta: 'Discovery'),
+    PragmaFilterOption(value: 'cosmos', label: 'Squad Cosmos', meta: 'Comms'),
+    PragmaFilterOption(value: 'orbit', label: 'Squad Orbit', meta: 'Mobile'),
+    PragmaFilterOption(value: 'pulsar', label: 'Squad Pulsar', meta: 'Growth'),
+  ];
+
+  static const List<PragmaFilterOption> _statusOptions = <PragmaFilterOption>[
+    PragmaFilterOption(value: 'draft', label: 'Briefing', meta: 'Ideando'),
+    PragmaFilterOption(value: 'qa', label: 'QA activo', meta: 'Validando'),
+    PragmaFilterOption(value: 'ready', label: 'Listo para deploy', meta: '✅'),
+  ];
+
+  static const List<_FilterRecord> _records = <_FilterRecord>[
+    _FilterRecord(
+      name: 'Andreina Serrano',
+      role: 'Product Designer',
+      squad: 'atlas',
+      status: _FilterStatus.qa,
+    ),
+    _FilterRecord(
+      name: 'Gabriela Torres',
+      role: 'UX Writer',
+      squad: 'cosmos',
+      status: _FilterStatus.draft,
+    ),
+    _FilterRecord(
+      name: 'Samuel Valencia',
+      role: 'Engineering Manager',
+      squad: 'pulsar',
+      status: _FilterStatus.ready,
+    ),
+    _FilterRecord(
+      name: 'Luisa Granados',
+      role: 'iOS Developer',
+      squad: 'orbit',
+      status: _FilterStatus.qa,
+    ),
+  ];
+
+  static const List<PragmaTableColumn> _columns = <PragmaTableColumn>[
+    PragmaTableColumn(label: 'Nombre', flex: 4),
+    PragmaTableColumn(label: 'Squad', flex: 2),
+    PragmaTableColumn(label: 'Estado', flex: 2, alignment: Alignment.center),
+    PragmaTableColumn(
+      label: 'Acción',
+      flex: 2,
+      alignment: Alignment.centerRight,
+    ),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+    final List<_FilterRecord> data = _filteredRecords;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text('PragmaFilterWidget', style: textTheme.headlineSmall),
+        const SizedBox(height: PragmaSpacing.md),
+        PragmaCard.section(
+          headline: 'Filtros flotantes',
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                'Combina cápsulas con contador, helper text, tags y una tabla reactiva.',
+                style: textTheme.bodyMedium,
+              ),
+              const SizedBox(height: PragmaSpacing.md),
+              Wrap(
+                spacing: PragmaSpacing.lg,
+                runSpacing: PragmaSpacing.lg,
+                children: <Widget>[
+                  SizedBox(
+                    width: 320,
+                    child: PragmaFilterWidget(
+                      label: 'Squad',
+                      options: _squadOptions,
+                      selectedValues: _selectedSquads,
+                      tone: _tone,
+                      summaryLabel: 'Squads activos',
+                      helperText: _showHelper
+                          ? 'Selecciona squads para acotar la tabla.'
+                          : null,
+                      showSummaryTags: _showTags,
+                      enabled: _enabled,
+                      onChanged: (Set<String> values) {
+                        setState(() => _selectedSquads = values);
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    width: 320,
+                    child: PragmaFilterWidget(
+                      label: 'Estado',
+                      options: _statusOptions,
+                      selectedValues: _selectedStatuses,
+                      tone: _tone,
+                      helperText: _showHelper
+                          ? 'Puedes marcar varios estados a la vez.'
+                          : null,
+                      showSummaryTags: _showTags,
+                      enabled: _enabled,
+                      onChanged: (Set<String> values) {
+                        setState(() => _selectedStatuses = values);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: PragmaSpacing.md),
+              Wrap(
+                spacing: PragmaSpacing.md,
+                runSpacing: PragmaSpacing.sm,
+                children: <Widget>[
+                  SegmentedButton<PragmaFilterTone>(
+                    segments: const <ButtonSegment<PragmaFilterTone>>[
+                      ButtonSegment<PragmaFilterTone>(
+                        value: PragmaFilterTone.dark,
+                        label: Text('Dark'),
+                      ),
+                      ButtonSegment<PragmaFilterTone>(
+                        value: PragmaFilterTone.light,
+                        label: Text('Light'),
+                      ),
+                    ],
+                    selected: <PragmaFilterTone>{_tone},
+                    onSelectionChanged: (Set<PragmaFilterTone> values) {
+                      setState(() => _tone = values.first);
+                    },
+                  ),
+                  SizedBox(
+                    width: 240,
+                    child: SwitchListTile.adaptive(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text('Mostrar tags'),
+                      value: _showTags,
+                      onChanged: (bool value) =>
+                          setState(() => _showTags = value),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 240,
+                    child: SwitchListTile.adaptive(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text('Helper text'),
+                      value: _showHelper,
+                      onChanged: (bool value) =>
+                          setState(() => _showHelper = value),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 240,
+                    child: SwitchListTile.adaptive(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text('Habilitar filtros'),
+                      value: _enabled,
+                      onChanged: (bool value) =>
+                          setState(() => _enabled = value),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: PragmaSpacing.md),
+              PragmaTableWidget(
+                columns: _columns,
+                rows: _buildRows(data),
+                showHeader: true,
+                emptyPlaceholder: const Text(
+                  'Ninguna persona coincide con los filtros aplicados.',
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  List<_FilterRecord> get _filteredRecords {
+    return _records.where((_FilterRecord record) {
+      final bool squadMatch =
+          _selectedSquads.isEmpty || _selectedSquads.contains(record.squad);
+      final bool statusMatch = _selectedStatuses.isEmpty ||
+          _selectedStatuses.contains(record.status.name);
+      return squadMatch && statusMatch;
+    }).toList(growable: false);
+  }
+
+  List<PragmaTableRowData> _buildRows(List<_FilterRecord> records) {
+    return records.map(((_FilterRecord record) {
+      return PragmaTableRowData(
+        tone: PragmaTableRowTone.light,
+        cells: <Widget>[
+          _FilterRecordCell(record: record),
+          Text(_squadLabel(record.squad)),
+          Align(
+            alignment: Alignment.center,
+            child: PragmaBadgeWidget(
+              label: record.status.label,
+              tone: record.status.badgeTone,
+              brightness: PragmaBadgeBrightness.light,
+              dense: true,
+            ),
+          ),
+          const PragmaSecondaryButton(
+            label: 'Asignar',
+            size: PragmaButtonSize.small,
+            onPressed: _noop,
+          ),
+        ],
+      );
+    })).toList(growable: false);
+  }
+
+  String _squadLabel(String squad) {
+    for (final PragmaFilterOption option in _squadOptions) {
+      if (option.value == squad) {
+        return option.label;
+      }
+    }
+    return squad;
+  }
+}
+
+class _FilterRecordCell extends StatelessWidget {
+  const _FilterRecordCell({required this.record});
+
+  final _FilterRecord record;
+
+  @override
+  Widget build(BuildContext context) {
+    final ColorScheme scheme = Theme.of(context).colorScheme;
+
+    return Row(
+      children: <Widget>[
+        CircleAvatar(
+          radius: 18,
+          backgroundColor: scheme.primaryContainer,
+          child: Text(
+            record.initials,
+            style: const TextStyle(fontWeight: FontWeight.w600),
+          ),
+        ),
+        const SizedBox(width: PragmaSpacing.xs),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              DefaultTextStyle.merge(
+                style: const TextStyle(fontWeight: FontWeight.w600),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                child: Text(record.name),
+              ),
+              const SizedBox(height: 2),
+              DefaultTextStyle.merge(
+                style:
+                    const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                child: Text(record.role),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _FilterRecord {
+  const _FilterRecord({
+    required this.name,
+    required this.role,
+    required this.squad,
+    required this.status,
+  });
+
+  final String name;
+  final String role;
+  final String squad;
+  final _FilterStatus status;
+
+  String get initials {
+    final List<String> parts = name
+        .trim()
+        .split(RegExp(r'\s+'))
+        .where((String part) => part.isNotEmpty)
+        .toList();
+    if (parts.isEmpty) {
+      return 'P';
+    }
+    if (parts.length == 1) {
+      return parts.first[0].toUpperCase();
+    }
+    return parts.first[0].toUpperCase() + parts[1][0].toUpperCase();
+  }
+}
+
+enum _FilterStatus { draft, qa, ready }
+
+extension _FilterStatusX on _FilterStatus {
+  String get label {
+    switch (this) {
+      case _FilterStatus.draft:
+        return 'Briefing';
+      case _FilterStatus.qa:
+        return 'QA activo';
+      case _FilterStatus.ready:
+        return 'Listo para deploy';
+    }
+  }
+
+  PragmaBadgeTone get badgeTone {
+    switch (this) {
+      case _FilterStatus.draft:
+        return PragmaBadgeTone.info;
+      case _FilterStatus.qa:
+        return PragmaBadgeTone.warning;
+      case _FilterStatus.ready:
+        return PragmaBadgeTone.success;
+    }
+  }
+}
+
 class _SearchShowcase extends StatefulWidget {
   const _SearchShowcase();
 
@@ -3594,6 +3940,37 @@ const List<Map<String, dynamic>> _componentCatalog = <Map<String, dynamic>>[
     ],
     'urlImages': <String>[
       'https://cdn.pragma.co/components/badge/cover.png',
+    ],
+  },
+  <String, dynamic>{
+    'titleComponent': 'PragmaFilterWidget',
+    'description':
+        'Filtro mejorado para tablas que despliega un panel flotante multi-select, contador y tags persistentes.',
+    'anatomy': <Map<String, dynamic>>[
+      <String, dynamic>{
+        'title': 'Cápsula',
+        'description': 'Surface con contador e ícono para abrir el panel.',
+        'value': 0.3,
+      },
+      <String, dynamic>{
+        'title': 'Panel',
+        'description':
+            'Lista de checkboxes, helper text y acciones Filtrar/Limpiar.',
+        'value': 0.45,
+      },
+      <String, dynamic>{
+        'title': 'Tags activos',
+        'description': 'Resumen de opciones aplicadas fuera de la tabla.',
+        'value': 0.25,
+      },
+    ],
+    'useCases': <String>[
+      'Tablas extensas',
+      'Dashboards de datos',
+      'Listas jerarquizadas'
+    ],
+    'urlImages': <String>[
+      'https://cdn.pragma.co/components/filter/cover.png',
     ],
   },
 ];
