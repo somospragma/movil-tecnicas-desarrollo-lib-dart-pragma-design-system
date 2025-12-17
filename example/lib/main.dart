@@ -326,6 +326,8 @@ class ShowcaseScreen extends StatelessWidget {
           const SizedBox(height: PragmaSpacing.lg),
           const _InputPlayground(),
           const SizedBox(height: PragmaSpacing.lg),
+          const _TextAreaShowcase(),
+          const SizedBox(height: PragmaSpacing.lg),
           const _ToastPlayground(),
           const SizedBox(height: PragmaSpacing.lg),
           const _LoadingShowcase(),
@@ -900,6 +902,163 @@ class _InputPlaygroundState extends State<_InputPlayground> {
         Text(
           'Valor actual: ${_controller.value.value}',
           style: textTheme.bodyMedium,
+        ),
+      ],
+    );
+  }
+}
+
+class _TextAreaShowcase extends StatefulWidget {
+  const _TextAreaShowcase();
+
+  @override
+  State<_TextAreaShowcase> createState() => _TextAreaShowcaseState();
+}
+
+class _TextAreaShowcaseState extends State<_TextAreaShowcase> {
+  final TextEditingController _controller = TextEditingController(
+    text:
+        'Documenta los acuerdos del squad, riesgos conocidos y próximos entregables en un solo lugar.',
+  );
+  bool _disabled = false;
+  bool _showError = false;
+  bool _showSuccess = false;
+  bool _showCounter = true;
+  int _minLines = 4;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _toggleError(bool value) {
+    setState(() {
+      _showError = value;
+      if (value) {
+        _showSuccess = false;
+      }
+    });
+  }
+
+  void _toggleSuccess(bool value) {
+    setState(() {
+      _showSuccess = value;
+      if (value) {
+        _showError = false;
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+    final String? errorText =
+        _showError ? 'Describe el bloqueo o la tarea pendiente.' : null;
+    final String? successText =
+        _showSuccess ? 'Listo para compartir con el squad.' : null;
+    final int maxLines = _minLines + 3;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text('PragmaTextAreaWidget', style: textTheme.headlineSmall),
+        const SizedBox(height: PragmaSpacing.md),
+        PragmaCard.section(
+          headline: 'Briefs extensos',
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                'Combina estados default/focus/error/success y el contador para validar escenarios del spec.',
+                style: textTheme.bodyMedium,
+              ),
+              const SizedBox(height: PragmaSpacing.md),
+              Wrap(
+                spacing: PragmaSpacing.lg,
+                runSpacing: PragmaSpacing.lg,
+                children: <Widget>[
+                  SizedBox(
+                    width: 420,
+                    child: PragmaTextAreaWidget(
+                      label: 'Notas del requerimiento',
+                      controller: _controller,
+                      placeholder:
+                          'Escribe alcance, supuestos, riesgos y decisiones clave...',
+                      description: _showError || _showSuccess
+                          ? null
+                          : 'Usa este espacio para registrar acuerdos largos.',
+                      errorText: errorText,
+                      successText: successText,
+                      enabled: !_disabled,
+                      maxLength: _showCounter ? 320 : null,
+                      showCounter: _showCounter,
+                      minLines: _minLines,
+                      maxLines: maxLines,
+                      onChanged: (_) => setState(() {}),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 320,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        DropdownButtonFormField<int>(
+                          initialValue: _minLines,
+                          decoration: const InputDecoration(
+                              labelText: 'Líneas mínimas'),
+                          items: const <int>[3, 4, 5, 6]
+                              .map(
+                                (int value) => DropdownMenuItem<int>(
+                                  value: value,
+                                  child: Text('$value líneas'),
+                                ),
+                              )
+                              .toList(),
+                          onChanged: (int? value) {
+                            if (value != null) {
+                              setState(() => _minLines = value);
+                            }
+                          },
+                        ),
+                        SwitchListTile.adaptive(
+                          contentPadding: EdgeInsets.zero,
+                          title: const Text('Deshabilitar campo'),
+                          value: _disabled,
+                          onChanged: (bool value) =>
+                              setState(() => _disabled = value),
+                        ),
+                        SwitchListTile.adaptive(
+                          contentPadding: EdgeInsets.zero,
+                          title: const Text('Mostrar error'),
+                          value: _showError,
+                          onChanged: _toggleError,
+                        ),
+                        SwitchListTile.adaptive(
+                          contentPadding: EdgeInsets.zero,
+                          title: const Text('Mostrar success'),
+                          value: _showSuccess,
+                          onChanged: _toggleSuccess,
+                        ),
+                        SwitchListTile.adaptive(
+                          contentPadding: EdgeInsets.zero,
+                          title: const Text('Contador de caracteres'),
+                          value: _showCounter,
+                          onChanged: (bool value) =>
+                              setState(() => _showCounter = value),
+                        ),
+                        const SizedBox(height: PragmaSpacing.xs),
+                        Text(
+                          'Caracteres actuales: ${_controller.text.length}',
+                          style: textTheme.labelMedium,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ],
     );

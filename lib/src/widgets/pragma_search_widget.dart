@@ -291,7 +291,6 @@ class _PragmaSearchWidgetState extends State<PragmaSearchWidget> {
       height: metrics.fieldHeight,
       padding: EdgeInsets.symmetric(horizontal: metrics.horizontalPadding),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           if (leading != null) ...<Widget>[
             DefaultTextStyle.merge(

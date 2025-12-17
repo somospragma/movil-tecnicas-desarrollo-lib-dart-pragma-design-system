@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [1.1.5] - 2025-12-17
+
+### Added
+
+- `PragmaTextAreaWidget`, un campo multi-línea con label superior, focos con glow, estados error/success y contador opcional, alineado al spec de text area.
+- Showcase `_TextAreaShowcase` en la app de ejemplo con controles para disabled, error, success, contador y densidades.
+- Guía `doc/textarea.md` y snippet en el README para documentar anatomía, estados y uso.
+
+### Changed
+
+- Biblioteca pública y README actualizados para exportar y referenciar `PragmaTextAreaWidget` dentro de la versión `1.1.5`.
+
 ## [1.1.4] - 2025-12-17
 
 ### Added
