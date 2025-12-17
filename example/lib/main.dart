@@ -328,6 +328,8 @@ class ShowcaseScreen extends StatelessWidget {
           const SizedBox(height: PragmaSpacing.lg),
           const _TextAreaShowcase(),
           const SizedBox(height: PragmaSpacing.lg),
+          const _TagShowcase(),
+          const SizedBox(height: PragmaSpacing.lg),
           const _ToastPlayground(),
           const SizedBox(height: PragmaSpacing.lg),
           const _LoadingShowcase(),
@@ -1061,6 +1063,166 @@ class _TextAreaShowcaseState extends State<_TextAreaShowcase> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _TagShowcase extends StatefulWidget {
+  const _TagShowcase();
+
+  @override
+  State<_TagShowcase> createState() => _TagShowcaseState();
+}
+
+class _TagShowcaseState extends State<_TagShowcase> {
+  final List<String> _participants = <String>[
+    'eugenia.sarmiento@pragma.com.co',
+    'andres.burgos@pragma.com',
+    'luisa.granados@pragma.com',
+    'uxresearch@pragma.com',
+  ];
+
+  bool _withAvatar = true;
+  bool _allowRemove = true;
+  bool _disabled = false;
+  String? _lastAction;
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final TextTheme textTheme = theme.textTheme;
+    final ColorScheme colorScheme = theme.colorScheme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text('PragmaTagWidget', style: textTheme.headlineSmall),
+        const SizedBox(height: PragmaSpacing.md),
+        PragmaCard.section(
+          headline: 'Asignaciones rápidas',
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                'Etiqueta squads, responsables o tópicos y permite eliminarlos con el ícono X.',
+                style: textTheme.bodyMedium,
+              ),
+              const SizedBox(height: PragmaSpacing.md),
+              Wrap(
+                spacing: PragmaSpacing.sm,
+                runSpacing: PragmaSpacing.sm,
+                children: _participants
+                    .map((String email) => PragmaTagWidget(
+                          label: email,
+                          leading: _withAvatar
+                              ? _buildAvatar(email, colorScheme)
+                              : null,
+                          enabled: !_disabled,
+                          onPressed: _disabled
+                              ? null
+                              : () => setState(
+                                    () => _lastAction = 'Tap: $email',
+                                  ),
+                          onRemove: _allowRemove && !_disabled
+                              ? () => setState(
+                                    () => _lastAction = 'Eliminar: $email',
+                                  )
+                              : null,
+                        ))
+                    .toList(),
+              ),
+              const SizedBox(height: PragmaSpacing.md),
+              Wrap(
+                spacing: PragmaSpacing.lg,
+                runSpacing: PragmaSpacing.md,
+                children: <Widget>[
+                  SizedBox(
+                    width: 320,
+                    child: Column(
+                      children: <Widget>[
+                        SwitchListTile.adaptive(
+                          contentPadding: EdgeInsets.zero,
+                          title: const Text('Mostrar avatar'),
+                          value: _withAvatar,
+                          onChanged: (bool value) =>
+                              setState(() => _withAvatar = value),
+                        ),
+                        SwitchListTile.adaptive(
+                          contentPadding: EdgeInsets.zero,
+                          title: const Text('Permitir eliminar'),
+                          value: _allowRemove,
+                          onChanged: (bool value) =>
+                              setState(() => _allowRemove = value),
+                        ),
+                        SwitchListTile.adaptive(
+                          contentPadding: EdgeInsets.zero,
+                          title: const Text('Deshabilitar tags'),
+                          value: _disabled,
+                          onChanged: (bool value) =>
+                              setState(() => _disabled = value),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    width: 280,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          'Última interacción',
+                          style: textTheme.labelMedium,
+                        ),
+                        const SizedBox(height: PragmaSpacing.xs),
+                        Text(
+                          _lastAction ?? 'Ninguna todavía',
+                          style: textTheme.bodyMedium?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAvatar(String email, ColorScheme scheme) {
+    final String alias = email.split('@').first;
+    final List<String> segments = alias.split('.');
+    final List<String> letters = <String>[];
+    for (final String segment in segments) {
+      if (segment.isEmpty) {
+        continue;
+      }
+      letters.add(segment[0].toUpperCase());
+      if (letters.length == 2) {
+        break;
+      }
+    }
+    if (letters.isEmpty && alias.isNotEmpty) {
+      letters.add(alias[0].toUpperCase());
+    }
+    if (letters.length == 1 && alias.length > 1) {
+      letters.add(alias[1].toUpperCase());
+    }
+
+    return SizedBox(
+      width: 28,
+      height: 28,
+      child: CircleAvatar(
+        backgroundColor: scheme.secondaryContainer,
+        foregroundColor: scheme.onSecondaryContainer,
+        child: Text(
+          letters.join(),
+          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
+        ),
+      ),
     );
   }
 }

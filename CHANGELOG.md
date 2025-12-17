@@ -12,6 +12,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.1] - 2025-12-17
+
+### Added
+
+- `PragmaTagWidget`, cápsula con gradiente morado, avatar opcional y botón de cerrado accesible que replica los estados active/hover/pressed/disabled del spec.
+- Showcase `_TagShowcase` en la app de ejemplo para alternar avatar, remove y disabled, más la guía dedicada `doc/tags.md` y snippet en el README.
+
+### Changed
+
+- Biblioteca pública actualizada para exportar `PragmaTagWidget` y habilitar el uso directo desde `pragma_design_system.dart`.
+- Versión del paquete adelantada a `1.2.1` para publicar la nueva funcionalidad en pub.dev.
+
 ## [1.2.0] - 2025-12-17
 
 ### Added
