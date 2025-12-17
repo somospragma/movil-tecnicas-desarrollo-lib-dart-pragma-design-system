@@ -3041,17 +3041,17 @@ class _TooltipShowcaseState extends State<_TooltipShowcase> {
                   spacing: PragmaSpacing.lg,
                   runSpacing: PragmaSpacing.lg,
                   alignment: WrapAlignment.center,
-                  children: targets.map((_) {
+                  children: targets.map((value) {
                     return PragmaTooltipWidget(
                       tone: _tone,
-                      placement: _.placement,
+                      placement: value.placement,
                       title: title,
                       message: _message,
                       icon: icon,
                       action: action,
                       child: PragmaButton.icon(
-                        label: '${_.label} tooltip',
-                        icon: _.icon,
+                        label: '${value.label} tooltip',
+                        icon: value.icon,
                         hierarchy: PragmaButtonHierarchy.secondary,
                         onPressed: _noop,
                         size: PragmaButtonSize.small,
