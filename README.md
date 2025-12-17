@@ -12,6 +12,7 @@ Flutter library focused on mobile experiences that bundles Pragma's design token
 - Rich text areas (`PragmaTextAreaWidget`) with multi-line support, focus glow, validation states, and optional character counter.
 - Neon tags (`PragmaTagWidget`) with gradient capsules, avatar slot, hover/pressed glow, and removable actions.
 - Radio pills (`PragmaRadioButtonWidget`) with neon stroke, optional helper text, hover/pressed glow, and disabled styling.
+- Glow checkboxes (`PragmaCheckboxWidget`) with multi-select support, indeterminate state, dense mode, and hover/pressed neon outline.
 - Accessible components (`PragmaButton`, `PragmaCard`, `PragmaIconButtonWidget`, `PragmaInputWidget`, `PragmaToastWidget`, `PragmaAccordionWidget`, `PragmaColorTokenRowWidget`, `PragmaThemeEditorWidget`, `PragmaLogoWidget`).
 - Theme lab sample that lets you edit colors/typography in real time and export a JSON payload backed by `ModelThemePragma`.
 - `PragmaGridTokens`, viewport helpers, and the `PragmaGridContainer` widget to debug layouts.
@@ -24,7 +25,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-	pragma_design_system: ^1.2.2
+	pragma_design_system: ^1.2.3
 ```
 
 Then run:
@@ -65,6 +66,7 @@ class PragmaApp extends StatelessWidget {
 - Text area guidance vive en [doc/textarea.md](doc/textarea.md), detallando anatomía, estados focus/error/success y mejores prácticas para copy largo.
 - Tag guidance vive en [doc/tags.md](doc/tags.md), cubriendo anatomía, estados active/hover/pressed/disabled y flujos para remover participantes.
 - Radio guidance vive en [doc/radio_button.md](doc/radio_button.md), describiendo anatomía, tokens y combinaciones unselected/hover/disabled para grupos exclusivos.
+- Checkbox guidance vive en [doc/checkbox.md](doc/checkbox.md), explicando estados unchecked/checked/indeterminate, glow morado y patrones de "seleccionar todos".
 - **Opacity:** `PragmaOpacityTokens` and `PragmaOpacity` constrain overlays to 8/30/60 intervals using `Color.withValues` for Flutter 3.22+.
 - **Domain models:** `ModelPragmaComponent`, `ModelAnatomyAttribute`, `ModelFieldState`, `ModelColorToken`, and `ModelThemePragma` serialize the documentation sourced from Figma, power the input widgets, and guarantee JSON roundtrips.
 - **Grid:** `PragmaGridTokens`, `getGridConfigFromContext`, `PragmaGridContainer`, and `PragmaScaleBox` help replicate the official grid, respect gutters, and scale full mockups.
@@ -227,6 +229,63 @@ class _AccessLevelField extends StatelessWidget {
 					label: 'Solo lectura',
 					description: 'Ideal para stakeholders o clientes.',
 					onChanged: onChanged,
+				),
+			],
+		);
+	}
+}
+```
+
+### Checkbox quick sample
+
+```dart
+class _ScopeChecklist extends StatefulWidget {
+	const _ScopeChecklist({super.key});
+
+	@override
+	State<_ScopeChecklist> createState() => _ScopeChecklistState();
+}
+
+class _ScopeChecklistState extends State<_ScopeChecklist> {
+	bool design = true;
+	bool qa = false;
+
+	bool? get selectAll {
+		if (design && qa) return true;
+		if (!design && !qa) return false;
+		return null;
+	}
+
+	@override
+	Widget build(BuildContext context) {
+		return Column(
+			children: <Widget>[
+				PragmaCheckboxWidget(
+					value: selectAll,
+					tristate: true,
+					label: 'Seleccionar todo',
+					onChanged: (bool? value) {
+						final bool shouldSelect = value ?? false;
+						setState(() {
+							design = shouldSelect;
+							qa = shouldSelect;
+						});
+					},
+				),
+				PragmaCheckboxWidget(
+					value: design,
+					label: 'Diseño listo',
+					description: 'Entregables revisados y compartidos.',
+					onChanged: (bool? value) {
+						setState(() => design = value ?? false);
+					},
+				),
+				PragmaCheckboxWidget(
+					value: qa,
+					label: 'QA finalizado',
+					onChanged: (bool? value) {
+						setState(() => qa = value ?? false);
+					},
 				),
 			],
 		);

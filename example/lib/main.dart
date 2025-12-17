@@ -330,6 +330,8 @@ class ShowcaseScreen extends StatelessWidget {
           const SizedBox(height: PragmaSpacing.lg),
           const _TagShowcase(),
           const SizedBox(height: PragmaSpacing.lg),
+          const _CheckboxShowcase(),
+          const SizedBox(height: PragmaSpacing.lg),
           const _RadioButtonShowcase(),
           const SizedBox(height: PragmaSpacing.lg),
           const _ToastPlayground(),
@@ -1227,6 +1229,192 @@ class _TagShowcaseState extends State<_TagShowcase> {
       ),
     );
   }
+}
+
+class _CheckboxShowcase extends StatefulWidget {
+  const _CheckboxShowcase();
+
+  @override
+  State<_CheckboxShowcase> createState() => _CheckboxShowcaseState();
+}
+
+class _CheckboxShowcaseState extends State<_CheckboxShowcase> {
+  final List<_CheckboxItem> _items = <_CheckboxItem>[
+    const _CheckboxItem(
+      id: 'design',
+      label: 'Sprint de diseño',
+      description: 'Sketching, testeo y handoff semanal.',
+    ),
+    const _CheckboxItem(
+      id: 'research',
+      label: 'Investigación continua',
+      description: 'Entrevistas y análisis de hallazgos.',
+    ),
+    const _CheckboxItem(
+      id: 'qa',
+      label: 'QA dedicado',
+      description: 'Validaciones en staging antes de cada release.',
+    ),
+  ];
+
+  final Set<String> _selected = <String>{'design', 'qa'};
+  bool _disabled = false;
+  bool _dense = false;
+
+  bool? get _allValue {
+    if (_selected.isEmpty) {
+      return false;
+    }
+    if (_selected.length == _items.length) {
+      return true;
+    }
+    return null;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+    final ColorScheme scheme = Theme.of(context).colorScheme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text('PragmaCheckboxWidget', style: textTheme.headlineSmall),
+        const SizedBox(height: PragmaSpacing.md),
+        PragmaCard.section(
+          headline: 'Tareas seleccionables',
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                'Activa múltiples iniciativas del squad, incluyendo estado indeterminado para "Seleccionar todos".',
+                style: textTheme.bodyMedium,
+              ),
+              const SizedBox(height: PragmaSpacing.md),
+              Wrap(
+                spacing: PragmaSpacing.lg,
+                runSpacing: PragmaSpacing.lg,
+                children: <Widget>[
+                  SizedBox(
+                    width: 420,
+                    child: Column(
+                      children: <Widget>[
+                        PragmaCheckboxWidget(
+                          value: _allValue,
+                          tristate: true,
+                          label: 'Seleccionar todos',
+                          description:
+                              'Activa cada frente del squad en una sola acción.',
+                          dense: _dense,
+                          enabled: !_disabled,
+                          onChanged: _disabled
+                              ? null
+                              : (bool? value) => _toggleAll(value ?? false),
+                        ),
+                        Divider(
+                            color:
+                                scheme.outlineVariant.withValues(alpha: 0.3)),
+                        ..._items.map(
+                          (_CheckboxItem item) => PragmaCheckboxWidget(
+                            value: _selected.contains(item.id),
+                            label: item.label,
+                            description: item.description,
+                            dense: _dense,
+                            enabled: !_disabled,
+                            onChanged: _disabled
+                                ? null
+                                : (bool? value) =>
+                                    _toggleItem(item, value ?? false),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    width: 320,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        SwitchListTile.adaptive(
+                          contentPadding: EdgeInsets.zero,
+                          title: const Text('Modo denso'),
+                          value: _dense,
+                          onChanged: (bool value) =>
+                              setState(() => _dense = value),
+                        ),
+                        SwitchListTile.adaptive(
+                          contentPadding: EdgeInsets.zero,
+                          title: const Text('Deshabilitar grupo'),
+                          value: _disabled,
+                          onChanged: (bool value) =>
+                              setState(() => _disabled = value),
+                        ),
+                        const SizedBox(height: PragmaSpacing.sm),
+                        Text(
+                          'Seleccionados (${_selected.length}/${_items.length})',
+                          style: textTheme.labelMedium,
+                        ),
+                        const SizedBox(height: PragmaSpacing.xs),
+                        Text(
+                          _selectedLabels().isEmpty
+                              ? 'Ninguna iniciativa activa'
+                              : _selectedLabels().join(', '),
+                          style: textTheme.bodyMedium?.copyWith(
+                            color: scheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _toggleAll(bool selectAll) {
+    setState(() {
+      if (selectAll) {
+        _selected
+          ..clear()
+          ..addAll(_items.map((_CheckboxItem item) => item.id));
+      } else {
+        _selected.clear();
+      }
+    });
+  }
+
+  void _toggleItem(_CheckboxItem item, bool selected) {
+    setState(() {
+      if (selected) {
+        _selected.add(item.id);
+      } else {
+        _selected.remove(item.id);
+      }
+    });
+  }
+
+  List<String> _selectedLabels() {
+    return _items
+        .where((_CheckboxItem item) => _selected.contains(item.id))
+        .map((_CheckboxItem item) => item.label)
+        .toList();
+  }
+}
+
+class _CheckboxItem {
+  const _CheckboxItem({
+    required this.id,
+    required this.label,
+    required this.description,
+  });
+
+  final String id;
+  final String label;
+  final String description;
 }
 
 class _RadioButtonShowcase extends StatefulWidget {

@@ -26,6 +26,7 @@ export 'src/widgets/pragma_button.dart';
 export 'src/widgets/pragma_calendar_widget.dart';
 export 'src/widgets/pragma_card.dart';
 export 'src/widgets/pragma_card_widget.dart';
+export 'src/widgets/pragma_checkbox_widget.dart';
 export 'src/widgets/pragma_color_token_row_widget.dart';
 export 'src/widgets/pragma_dropdown_list_widget.dart';
 export 'src/widgets/pragma_dropdown_option.dart';
