@@ -330,6 +330,8 @@ class ShowcaseScreen extends StatelessWidget {
           const SizedBox(height: PragmaSpacing.lg),
           const _TagShowcase(),
           const SizedBox(height: PragmaSpacing.lg),
+          const _BadgeShowcase(),
+          const SizedBox(height: PragmaSpacing.lg),
           const _CheckboxShowcase(),
           const SizedBox(height: PragmaSpacing.lg),
           const _RadioButtonShowcase(),
@@ -1228,6 +1230,214 @@ class _TagShowcaseState extends State<_TagShowcase> {
         ),
       ),
     );
+  }
+}
+
+class _BadgeShowcase extends StatefulWidget {
+  const _BadgeShowcase();
+
+  @override
+  State<_BadgeShowcase> createState() => _BadgeShowcaseState();
+}
+
+class _BadgeShowcaseState extends State<_BadgeShowcase> {
+  final TextEditingController _labelController =
+      TextEditingController(text: 'Nuevo release');
+  PragmaBadgeTone _tone = PragmaBadgeTone.brand;
+  PragmaBadgeBrightness _brightness = PragmaBadgeBrightness.light;
+  bool _dense = false;
+  bool _withIcon = true;
+
+  @override
+  void dispose() {
+    _labelController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final TextTheme textTheme = theme.textTheme;
+    final ColorScheme scheme = theme.colorScheme;
+    final IconData? icon = _withIcon ? Icons.auto_awesome : null;
+    final Color previewBackground = _brightness == PragmaBadgeBrightness.dark
+        ? Color.lerp(scheme.surface, Colors.black, 0.65)!
+        : scheme.surfaceContainerHighest.withValues(alpha: 0.4);
+    final Color borderColor = scheme.outlineVariant.withValues(alpha: 0.3);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text('PragmaBadgeWidget', style: textTheme.headlineSmall),
+        const SizedBox(height: PragmaSpacing.md),
+        PragmaCard.section(
+          headline: 'Capsulas informativas',
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                'Etiqueta estados rápidos en dashboards o tarjetas usando los tonos brand/success/warning/info/neutral.',
+                style: textTheme.bodyMedium,
+              ),
+              const SizedBox(height: PragmaSpacing.md),
+              Wrap(
+                spacing: PragmaSpacing.lg,
+                runSpacing: PragmaSpacing.lg,
+                children: <Widget>[
+                  SizedBox(
+                    width: 360,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          padding: const EdgeInsets.all(PragmaSpacing.md),
+                          decoration: BoxDecoration(
+                            color: previewBackground,
+                            borderRadius:
+                                BorderRadius.circular(PragmaBorderRadius.l),
+                            border: Border.all(color: borderColor),
+                          ),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: PragmaBadgeWidget(
+                              label: _labelController.text,
+                              tone: _tone,
+                              brightness: _brightness,
+                              dense: _dense,
+                              icon: icon,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: PragmaSpacing.sm),
+                        TextField(
+                          controller: _labelController,
+                          decoration: const InputDecoration(labelText: 'Label'),
+                          onChanged: (_) => setState(() {}),
+                        ),
+                        const SizedBox(height: PragmaSpacing.sm),
+                        DropdownButtonFormField<PragmaBadgeTone>(
+                          initialValue: _tone,
+                          decoration: const InputDecoration(labelText: 'Tone'),
+                          items: PragmaBadgeTone.values
+                              .map(
+                                (PragmaBadgeTone tone) =>
+                                    DropdownMenuItem<PragmaBadgeTone>(
+                                  value: tone,
+                                  child: Text(_toneLabel(tone)),
+                                ),
+                              )
+                              .toList(),
+                          onChanged: (PragmaBadgeTone? value) {
+                            if (value != null) {
+                              setState(() => _tone = value);
+                            }
+                          },
+                        ),
+                        const SizedBox(height: PragmaSpacing.xs),
+                        SegmentedButton<PragmaBadgeBrightness>(
+                          segments: const <ButtonSegment<
+                              PragmaBadgeBrightness>>[
+                            ButtonSegment<PragmaBadgeBrightness>(
+                              value: PragmaBadgeBrightness.light,
+                              label: Text('Light'),
+                            ),
+                            ButtonSegment<PragmaBadgeBrightness>(
+                              value: PragmaBadgeBrightness.dark,
+                              label: Text('Dark'),
+                            ),
+                          ],
+                          selected: <PragmaBadgeBrightness>{_brightness},
+                          showSelectedIcon: false,
+                          onSelectionChanged:
+                              (Set<PragmaBadgeBrightness> selection) {
+                            setState(() => _brightness = selection.first);
+                          },
+                        ),
+                        const SizedBox(height: PragmaSpacing.xs),
+                        SwitchListTile.adaptive(
+                          contentPadding: EdgeInsets.zero,
+                          title: const Text('Modo denso'),
+                          value: _dense,
+                          onChanged: (bool value) =>
+                              setState(() => _dense = value),
+                        ),
+                        SwitchListTile.adaptive(
+                          contentPadding: EdgeInsets.zero,
+                          title: const Text('Mostrar ícono'),
+                          value: _withIcon,
+                          onChanged: (bool value) =>
+                              setState(() => _withIcon = value),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    width: 420,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text('Catálogo listo para copiar',
+                            style: textTheme.titleSmall),
+                        const SizedBox(height: PragmaSpacing.xs),
+                        Text(
+                          'Compara los tonos en light/dark y mezcla densidades para maquetar badges en wraps.',
+                          style: textTheme.bodySmall
+                              ?.copyWith(color: scheme.onSurfaceVariant),
+                        ),
+                        const SizedBox(height: PragmaSpacing.sm),
+                        Wrap(
+                          spacing: PragmaSpacing.sm,
+                          runSpacing: PragmaSpacing.sm,
+                          children: _buildCatalogBadges(),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  List<Widget> _buildCatalogBadges() {
+    final List<Widget> badges = <Widget>[];
+    for (final PragmaBadgeTone tone in PragmaBadgeTone.values) {
+      badges
+        ..add(
+          PragmaBadgeWidget(
+            label: _toneLabel(tone),
+            tone: tone,
+          ),
+        )
+        ..add(
+          PragmaBadgeWidget(
+            label: '${_toneLabel(tone)} dark',
+            tone: tone,
+            brightness: PragmaBadgeBrightness.dark,
+            dense: true,
+            icon: Icons.dark_mode,
+          ),
+        );
+    }
+    return badges;
+  }
+
+  String _toneLabel(PragmaBadgeTone tone) {
+    switch (tone) {
+      case PragmaBadgeTone.brand:
+        return 'Brand';
+      case PragmaBadgeTone.success:
+        return 'Success';
+      case PragmaBadgeTone.warning:
+        return 'Warning';
+      case PragmaBadgeTone.info:
+        return 'Info';
+      case PragmaBadgeTone.neutral:
+        return 'Neutral';
+    }
   }
 }
 
@@ -3354,6 +3564,36 @@ const List<Map<String, dynamic>> _componentCatalog = <Map<String, dynamic>>[
     'useCases': <String>['Demos responsivas', 'QA visual'],
     'urlImages': <String>[
       'https://cdn.pragma.co/components/scalebox/cover.png',
+    ],
+  },
+  <String, dynamic>{
+    'titleComponent': 'PragmaBadgeWidget',
+    'description':
+        'Capsulas informativas con tonos brand/success/warning/info/neutral listos para superfícies claras u oscuras.',
+    'anatomy': <Map<String, dynamic>>[
+      <String, dynamic>{
+        'title': 'Contenedor',
+        'description': 'Capsula full radius con borde de 1dp.',
+        'value': 0.4,
+      },
+      <String, dynamic>{
+        'title': 'Ícono opcional',
+        'description': 'Elemento de 16px que refuerza el estado.',
+        'value': 0.15,
+      },
+      <String, dynamic>{
+        'title': 'Label',
+        'description': 'Texto bold 12px truncado a una línea.',
+        'value': 0.45,
+      },
+    ],
+    'useCases': <String>[
+      'Etiquetas de estado',
+      'Dashboards',
+      'Metadatos en tarjetas',
+    ],
+    'urlImages': <String>[
+      'https://cdn.pragma.co/components/badge/cover.png',
     ],
   },
 ];

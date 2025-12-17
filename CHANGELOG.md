@@ -12,6 +12,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.4] - 2025-12-17
+
+### Added
+
+- `PragmaBadgeWidget`, cápsula informativa con tonos brand/success/warning/info/neutral, soporte light/dark, modo denso e ícono opcional para etiquetar estados.
+- Showcase `_BadgeShowcase` en la app de ejemplo que permite alternar tono, brillo, densidad, íconos y textos personalizados junto a un catálogo listo para copiar.
+- Guía `doc/badge.md` y snippet en el README documentando anatomía, estados y buenas prácticas para integrar badges.
+
+### Changed
+
+- `pubspec.yaml`, README y exports sincronizados para publicar la versión `1.2.4` con el nuevo componente.
+
 ## [1.2.3] - 2025-12-17
 
 ### Added

@@ -13,6 +13,7 @@ Flutter library focused on mobile experiences that bundles Pragma's design token
 - Neon tags (`PragmaTagWidget`) with gradient capsules, avatar slot, hover/pressed glow, and removable actions.
 - Radio pills (`PragmaRadioButtonWidget`) with neon stroke, optional helper text, hover/pressed glow, and disabled styling.
 - Glow checkboxes (`PragmaCheckboxWidget`) with multi-select support, indeterminate state, dense mode, and hover/pressed neon outline.
+- Status badges (`PragmaBadgeWidget`) with light/dark palettes, icon slot, tone presets, and compact padding.
 - Accessible components (`PragmaButton`, `PragmaCard`, `PragmaIconButtonWidget`, `PragmaInputWidget`, `PragmaToastWidget`, `PragmaAccordionWidget`, `PragmaColorTokenRowWidget`, `PragmaThemeEditorWidget`, `PragmaLogoWidget`).
 - Theme lab sample that lets you edit colors/typography in real time and export a JSON payload backed by `ModelThemePragma`.
 - `PragmaGridTokens`, viewport helpers, and the `PragmaGridContainer` widget to debug layouts.
@@ -25,7 +26,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-	pragma_design_system: ^1.2.3
+	pragma_design_system: ^1.2.4
 ```
 
 Then run:
@@ -67,6 +68,7 @@ class PragmaApp extends StatelessWidget {
 - Tag guidance vive en [doc/tags.md](doc/tags.md), cubriendo anatomía, estados active/hover/pressed/disabled y flujos para remover participantes.
 - Radio guidance vive en [doc/radio_button.md](doc/radio_button.md), describiendo anatomía, tokens y combinaciones unselected/hover/disabled para grupos exclusivos.
 - Checkbox guidance vive en [doc/checkbox.md](doc/checkbox.md), explicando estados unchecked/checked/indeterminate, glow morado y patrones de "seleccionar todos".
+- Badge guidance vive en [doc/badge.md](doc/badge.md), detallando tonos light/dark, anatomía y casos de uso informativos.
 - **Opacity:** `PragmaOpacityTokens` and `PragmaOpacity` constrain overlays to 8/30/60 intervals using `Color.withValues` for Flutter 3.22+.
 - **Domain models:** `ModelPragmaComponent`, `ModelAnatomyAttribute`, `ModelFieldState`, `ModelColorToken`, and `ModelThemePragma` serialize the documentation sourced from Figma, power the input widgets, and guarantee JSON roundtrips.
 - **Grid:** `PragmaGridTokens`, `getGridConfigFromContext`, `PragmaGridContainer`, and `PragmaScaleBox` help replicate the official grid, respect gutters, and scale full mockups.
@@ -291,6 +293,30 @@ class _ScopeChecklistState extends State<_ScopeChecklist> {
 		);
 	}
 }
+```
+
+### Badge quick sample
+
+```dart
+Wrap(
+	spacing: PragmaSpacing.xs,
+	runSpacing: PragmaSpacing.xs,
+	children: <Widget>[
+		PragmaBadgeWidget(
+			label: 'Nuevo',
+			icon: Icons.bolt,
+		),
+		PragmaBadgeWidget(
+			label: 'QA',
+			tone: PragmaBadgeTone.success,
+			brightness: PragmaBadgeBrightness.dark,
+		),
+		PragmaBadgeWidget(
+			label: 'Alert',
+			tone: PragmaBadgeTone.warning,
+		),
+	],
+);
 ```
 
 ### Color token row quick sample

@@ -21,6 +21,7 @@ export 'src/tokens/pragma_spacing.dart';
 export 'src/tokens/pragma_typography.dart';
 export 'src/widgets/pragma_accordion_widget.dart';
 export 'src/widgets/pragma_avatar_widget.dart';
+export 'src/widgets/pragma_badge_widget.dart';
 export 'src/widgets/pragma_breadcrumb_widget.dart';
 export 'src/widgets/pragma_button.dart';
 export 'src/widgets/pragma_calendar_widget.dart';
