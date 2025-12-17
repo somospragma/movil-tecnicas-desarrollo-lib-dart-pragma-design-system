@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2025-12-17
+
+### Added
+
+- `PragmaCalendarWidget`, un calendario con selección única o por rangos, navegación por mes/año/década, límites configurables y resumen accesible alineado con los tokens del sistema.
+- Demo dedicada en la app de ejemplo (`CalendarDemoPage`) con atajos, límites dinámicos y copiado de rangos para validar el componente visualmente.
+- Documentación detallada en `doc/calendar.md` que cubre enfoque, casos de uso y patrones de implementación para consumidores del design system.
+
 ## [1.0.2] - 2025-12-17
 
 ### Fixed
