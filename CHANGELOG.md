@@ -5,12 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-# Changelog
+## [1.2.7] - 2025-12-17
 
-All notable changes to this project will be documented in this file.
+### Added
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+- `PragmaTooltipWidget`, tooltip con gradiente light/dark, flecha en cuatro direcciones, título/ícono/botón opcional y manejo de hover/focus/touch vía overlay.
+- Showcase `_TooltipShowcase` en `example/lib/main.dart` con toggles para tono, título, ícono, botón y longitud de copy.
+- Guía `doc/tooltip.md`, snippet en README y catálogo documentado actualizado.
+
+### Changed
+
+- README y `pubspec.yaml` actualizados a la versión `1.2.7`, destacando el nuevo componente en la lista de features y samples.
 
 ## [1.2.6] - 2025-12-17
 

@@ -47,3 +47,4 @@ export 'src/widgets/pragma_tag_widget.dart';
 export 'src/widgets/pragma_text_area_widget.dart';
 export 'src/widgets/pragma_theme_editor_widget.dart';
 export 'src/widgets/pragma_toast_widget.dart';
+export 'src/widgets/pragma_tooltip_widget.dart';

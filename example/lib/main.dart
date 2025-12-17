@@ -350,6 +350,8 @@ class ShowcaseScreen extends StatelessWidget {
           const SizedBox(height: PragmaSpacing.lg),
           const _FilterShowcase(),
           const SizedBox(height: PragmaSpacing.lg),
+          const _TooltipShowcase(),
+          const SizedBox(height: PragmaSpacing.lg),
           const _SearchShowcase(),
           const SizedBox(height: PragmaSpacing.lg),
           const _DropdownPlayground(),
@@ -2896,6 +2898,188 @@ class _FilterRecordCell extends StatelessWidget {
   }
 }
 
+class _TooltipShowcase extends StatefulWidget {
+  const _TooltipShowcase();
+
+  @override
+  State<_TooltipShowcase> createState() => _TooltipShowcaseState();
+}
+
+class _TooltipShowcaseState extends State<_TooltipShowcase> {
+  PragmaTooltipTone _tone = PragmaTooltipTone.dark;
+  bool _showTitle = true;
+  bool _showIcon = true;
+  bool _showAction = true;
+  bool _longCopy = false;
+
+  String get _message => _longCopy
+      ? 'Comparte instrucciones precisas sin saturar la UI. El tooltip desaparece después de unos segundos o al salir del hover.'
+      : 'Copy breve y descriptivo para guiar acciones inmediatas.';
+
+  @override
+  Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+    final IconData? icon = _showIcon ? Icons.lightbulb_outline : null;
+    final PragmaTooltipAction? action = _showAction
+        ? PragmaTooltipAction(
+            label: 'Button',
+            onPressed: () => debugPrint('Tooltip action fired'),
+          )
+        : null;
+    final String? title = _showTitle ? 'Title (optional)' : null;
+
+    final List<_TooltipTargetConfig> targets = <_TooltipTargetConfig>[
+      const _TooltipTargetConfig(
+        label: 'Bottom',
+        placement: PragmaTooltipPlacement.bottom,
+        icon: Icons.touch_app,
+      ),
+      const _TooltipTargetConfig(
+        label: 'Top',
+        placement: PragmaTooltipPlacement.top,
+        icon: Icons.keyboard_arrow_up,
+      ),
+      const _TooltipTargetConfig(
+        label: 'Left',
+        placement: PragmaTooltipPlacement.left,
+        icon: Icons.arrow_back,
+      ),
+      const _TooltipTargetConfig(
+        label: 'Right',
+        placement: PragmaTooltipPlacement.right,
+        icon: Icons.arrow_forward,
+      ),
+    ];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text('PragmaTooltipWidget', style: textTheme.headlineSmall),
+        const SizedBox(height: PragmaSpacing.md),
+        PragmaCard.section(
+          headline: 'Tooltips multivariantes',
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                'Combina título, ícono, botón interno y arrow para simular top/bottom/left/right en light o dark.',
+                style: textTheme.bodyMedium,
+              ),
+              const SizedBox(height: PragmaSpacing.md),
+              Wrap(
+                spacing: PragmaSpacing.md,
+                runSpacing: PragmaSpacing.sm,
+                children: <Widget>[
+                  SegmentedButton<PragmaTooltipTone>(
+                    segments: const <ButtonSegment<PragmaTooltipTone>>[
+                      ButtonSegment<PragmaTooltipTone>(
+                        value: PragmaTooltipTone.dark,
+                        label: Text('Dark'),
+                      ),
+                      ButtonSegment<PragmaTooltipTone>(
+                        value: PragmaTooltipTone.light,
+                        label: Text('Light'),
+                      ),
+                    ],
+                    selected: <PragmaTooltipTone>{_tone},
+                    onSelectionChanged: (Set<PragmaTooltipTone> values) {
+                      setState(() => _tone = values.first);
+                    },
+                  ),
+                  SizedBox(
+                    width: 220,
+                    child: SwitchListTile.adaptive(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text('Mostrar título'),
+                      value: _showTitle,
+                      onChanged: (bool value) =>
+                          setState(() => _showTitle = value),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 220,
+                    child: SwitchListTile.adaptive(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text('Ícono inicial'),
+                      value: _showIcon,
+                      onChanged: (bool value) =>
+                          setState(() => _showIcon = value),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 220,
+                    child: SwitchListTile.adaptive(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text('Botón interno'),
+                      value: _showAction,
+                      onChanged: (bool value) =>
+                          setState(() => _showAction = value),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 220,
+                    child: SwitchListTile.adaptive(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text('Texto largo'),
+                      value: _longCopy,
+                      onChanged: (bool value) =>
+                          setState(() => _longCopy = value),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: PragmaSpacing.lg),
+              Container(
+                width: double.infinity,
+                padding: PragmaSpacing.insetAll(PragmaSpacing.lg),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                  borderRadius:
+                      BorderRadius.circular(PragmaBorderRadiusTokens.l.value),
+                ),
+                child: Wrap(
+                  spacing: PragmaSpacing.lg,
+                  runSpacing: PragmaSpacing.lg,
+                  alignment: WrapAlignment.center,
+                  children: targets.map((_) {
+                    return PragmaTooltipWidget(
+                      tone: _tone,
+                      placement: _.placement,
+                      title: title,
+                      message: _message,
+                      icon: icon,
+                      action: action,
+                      child: PragmaButton.icon(
+                        label: '${_.label} tooltip',
+                        icon: _.icon,
+                        hierarchy: PragmaButtonHierarchy.secondary,
+                        onPressed: _noop,
+                        size: PragmaButtonSize.small,
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _TooltipTargetConfig {
+  const _TooltipTargetConfig({
+    required this.label,
+    required this.placement,
+    required this.icon,
+  });
+
+  final String label;
+  final PragmaTooltipPlacement placement;
+  final IconData icon;
+}
+
 class _FilterRecord {
   const _FilterRecord({
     required this.name,
@@ -4232,6 +4416,42 @@ const List<Map<String, dynamic>> _componentCatalog = <Map<String, dynamic>>[
     'useCases': <String>['Tablas extensas', 'Listas de catálogo', 'Reportes'],
     'urlImages': <String>[
       'https://cdn.pragma.co/components/pagination/cover.png',
+    ],
+  },
+  <String, dynamic>{
+    'titleComponent': 'PragmaTooltipWidget',
+    'description':
+        'Tooltip con gradiente morado o surface clara, título opcional, ícono y botón interno más arrow en las cuatro direcciones.',
+    'anatomy': <Map<String, dynamic>>[
+      <String, dynamic>{
+        'title': 'Cápsula',
+        'description':
+            'Surface 16dp con glow y borde para alojar el contenido.',
+        'value': 0.4,
+      },
+      <String, dynamic>{
+        'title': 'Contenido',
+        'description': 'Ícono, título y copy principal.',
+        'value': 0.35,
+      },
+      <String, dynamic>{
+        'title': 'Botón interno',
+        'description': 'Acción terciaria opcional.',
+        'value': 0.15,
+      },
+      <String, dynamic>{
+        'title': 'Arrow',
+        'description': 'Triángulo que apunta al elemento asociado.',
+        'value': 0.1,
+      },
+    ],
+    'useCases': <String>[
+      'Formularios densos',
+      'Icon buttons sin label',
+      'Atajos rápidos',
+    ],
+    'urlImages': <String>[
+      'https://cdn.pragma.co/components/tooltip/cover.png',
     ],
   },
 ];
