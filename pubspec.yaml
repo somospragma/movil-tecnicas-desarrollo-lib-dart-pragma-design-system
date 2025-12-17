@@ -1,7 +1,7 @@
 name: pragma_design_system
 description: >-
   Flutter library that gathers Pragma's design tokens, themes, and base components for mobile apps.
-version: 1.1.1
+version: 1.1.2
 homepage: https://pragma.co/
 repository: https://github.com/somospragma/movil-tecnicas-desarrollo-lib-dart-pragma-design-system
 issue_tracker: https://github.com/somospragma/movil-tecnicas-desarrollo-lib-dart-pragma-design-system/issues

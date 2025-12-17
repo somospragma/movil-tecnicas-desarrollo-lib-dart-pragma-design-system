@@ -330,6 +330,8 @@ class ShowcaseScreen extends StatelessWidget {
           const SizedBox(height: PragmaSpacing.lg),
           const _LoadingShowcase(),
           const SizedBox(height: PragmaSpacing.lg),
+          const _StepperShowcase(),
+          const SizedBox(height: PragmaSpacing.lg),
           const _DropdownPlayground(),
           const SizedBox(height: PragmaSpacing.lg),
           const _DropdownListPlayground(),
@@ -1153,6 +1155,106 @@ class _LoadingShowcaseState extends State<_LoadingShowcase> {
         ],
       ),
     );
+  }
+}
+
+class _StepperShowcase extends StatefulWidget {
+  const _StepperShowcase();
+
+  @override
+  State<_StepperShowcase> createState() => _StepperShowcaseState();
+}
+
+class _StepperShowcaseState extends State<_StepperShowcase> {
+  PragmaStepperSize _size = PragmaStepperSize.big;
+  bool _showFailure = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+    final List<PragmaStepperStep> steps = _buildSteps(compact: false);
+    final List<PragmaStepperStep> compactSteps = _buildSteps(compact: true);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text('PragmaStepperWidget', style: textTheme.headlineSmall),
+        const SizedBox(height: PragmaSpacing.md),
+        PragmaCard.section(
+          headline: 'Configura el flujo',
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                'Selecciona el tamaño y simula un escenario con error o con el flujo completo.',
+                style: textTheme.bodyMedium,
+              ),
+              const SizedBox(height: PragmaSpacing.sm),
+              SegmentedButton<PragmaStepperSize>(
+                segments: const <ButtonSegment<PragmaStepperSize>>[
+                  ButtonSegment<PragmaStepperSize>(
+                    value: PragmaStepperSize.big,
+                    label: Text('Big'),
+                  ),
+                  ButtonSegment<PragmaStepperSize>(
+                    value: PragmaStepperSize.small,
+                    label: Text('Small'),
+                  ),
+                ],
+                selected: <PragmaStepperSize>{_size},
+                onSelectionChanged: (Set<PragmaStepperSize> values) {
+                  setState(() => _size = values.first);
+                },
+              ),
+              SwitchListTile.adaptive(
+                contentPadding: EdgeInsets.zero,
+                title: const Text('Simular error en el último paso'),
+                value: _showFailure,
+                onChanged: (bool value) => setState(() => _showFailure = value),
+              ),
+              const SizedBox(height: PragmaSpacing.md),
+              PragmaStepperWidget(steps: steps, size: _size),
+              const SizedBox(height: PragmaSpacing.md),
+              Text('Preset compacto', style: textTheme.titleSmall),
+              const SizedBox(height: PragmaSpacing.sm),
+              PragmaStepperWidget(
+                steps: compactSteps,
+                size: PragmaStepperSize.small,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  List<PragmaStepperStep> _buildSteps({required bool compact}) {
+    return <PragmaStepperStep>[
+      PragmaStepperStep(
+        title: compact ? 'Brief' : 'Discovery & Briefing',
+        description: compact ? null : 'Historias aprobadas',
+        status: PragmaStepperStatus.success,
+      ),
+      PragmaStepperStep(
+        title: compact ? 'UX' : 'Investigación UX',
+        description: compact ? 'Validando' : 'Puestos en pruebas con usuarios',
+        status: PragmaStepperStatus.currentPurple,
+      ),
+      PragmaStepperStep(
+        title: compact ? 'Dev' : 'Implementación',
+        description: compact ? 'Pendiente' : 'Se define backlog de sprint',
+        status: PragmaStepperStatus.currentWhite,
+      ),
+      PragmaStepperStep(
+        title: compact ? 'QA' : 'QA funcional',
+        description: compact
+            ? (_showFailure ? 'Bloqueado' : 'Esperando dev')
+            : (_showFailure ? 'Bloqueado por bug crítico' : 'Listo tras dev'),
+        status: _showFailure
+            ? PragmaStepperStatus.fail
+            : PragmaStepperStatus.disabled,
+      ),
+    ];
   }
 }
 

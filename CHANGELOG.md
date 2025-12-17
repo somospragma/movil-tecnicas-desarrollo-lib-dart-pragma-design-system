@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.2] - 2025-12-17
+
+### Added
+
+- `PragmaStepperWidget`, un componente horizontal que combina estados success/current/fail, conectores con glow y tamaños `big`/`small` para narrar flujos multi-paso.
+- Playground en la app de ejemplo con controles para alternar el tamaño y simular un fallo en el último paso, validando estilos compactos y extendidos.
+
+### Changed
+
+- Versión del paquete actualizada a `1.1.2` y referencias internas sincronizadas con el nuevo componente.
+
 ## [1.1.1] - 2025-12-17
 
 ### Added
