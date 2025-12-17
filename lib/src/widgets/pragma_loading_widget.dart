@@ -142,7 +142,7 @@ class _CircularNeonIndicator extends StatelessWidget {
       painter: _CircularNeonPainter(
         progress: progress,
         strokeWidth: strokeWidth,
-        trackColor: scheme.onSurfaceVariant.withValues(alpha: 0.8),
+        trackColor: scheme.onSurfaceVariant.withValues(alpha: 0.18),
         gradient: gradient,
       ),
       child: Center(
@@ -232,7 +232,7 @@ class _LinearNeonIndicator extends StatelessWidget {
     final ColorScheme scheme = theme.colorScheme;
     final List<Color> gradientColors = _neonColors(scheme);
     final Color trackColor = scheme.onSurfaceVariant
-        .withValues(alpha: theme.brightness == Brightness.dark ? 0.68 : 0.86);
+        .withValues(alpha: theme.brightness == Brightness.dark ? 0.32 : 0.16);
 
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
@@ -259,15 +259,22 @@ class _LinearNeonIndicator extends StatelessWidget {
                 borderRadius: BorderRadius.circular(PragmaBorderRadius.l),
                 boxShadow: <BoxShadow>[
                   BoxShadow(
-                    color: gradientColors.last.withValues(alpha: 0.45),
-                    blurRadius: 24,
-                    offset: const Offset(0, 10),
+                    color: gradientColors.last.withValues(alpha: 0.55),
+                    blurRadius: 28,
+                    offset: const Offset(0, 14),
                   ),
                   BoxShadow(
-                    color: gradientColors.first.withValues(alpha: 0.7),
-                    blurRadius: 16,
+                    color: gradientColors.first.withValues(alpha: 0.42),
+                    blurRadius: 18,
+                    offset: const Offset(0, 4),
                   ),
                 ],
+              ),
+              foregroundDecoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: _coreHighlightColors(scheme),
+                ),
+                borderRadius: BorderRadius.circular(PragmaBorderRadius.l),
               ),
             ),
           ),
@@ -327,11 +334,19 @@ class _LinearNeonIndicator extends StatelessWidget {
 }
 
 List<Color> _neonColors(ColorScheme scheme) {
-  final Color mid = Color.lerp(scheme.primary, scheme.secondary, 0.4)!;
+  final Color mid = Color.lerp(scheme.primary, scheme.secondary, 0.35)!;
   return <Color>[
-    scheme.primary.withValues(alpha: 0.05),
-    mid.withValues(alpha: 0.1),
-    scheme.secondary.withValues(alpha: 0.05),
+    scheme.primary.withValues(alpha: 0.95),
+    mid.withValues(alpha: 0.9),
+    scheme.secondary.withValues(alpha: 0.95),
+  ];
+}
+
+List<Color> _coreHighlightColors(ColorScheme scheme) {
+  final Color darker = Color.lerp(scheme.primary, scheme.secondary, 0.15)!;
+  return <Color>[
+    darker.withValues(alpha: 0.55),
+    Colors.transparent,
   ];
 }
 

@@ -1120,6 +1120,9 @@ class _LoadingShowcaseState extends State<_LoadingShowcase> {
                 strokeWidth: 14,
                 showPercentageLabel: _showLabels,
               ),
+              const SizedBox(
+                width: PragmaSpacing.xl,
+              ),
               SizedBox(
                 width: 280,
                 child: PragmaLoadingWidget(
