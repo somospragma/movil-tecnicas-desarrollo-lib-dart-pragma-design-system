@@ -161,8 +161,9 @@ class _PragmaSearchWidgetState extends State<PragmaSearchWidget> {
         _PragmaSearchStyle.resolve(scheme: scheme, tone: widget.tone);
     final _PragmaSearchMetrics metrics = _PragmaSearchMetrics(widget.size);
 
+    final bool showGlow = widget.enabled && _isHovered;
     final bool showAccent =
-        widget.enabled && (_focusNode.hasFocus || _isHovered || _hasValue);
+        widget.enabled && (_focusNode.hasFocus || _hasValue || _isHovered);
 
     final Color innerColor = widget.enabled
         ? style.innerBackground
@@ -193,7 +194,10 @@ class _PragmaSearchWidgetState extends State<PragmaSearchWidget> {
           color: showAccent ? null : style.outerBackground,
           gradient: showAccent ? style.accentGradient : null,
           borderRadius: BorderRadius.circular(PragmaBorderRadius.xl),
-          boxShadow: showAccent ? style.glow : null,
+          border: showAccent
+              ? null
+              : Border.all(color: style.frameColor, width: 1.5),
+          boxShadow: showGlow ? style.glow : null,
         ),
         padding: const EdgeInsets.all(1.5),
         child: DecoratedBox(
@@ -251,6 +255,7 @@ class _PragmaSearchWidgetState extends State<PragmaSearchWidget> {
       enabled: widget.enabled,
       autofocus: widget.autofocus,
       textInputAction: TextInputAction.search,
+      textAlignVertical: TextAlignVertical.center,
       style: textStyle,
       cursorColor: style.cursorColor,
       decoration: InputDecoration(
@@ -282,12 +287,11 @@ class _PragmaSearchWidgetState extends State<PragmaSearchWidget> {
 
     final Widget? leading = widget.leading;
 
-    Widget content = Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: metrics.horizontalPadding,
-        vertical: metrics.verticalPadding,
-      ),
+    Widget content = Container(
+      height: metrics.fieldHeight,
+      padding: EdgeInsets.symmetric(horizontal: metrics.horizontalPadding),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           if (leading != null) ...<Widget>[
             DefaultTextStyle.merge(
@@ -296,7 +300,12 @@ class _PragmaSearchWidgetState extends State<PragmaSearchWidget> {
             ),
             const SizedBox(width: PragmaSpacing.sm),
           ],
-          Expanded(child: input),
+          Expanded(
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: input,
+            ),
+          ),
           const SizedBox(width: PragmaSpacing.sm),
           trailing,
         ],
@@ -331,9 +340,8 @@ class _PragmaSearchMetrics {
   double get fontSize => size == PragmaSearchSize.large ? 16 : 14;
   double get horizontalPadding =>
       size == PragmaSearchSize.large ? PragmaSpacing.lg : PragmaSpacing.md;
-  double get verticalPadding =>
-      size == PragmaSearchSize.large ? PragmaSpacing.md : PragmaSpacing.sm;
-  double get iconContainerSize => size == PragmaSearchSize.large ? 44 : 38;
+  double get fieldHeight => size == PragmaSearchSize.large ? 56 : 46;
+  double get iconContainerSize => size == PragmaSearchSize.large ? 44 : 36;
 }
 
 class _PragmaSearchStyle {
@@ -346,6 +354,7 @@ class _PragmaSearchStyle {
     required this.disabledIconColor,
     required this.infoColor,
     required this.cursorColor,
+    required this.frameColor,
     required this.accentGradient,
     required this.glow,
   });
@@ -358,6 +367,7 @@ class _PragmaSearchStyle {
   final Color disabledIconColor;
   final Color infoColor;
   final Color cursorColor;
+  final Color frameColor;
   final Gradient accentGradient;
   final List<BoxShadow> glow;
 
@@ -381,6 +391,8 @@ class _PragmaSearchStyle {
           (isDark ? Colors.white : scheme.onSurface).withValues(alpha: 0.5),
       infoColor: isDark ? Colors.white70 : scheme.primary,
       cursorColor: primary,
+      frameColor:
+          isDark ? Colors.white.withValues(alpha: 0.45) : scheme.primary,
       accentGradient: LinearGradient(
         colors: <Color>[primary, accent],
       ),
