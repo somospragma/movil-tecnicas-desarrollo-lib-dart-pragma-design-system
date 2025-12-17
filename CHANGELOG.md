@@ -12,6 +12,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.6] - 2025-12-17
+
+### Added
+
+- `PragmaPaginationWidget`, componente de paginación con cápsula glow, flechas numeradas, summary accesible y dropdown de "por página" listo para tablas extensas.
+- Showcase `_PaginationShowcase` con slider de registros, alternancia light/dark y vista previa integrada a badges.
+- Guía `doc/pagination.md` más snippet/feature en README para documentar anatomía y patrones del componente.
+
+### Changed
+
+- README y catálogo documentado actualizados para listar el nuevo componente y sincronizar la dependencia `^1.2.6`.
+
 ## [1.2.5] - 2025-12-17
 
 ### Added

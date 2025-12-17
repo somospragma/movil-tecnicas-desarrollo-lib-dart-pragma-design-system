@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_relative_lib_imports
 
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pragma_design_system/pragma_design_system.dart';
@@ -343,6 +345,8 @@ class ShowcaseScreen extends StatelessWidget {
           const _StepperShowcase(),
           const SizedBox(height: PragmaSpacing.lg),
           const _TableShowcase(),
+          const SizedBox(height: PragmaSpacing.lg),
+          const _PaginationShowcase(),
           const SizedBox(height: PragmaSpacing.lg),
           const _FilterShowcase(),
           const SizedBox(height: PragmaSpacing.lg),
@@ -2372,6 +2376,237 @@ class _TableMemberCell extends StatelessWidget {
   }
 }
 
+class _PaginationShowcase extends StatefulWidget {
+  const _PaginationShowcase();
+
+  @override
+  State<_PaginationShowcase> createState() => _PaginationShowcaseState();
+}
+
+class _PaginationShowcaseState extends State<_PaginationShowcase> {
+  static const List<int> _perPageOptions = <int>[10, 25, 50, 100];
+  static const List<String> _owners = <String>[
+    'Andreina Serrano',
+    'Luisa Granados',
+    'Samuel Valencia',
+    'Gabriela Torres',
+    'Felipe Gaitán',
+    'Diego Salazar',
+    'Juliana Pardo',
+  ];
+  static const List<_PaginationStatus> _statuses = <_PaginationStatus>[
+    _PaginationStatus(label: 'QA activo', tone: PragmaBadgeTone.info),
+    _PaginationStatus(label: 'En curso', tone: PragmaBadgeTone.warning),
+    _PaginationStatus(label: 'Deploy listo', tone: PragmaBadgeTone.success),
+  ];
+
+  PragmaPaginationTone _tone = PragmaPaginationTone.dark;
+  bool _showSummary = true;
+  int _currentPage = 2;
+  int _itemsPerPage = 25;
+  double _totalItemsSlider = 180;
+
+  int get _totalRecords => _totalItemsSlider.round();
+  int get _totalPages => math.max(1, (_totalRecords / _itemsPerPage).ceil());
+
+  @override
+  Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+    final List<_PaginationRecord> pageRecords = _buildRecordsForPage();
+    final List<_PaginationRecord> preview = pageRecords.take(6).toList();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text('PragmaPaginationWidget', style: textTheme.headlineSmall),
+        const SizedBox(height: PragmaSpacing.md),
+        PragmaCard.section(
+          headline: 'Paginación viva',
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                'Alterna superficie, summary y registros por página para replicar catálogos extensos.',
+                style: textTheme.bodyMedium,
+              ),
+              const SizedBox(height: PragmaSpacing.md),
+              SegmentedButton<PragmaPaginationTone>(
+                segments: const <ButtonSegment<PragmaPaginationTone>>[
+                  ButtonSegment<PragmaPaginationTone>(
+                    value: PragmaPaginationTone.dark,
+                    label: Text('Dark'),
+                  ),
+                  ButtonSegment<PragmaPaginationTone>(
+                    value: PragmaPaginationTone.light,
+                    label: Text('Light'),
+                  ),
+                ],
+                selected: <PragmaPaginationTone>{_tone},
+                onSelectionChanged: (Set<PragmaPaginationTone> value) {
+                  setState(() => _tone = value.first);
+                },
+              ),
+              SwitchListTile.adaptive(
+                contentPadding: EdgeInsets.zero,
+                title: const Text('Mostrar summary'),
+                value: _showSummary,
+                onChanged: (bool value) => setState(() => _showSummary = value),
+              ),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text('Total de registros: $_totalRecords'),
+                subtitle:
+                    const Text('Usa el slider para llegar hasta 400 items.'),
+                trailing: Text('$_totalPages páginas'),
+              ),
+              Slider(
+                value: _totalItemsSlider,
+                min: 60,
+                max: 400,
+                divisions: 17,
+                label: '$_totalRecords registros',
+                onChanged: (double value) {
+                  setState(() {
+                    _totalItemsSlider = value;
+                    _currentPage = math.min(_currentPage, _totalPages);
+                  });
+                },
+              ),
+              const SizedBox(height: PragmaSpacing.sm),
+              PragmaPaginationWidget(
+                currentPage: _currentPage,
+                totalPages: _totalPages,
+                tone: _tone,
+                itemsPerPage: _itemsPerPage,
+                itemsPerPageOptions: _perPageOptions,
+                totalItems: _totalRecords,
+                showSummary: _showSummary,
+                onPageChanged: (int page) {
+                  setState(() => _currentPage = page);
+                },
+                onItemsPerPageChanged: (int value) {
+                  setState(() {
+                    _itemsPerPage = value;
+                    _currentPage = math.min(_currentPage, _totalPages);
+                  });
+                },
+              ),
+              const SizedBox(height: PragmaSpacing.md),
+              _PaginationRecordsPreview(
+                records: preview,
+                pageSize: pageRecords.length,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  List<_PaginationRecord> _buildRecordsForPage() {
+    final int startIndex = (_currentPage - 1) * _itemsPerPage;
+    final int endIndexExclusive =
+        math.min(startIndex + _itemsPerPage, _totalRecords);
+    final List<_PaginationRecord> records = <_PaginationRecord>[];
+    for (int index = startIndex; index < endIndexExclusive; index += 1) {
+      final _PaginationStatus status = _statuses[index % _statuses.length];
+      records.add(
+        _PaginationRecord(
+          ticket: 'Ticket ${(index + 1).toString().padLeft(3, '0')}',
+          squad: 'Squad ${(index % 8) + 1}',
+          owner: _owners[index % _owners.length],
+          status: status,
+        ),
+      );
+    }
+    return records;
+  }
+}
+
+class _PaginationRecord {
+  const _PaginationRecord({
+    required this.ticket,
+    required this.squad,
+    required this.owner,
+    required this.status,
+  });
+
+  final String ticket;
+  final String squad;
+  final String owner;
+  final _PaginationStatus status;
+}
+
+class _PaginationStatus {
+  const _PaginationStatus({required this.label, required this.tone});
+
+  final String label;
+  final PragmaBadgeTone tone;
+}
+
+class _PaginationRecordsPreview extends StatelessWidget {
+  const _PaginationRecordsPreview({
+    required this.records,
+    required this.pageSize,
+  });
+
+  final List<_PaginationRecord> records;
+  final int pageSize;
+
+  @override
+  Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+    final Color captionColor = Theme.of(context).colorScheme.onSurfaceVariant;
+    if (records.isEmpty) {
+      return Text(
+        'Esta página no tiene registros cargados.',
+        style: textTheme.bodyMedium,
+      );
+    }
+
+    final bool isFullPreview = records.length == pageSize;
+    final String subtitle = isFullPreview
+        ? 'Mostrando $pageSize registros en esta página.'
+        : 'Vista previa de ${records.length} de $pageSize registros.';
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text('Vista previa interactiva', style: textTheme.titleMedium),
+        const SizedBox(height: PragmaSpacing.xs),
+        Text(subtitle,
+            style: textTheme.bodySmall?.copyWith(color: captionColor)),
+        const SizedBox(height: PragmaSpacing.sm),
+        Card(
+          margin: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(PragmaSpacing.md),
+          ),
+          child: Column(
+            children: List<Widget>.generate(records.length, (int index) {
+              final _PaginationRecord record = records[index];
+              return Column(
+                children: <Widget>[
+                  ListTile(
+                    dense: true,
+                    title: Text(record.ticket),
+                    subtitle: Text('${record.squad} · ${record.owner}'),
+                    trailing: PragmaBadgeWidget(
+                      label: record.status.label,
+                      tone: record.status.tone,
+                    ),
+                  ),
+                  if (index != records.length - 1) const Divider(height: 1),
+                ],
+              );
+            }),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class _FilterShowcase extends StatefulWidget {
   const _FilterShowcase();
 
@@ -3971,6 +4206,32 @@ const List<Map<String, dynamic>> _componentCatalog = <Map<String, dynamic>>[
     ],
     'urlImages': <String>[
       'https://cdn.pragma.co/components/filter/cover.png',
+    ],
+  },
+  <String, dynamic>{
+    'titleComponent': 'PragmaPaginationWidget',
+    'description':
+        'Paginador con cápsula glow, flechas, páginas numeradas y dropdown "por página" sincronizado con el summary.',
+    'anatomy': <Map<String, dynamic>>[
+      <String, dynamic>{
+        'title': 'Cápsula principal',
+        'description': 'Surface light/dark con degradado, flechas y números.',
+        'value': 0.4,
+      },
+      <String, dynamic>{
+        'title': 'Dropdown por página',
+        'description': 'Control comprimido para elegir 10/25/50/100 registros.',
+        'value': 0.25,
+      },
+      <String, dynamic>{
+        'title': 'Summary',
+        'description': 'Etiqueta accesible con rango (1-25 de 240).',
+        'value': 0.35,
+      },
+    ],
+    'useCases': <String>['Tablas extensas', 'Listas de catálogo', 'Reportes'],
+    'urlImages': <String>[
+      'https://cdn.pragma.co/components/pagination/cover.png',
     ],
   },
 ];

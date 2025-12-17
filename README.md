@@ -8,6 +8,7 @@ Flutter library focused on mobile experiences that bundles Pragma's design token
 - `PragmaTheme` with light/dark variants and Material 3 enabled by default.
 - Glow-based loading components (`PragmaLoadingWidget`) with circular and linear variants.
 - Multi-state tables (`PragmaTableWidget`) with hover glow, tone presets, and compact density.
+- Neon pagination rows (`PragmaPaginationWidget`) with gradient capsule, summary builder, per-page dropdown, and light/dark surfaces.
 - Filter capsules (`PragmaFilterWidget`) with multi-select overlays, helper text, tag summaries, and light/dark surfaces.
 - Search-first input (`PragmaSearchWidget`) with neon glow, tone presets, size options, and dropdown-ready callbacks.
 - Rich text areas (`PragmaTextAreaWidget`) with multi-line support, focus glow, validation states, and optional character counter.
@@ -27,7 +28,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-	pragma_design_system: ^1.2.5
+	pragma_design_system: ^1.2.6
 ```
 
 Then run:
@@ -70,6 +71,7 @@ class PragmaApp extends StatelessWidget {
 - Radio guidance vive en [doc/radio_button.md](doc/radio_button.md), describiendo anatomía, tokens y combinaciones unselected/hover/disabled para grupos exclusivos.
 - Checkbox guidance vive en [doc/checkbox.md](doc/checkbox.md), explicando estados unchecked/checked/indeterminate, glow morado y patrones de "seleccionar todos".
 - Filter guidance vive en [doc/filter.md](doc/filter.md), cubriendo estados default/hover/open, paneles con checkboxes y uso de tags persistentes.
+- Pagination guidance vive en [doc/pagination.md](doc/pagination.md), documentando cápsula, gaps, summary y selector por página.
 - Badge guidance vive en [doc/badge.md](doc/badge.md), detallando tonos light/dark, anatomía y casos de uso informativos.
 - **Opacity:** `PragmaOpacityTokens` and `PragmaOpacity` constrain overlays to 8/30/60 intervals using `Color.withValues` for Flutter 3.22+.
 - **Domain models:** `ModelPragmaComponent`, `ModelAnatomyAttribute`, `ModelFieldState`, `ModelColorToken`, and `ModelThemePragma` serialize the documentation sourced from Figma, power the input widgets, and guarantee JSON roundtrips.
@@ -194,7 +196,7 @@ PragmaTagWidget(
 		width: 28,
 		height: 28,
 		child: CircleAvatar(
-			backgroundColor: Colors.white.withOpacity(0.2),
+			backgroundColor: Colors.white.withValues(alpha: 0.2),
 			child: const Text('ES'),
 		),
 	),
@@ -499,6 +501,52 @@ class _StatusFilterState extends State<_StatusFilter> {
 				debugPrint('Filtros aplicados: $values');
 			},
 		);
+	}
+}
+```
+
+### Pagination quick sample
+
+```dart
+class _PaginationDemo extends StatefulWidget {
+	const _PaginationDemo();
+
+	@override
+	State<_PaginationDemo> createState() => _PaginationDemoState();
+}
+
+class _PaginationDemoState extends State<_PaginationDemo> {
+	int currentPage = 2;
+	int itemsPerPage = 25;
+	final int totalItems = 280;
+
+	int get totalPages => (totalItems / itemsPerPage).ceil();
+
+	@override
+	Widget build(BuildContext context) {
+		return PragmaPaginationWidget(
+			currentPage: currentPage,
+			totalPages: totalPages,
+			itemsPerPage: itemsPerPage,
+			itemsPerPageOptions: const <int>[10, 25, 50, 100],
+			totalItems: totalItems,
+			tone: PragmaPaginationTone.dark,
+			onPageChanged: (int page) {
+				setState(() => currentPage = page);
+				_fetchPage();
+			},
+			onItemsPerPageChanged: (int value) {
+				setState(() {
+					itemsPerPage = value;
+					currentPage = 1;
+				});
+				_fetchPage();
+			},
+		);
+	}
+
+	void _fetchPage() {
+		// Refresca la tabla o lista con los nuevos parámetros.
 	}
 }
 ```
