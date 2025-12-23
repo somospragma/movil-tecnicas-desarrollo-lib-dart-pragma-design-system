@@ -15,6 +15,8 @@ class ModelThemePragma {
     ThemeBrightness brightness = ThemeBrightness.light,
   }) {
     return ModelThemePragma._(
+      // NOTE: tokens may be partial; the ThemeData builder must apply defaults
+      // using ColorScheme.light()/dark() and only override provided keys.
       colorTokens: _sanitizeTokens(colorTokens ?? _defaultColorTokens()),
       textColorTokens:
           _sanitizeTokens(textColorTokens ?? _defaultTextColorTokens()),
@@ -52,8 +54,15 @@ class ModelThemePragma {
   static const String _brightnessKey = 'brightness';
   static const String _defaultTypography = 'Poppins';
 
-  /// Ordered keys commonly used across color schemes.
+  /// Full set of keys supported by Flutter's Material 3 [ColorScheme].
+  ///
+  /// Notes:
+  /// - Some keys are deprecated in Flutter but kept here for backward-compat:
+  ///   `background`, `onBackground`, `surfaceVariant`.
+  /// - Tokens can be partial; the builder should merge them over a default
+  ///   ColorScheme.light()/dark() so missing values never fall back to black.
   static const List<String> coreColorKeys = <String>[
+    // Core
     'primary',
     'onPrimary',
     'primaryContainer',
@@ -66,14 +75,31 @@ class ModelThemePragma {
     'onTertiary',
     'tertiaryContainer',
     'onTertiaryContainer',
+
+    // Error
     'error',
     'onError',
-    'background',
-    'onBackground',
+    'errorContainer',
+    'onErrorContainer',
+
+    // Surfaces (and deprecated ones)
     'surface',
     'onSurface',
-    'surfaceVariant',
+    'surfaceVariant', // deprecated in Flutter (kept for backward-compat)
     'onSurfaceVariant',
+    'background', // deprecated in Flutter (kept for backward-compat)
+    'onBackground', // deprecated in Flutter (kept for backward-compat)
+
+    // Surface containers (Material 3)
+    'surfaceDim',
+    'surfaceBright',
+    'surfaceContainerLowest',
+    'surfaceContainerLow',
+    'surfaceContainer',
+    'surfaceContainerHigh',
+    'surfaceContainerHighest',
+
+    // Other roles
     'inverseSurface',
     'onInverseSurface',
     'inversePrimary',
@@ -82,6 +108,20 @@ class ModelThemePragma {
     'outlineVariant',
     'shadow',
     'scrim',
+
+    // Fixed roles (Material 3)
+    'primaryFixed',
+    'primaryFixedDim',
+    'onPrimaryFixed',
+    'onPrimaryFixedVariant',
+    'secondaryFixed',
+    'secondaryFixedDim',
+    'onSecondaryFixed',
+    'onSecondaryFixedVariant',
+    'tertiaryFixed',
+    'tertiaryFixedDim',
+    'onTertiaryFixed',
+    'onTertiaryFixedVariant',
   ];
 
   /// Ordered keys used to colorize text styles.
@@ -128,7 +168,10 @@ class ModelThemePragma {
     );
   }
 
-  /// Picks a core color token by key, falling back to a neutral swatch.
+  /// Picks a color token by key.
+  ///
+  /// If missing, returns a neutral placeholder. Prefer using the Theme builder
+  /// to merge tokens over ColorScheme defaults so missing keys never become black.
   ModelColorToken colorFor(String key) {
     return colorTokens[key] ?? ModelColorToken(label: key, color: '#000000');
   }
@@ -184,8 +227,12 @@ class ModelThemePragma {
     );
   }
 
+  /// Minimal defaults (can be overridden by tokens or replaced by builder fallbacks).
+  ///
+  /// Important: the Theme builder MUST merge missing keys from ColorScheme defaults.
   static Map<String, ModelColorToken> _defaultColorTokens() {
     return <String, ModelColorToken>{
+      // Core (same as your previous set)
       'primary': ModelColorToken(label: 'Primary', color: '#6750A4'),
       'onPrimary': ModelColorToken(label: 'On primary', color: '#FFFFFF'),
       'primaryContainer':
@@ -204,16 +251,43 @@ class ModelThemePragma {
           ModelColorToken(label: 'Tertiary container', color: '#FFD8E4'),
       'onTertiaryContainer':
           ModelColorToken(label: 'On tertiary container', color: '#31111D'),
+
+      // Error
       'error': ModelColorToken(label: 'Error', color: '#B3261E'),
       'onError': ModelColorToken(label: 'On error', color: '#FFFFFF'),
+      'errorContainer':
+          ModelColorToken(label: 'Error container', color: '#F9DEDC'),
+      'onErrorContainer':
+          ModelColorToken(label: 'On error container', color: '#410E0B'),
+
+      // Surfaces (plus deprecated)
       'background': ModelColorToken(label: 'Background', color: '#FFFBFE'),
       'onBackground': ModelColorToken(label: 'On background', color: '#1C1B1F'),
       'surface': ModelColorToken(label: 'Surface', color: '#FFFBFE'),
       'onSurface': ModelColorToken(label: 'On surface', color: '#1C1B1F'),
-      'surfaceVariant':
-          ModelColorToken(label: 'Surface variant', color: '#E7E0EC'),
+      'surfaceVariant': ModelColorToken(
+        label: 'Surface variant (deprecated)',
+        color: '#E7E0EC',
+      ),
       'onSurfaceVariant':
           ModelColorToken(label: 'On surface variant', color: '#49454F'),
+
+      // Surface containers (reasonable defaults; builder will still fallback properly)
+      'surfaceDim': ModelColorToken(label: 'Surface dim', color: '#DED8E1'),
+      'surfaceBright':
+          ModelColorToken(label: 'Surface bright', color: '#FFFBFE'),
+      'surfaceContainerLowest':
+          ModelColorToken(label: 'Surface container lowest', color: '#FFFFFF'),
+      'surfaceContainerLow':
+          ModelColorToken(label: 'Surface container low', color: '#F7F2FA'),
+      'surfaceContainer':
+          ModelColorToken(label: 'Surface container', color: '#F3EDF7'),
+      'surfaceContainerHigh':
+          ModelColorToken(label: 'Surface container high', color: '#ECE6F0'),
+      'surfaceContainerHighest':
+          ModelColorToken(label: 'Surface container highest', color: '#E6E0E9'),
+
+      // Other roles
       'inverseSurface':
           ModelColorToken(label: 'Inverse surface', color: '#313033'),
       'onInverseSurface':
@@ -226,6 +300,35 @@ class ModelThemePragma {
           ModelColorToken(label: 'Outline variant', color: '#C4C7C5'),
       'shadow': ModelColorToken(label: 'Shadow', color: '#000000'),
       'scrim': ModelColorToken(label: 'Scrim', color: '#000000'),
+
+      // Fixed roles (defaults are “safe”; builder fallbacks are the source of truth)
+      'primaryFixed': ModelColorToken(label: 'Primary fixed', color: '#EADDFF'),
+      'primaryFixedDim':
+          ModelColorToken(label: 'Primary fixed dim', color: '#D0BCFF'),
+      'onPrimaryFixed':
+          ModelColorToken(label: 'On primary fixed', color: '#21005D'),
+      'onPrimaryFixedVariant':
+          ModelColorToken(label: 'On primary fixed variant', color: '#4F378B'),
+
+      'secondaryFixed':
+          ModelColorToken(label: 'Secondary fixed', color: '#E8DEF8'),
+      'secondaryFixedDim':
+          ModelColorToken(label: 'Secondary fixed dim', color: '#CCC2DC'),
+      'onSecondaryFixed':
+          ModelColorToken(label: 'On secondary fixed', color: '#1D192B'),
+      'onSecondaryFixedVariant': ModelColorToken(
+        label: 'On secondary fixed variant',
+        color: '#4A4458',
+      ),
+
+      'tertiaryFixed':
+          ModelColorToken(label: 'Tertiary fixed', color: '#FFD8E4'),
+      'tertiaryFixedDim':
+          ModelColorToken(label: 'Tertiary fixed dim', color: '#EFB8C8'),
+      'onTertiaryFixed':
+          ModelColorToken(label: 'On tertiary fixed', color: '#31111D'),
+      'onTertiaryFixedVariant':
+          ModelColorToken(label: 'On tertiary fixed variant', color: '#633B48'),
     };
   }
 

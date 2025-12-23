@@ -724,12 +724,14 @@ class PragmaToastWidget extends StatelessWidget {
                       ],
                     ),
                   ),
-                  IconButton(
-                    tooltip: 'Cerrar',
-                    onPressed: handleClose,
-                    icon: Icon(
-                      closeIcon,
-                      color: config.closeIconColor ?? palette.textColor,
+                  Tooltip(
+                    message: 'Cerrar',
+                    child: IconButton(
+                      onPressed: handleClose,
+                      icon: Icon(
+                        closeIcon,
+                        color: config.closeIconColor ?? palette.textColor,
+                      ),
                     ),
                   ),
                 ],
