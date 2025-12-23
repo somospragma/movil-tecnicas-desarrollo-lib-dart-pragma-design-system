@@ -5,6 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2025-12-23
+
+### Added
+
+- Tests ampliados para `ModelThemePragma` y `PragmaThemeBuilder`, cubriendo casos de colores faltantes y fallback automático.
+
+### Changed
+
+- `ModelThemePragma`: Mayor cobertura de casos y robustez en serialización, comparación y uso de modelos de tema personalizados.
+- `PragmaThemeBuilder`: Ahora utiliza los valores predeterminados de Flutter (`ThemeData` y `ColorScheme`) para cualquier color faltante, asegurando consistencia visual y evitando nulos.
+
+### Fixed
+
+- Lógica de fallback de colores mejorada en el builder para evitar errores en temas incompletos y mejorar la integración con Flutter.
+
+## [1.3.1] - 2025-12-23
+
+### Fixed
+
+- Manejo robusto de overlays y ciclo de vida de `PragmaToastWidget`: ahora los toasts pueden cerrarse en cualquier orden (arriba, medio, abajo) sin overlays huérfanos ni errores de `ValueNotifier disposed`.
+- Se corrigió el uso de keys en la lista de toasts para evitar reciclaje incorrecto de `State` y listeners.
+- Se fuerza el repintado del overlay al cerrar un toast para máxima estabilidad.
+
+### Tests
+
+- Sugeridos tests de widgets para asegurar que cerrar toasts en cualquier orden no deja overlays ni errores.
+
 ## [1.3.0] - 2025-12-17
 
 ### Added
@@ -354,7 +381,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Standardized the project language to English across README, documentation, and in-code comments.
 - Documented the anatomy value contract (0.0–1.0 range) and clarified the DartDoc examples for `ModelPragmaComponent`.
 - Promoted the package to version `0.0.5` to reflect the documentation overhaul.
-
-```
-
-```

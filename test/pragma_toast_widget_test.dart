@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart'; // Necesario para FlutterExceptionHandler
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pragma_design_system/pragma_design_system.dart';
@@ -122,4 +123,102 @@ void main() {
     expect(find.text('Temporal'), findsNothing);
     expect(handle.isActive, isFalse);
   });
+
+  group('regresión overlays/toasts', () {
+    testWidgets(
+        'Cerrar toasts de arriba hacia abajo no deja overlays ni errores',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(const _TestAppToastStack());
+      await tester.tap(find.text('Show 3'));
+      await tester.pump();
+
+      // Cierra el de arriba
+      await tester.tap(find.byTooltip('Cerrar').first);
+      await tester.pump(const Duration(milliseconds: 400));
+      // Cierra el siguiente
+      await tester.tap(find.byTooltip('Cerrar').first);
+      await tester.pump(const Duration(milliseconds: 400));
+      // Cierra el último
+      await tester.tap(find.byTooltip('Cerrar').first);
+      await tester.pump(const Duration(milliseconds: 400));
+
+      await tester.pumpAndSettle();
+      // Espera incremental tolerante a la animación de salida del Tooltip
+      const int maxTries = 30;
+      int tries = 0;
+      while (
+          find.byTooltip('Cerrar').evaluate().isNotEmpty && tries < maxTries) {
+        await tester.pump(const Duration(milliseconds: 200));
+        tries++;
+      }
+      expect(find.byTooltip('Cerrar'), findsNothing);
+    });
+
+    testWidgets('Cerrar toast del medio y luego otro no deja errores',
+        (WidgetTester tester) async {
+      FlutterErrorDetails? captured;
+      final FlutterExceptionHandler? old = FlutterError.onError;
+      try {
+        FlutterError.onError = (FlutterErrorDetails details) {
+          captured = details;
+        };
+
+        await tester.pumpWidget(const _TestAppToastStack());
+        await tester.tap(find.text('Show 3'));
+        await tester.pump();
+
+        // Cierra el del medio
+        await tester.tap(find.byTooltip('Cerrar').at(1));
+        await tester.pump(const Duration(milliseconds: 400));
+        // Cierra otro
+        await tester.tap(find.byTooltip('Cerrar').first);
+        await tester.pump(const Duration(milliseconds: 400));
+        // Cierra el último
+        await tester.tap(find.byTooltip('Cerrar').first);
+        await tester.pump(const Duration(milliseconds: 400));
+
+        await tester.pumpAndSettle();
+        // Espera incremental tolerante a la animación de salida del Tooltip
+        const int maxTries = 30;
+        int tries = 0;
+        while (find.byTooltip('Cerrar').evaluate().isNotEmpty &&
+            tries < maxTries) {
+          await tester.pump(const Duration(milliseconds: 200));
+          tries++;
+        }
+        expect(captured, isNull);
+        expect(find.byTooltip('Cerrar'), findsNothing);
+      } finally {
+        FlutterError.onError = old;
+      }
+    });
+  });
+}
+
+class _TestAppToastStack extends StatelessWidget {
+  const _TestAppToastStack();
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Builder(
+        builder: (BuildContext context) => Scaffold(
+          body: Center(
+            child: ElevatedButton(
+              child: const Text('Show 3'),
+              onPressed: () {
+                for (int i = 0; i < 3; i++) {
+                  PragmaToastService.showToast(
+                    context: context,
+                    title: 'Toast $i',
+                    message: 'Mensaje $i',
+                  );
+                }
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
