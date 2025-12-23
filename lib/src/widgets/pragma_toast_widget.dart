@@ -119,6 +119,9 @@ class PragmaToastHandle {
   }
 }
 
+// Set global privado para rastrear todas las llaves activas de overlays/toasts.
+final Set<_ToastOverlayKey> _activeToastKeys = <_ToastOverlayKey>{};
+
 /// Global service that injects Pragma toasts using overlay entries.
 class PragmaToastService {
   PragmaToastService._();
@@ -127,6 +130,27 @@ class PragmaToastService {
 
   final Map<_ToastOverlayKey, _PragmaToastQueue> _queues =
       <_ToastOverlayKey, _PragmaToastQueue>{};
+
+  /// Limpia todos los toasts y overlays activos para todos los contextos/alineaciones.
+  void clearAll() {
+    final List<_ToastOverlayKey> keys = _activeToastKeys.toList();
+    for (final _ToastOverlayKey key in keys) {
+      _queues[key]?.clearAll();
+    }
+    _queues.clear();
+    _activeToastKeys.clear();
+  }
+
+  /// Limpia todos los toasts y overlays activos para un contexto/alineación específico.
+  void clearForOverlayAndAlignment(
+    OverlayState overlay,
+    PragmaToastAlignment alignment,
+  ) {
+    final _ToastOverlayKey key = _ToastOverlayKey(overlay, alignment);
+    _queues[key]?.clearAll();
+    _queues.remove(key);
+    _activeToastKeys.remove(key);
+  }
 
   /// Displays a toast overlay tied to the nearest root [Overlay].
   PragmaToastHandle show({
@@ -152,12 +176,17 @@ class PragmaToastService {
     );
     final _ToastOverlayKey key = _ToastOverlayKey(overlay, alignment);
     final _PragmaToastQueue queue = _queues.putIfAbsent(key, () {
+      _activeToastKeys.add(key);
       return _PragmaToastQueue(
         overlay: overlay,
         alignment: alignment,
-        onEmpty: () => _queues.remove(key),
+        onEmpty: () {
+          _queues.remove(key);
+          _activeToastKeys.remove(key);
+        },
       );
     });
+    _activeToastKeys.add(key);
 
     final PragmaToastConfig config = PragmaToastConfig(
       title: title,
@@ -248,6 +277,19 @@ class _PragmaToastQueue extends ChangeNotifier {
   OverlayEntry? _entry;
   int _seed = 0;
 
+  /// Limpia todos los toasts y overlays activos inmediatamente.
+  void clearAll() {
+    for (final _ActiveToast toast in List<_ActiveToast>.from(_toasts)) {
+      toast.markClosing(force: true);
+      finalizeRemoval(toast);
+    }
+    _toasts.clear();
+    _entry?.remove();
+    _entry = null;
+    onEmpty();
+    notifyListeners();
+  }
+
   UnmodifiableListView<_ActiveToast> get toasts =>
       UnmodifiableListView<_ActiveToast>(_toasts);
 
@@ -285,16 +327,19 @@ class _PragmaToastQueue extends ChangeNotifier {
       return;
     }
     toast.markClosing();
+    _entry?.markNeedsBuild(); // defensivo: fuerza repintado del overlay
   }
 
   bool contains(int id) => _toasts.any((_ActiveToast value) => value.id == id);
 
   void finalizeRemoval(_ActiveToast toast) {
-    final bool removed = _toasts.remove(toast);
-    if (!removed) {
+    // Eliminar por id único, no por referencia directa.
+    final int index = _toasts.indexWhere((_ActiveToast t) => t.id == toast.id);
+    if (index == -1) {
       return;
     }
-    toast.disposeTimer();
+    final _ActiveToast removedToast = _toasts.removeAt(index);
+    removedToast.disposeTimer();
     notifyListeners();
     if (_toasts.isEmpty) {
       _entry?.remove();
@@ -304,13 +349,10 @@ class _PragmaToastQueue extends ChangeNotifier {
   }
 
   @override
+  @override
   void dispose() {
-    for (final _ActiveToast toast in _toasts) {
-      toast.disposeTimer();
-    }
-    _toasts.clear();
-    _entry?.remove();
-    _entry = null;
+    // Limpieza defensiva: elimina todos los overlays y listeners aunque haya toasts activos.
+    clearAll();
     super.dispose();
   }
 }
@@ -332,7 +374,7 @@ class _ActiveToast {
     _timer = Timer(config.duration, callback);
   }
 
-  void markClosing() {
+  void markClosing({bool force = false}) {
     if (_removed) {
       return;
     }
@@ -340,7 +382,7 @@ class _ActiveToast {
     if (_notifierDisposed) {
       return;
     }
-    if (!closing.value) {
+    if (!closing.value || force) {
       closing.value = true;
     }
   }
@@ -405,14 +447,15 @@ class _PragmaToastStackState extends State<_PragmaToastStack> {
     final List<_ActiveToast> toasts = widget.queue.toasts;
     final List<Widget> children = <Widget>[];
     for (int i = 0; i < toasts.length; i++) {
+      final _ActiveToast toast = toasts[i];
       children.add(
         Padding(
+          key: ValueKey<int>(toast.id),
           padding: EdgeInsets.only(top: i == 0 ? 0 : PragmaSpacing.md),
           child: _PragmaToastHost(
-            key: ValueKey<int>(toasts[i].id),
-            toast: toasts[i],
-            onRemoved: () => widget.queue.finalizeRemoval(toasts[i]),
-            onRequestClose: () => widget.queue.scheduleRemoval(toasts[i].id),
+            toast: toast,
+            onRemoved: () => widget.queue.finalizeRemoval(toast),
+            onRequestClose: () => widget.queue.scheduleRemoval(toast.id),
           ),
         ),
       );
@@ -446,7 +489,6 @@ class _PragmaToastHost extends StatefulWidget {
     required this.toast,
     required this.onRemoved,
     required this.onRequestClose,
-    super.key,
   });
 
   final _ActiveToast toast;
@@ -495,6 +537,7 @@ class _PragmaToastHostState extends State<_PragmaToastHost>
   @override
   void dispose() {
     widget.toast.closing.removeListener(_handleClosingChanged);
+    // Ahora sí, liberar el ChangeNotifier solo cuando el widget sale del árbol
     widget.toast.disposeNotifier();
     _controller.removeStatusListener(_handleStatusChanged);
     _controller.dispose();
@@ -579,6 +622,14 @@ class PragmaToastWidget extends StatelessWidget {
     final IconData closeIcon = config.closeIcon ?? Icons.close_rounded;
     final String semanticsLabel = config.semanticsLabel ??
         '${palette.label} toast: ${config.title}${config.message == null ? '' : ", ${config.message}"}';
+
+    void handleClose() {
+      // Siempre cerrar el overlay, aunque el callback sea null.
+      try {
+        config.onCloseIconPressed?.call();
+      } catch (_) {}
+      onClose();
+    }
 
     return FocusTraversalGroup(
       child: Semantics(
@@ -675,10 +726,7 @@ class PragmaToastWidget extends StatelessWidget {
                   ),
                   IconButton(
                     tooltip: 'Cerrar',
-                    onPressed: () {
-                      config.onCloseIconPressed?.call();
-                      onClose();
-                    },
+                    onPressed: handleClose,
                     icon: Icon(
                       closeIcon,
                       color: config.closeIconColor ?? palette.textColor,
