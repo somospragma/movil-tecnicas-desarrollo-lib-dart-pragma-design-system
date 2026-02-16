@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:pragma_design_system/pragma_design_system.dart';
 
 import 'calendar_demo_page.dart';
+import 'pragma_page_scaffold.dart';
 import 'theme_lab_page.dart';
 
 // Consumimos la librería local directamente para iterar sin publicar a pub.dev.
@@ -101,6 +102,11 @@ class ShowcaseScreen extends StatelessWidget {
             tooltip: 'Theme lab',
             icon: const Icon(Icons.palette_outlined),
             onPressed: () => _openThemeLab(context),
+          ),
+          IconButton(
+            tooltip: 'Page scaffold demo',
+            icon: const Icon(Icons.dashboard_customize_outlined),
+            onPressed: () => _openPragmaPageScaffold(context),
           ),
         ],
       ),
@@ -326,6 +332,8 @@ class ShowcaseScreen extends StatelessWidget {
                 Text('Este panel permanece cerrado hasta habilitar el flujo.'),
           ),
           const SizedBox(height: PragmaSpacing.lg),
+          const _SidebarMenuShowcase(),
+          const SizedBox(height: PragmaSpacing.lg),
           const _InputPlayground(),
           const SizedBox(height: PragmaSpacing.lg),
           const _TextAreaShowcase(),
@@ -400,6 +408,14 @@ void _openThemeLab(BuildContext context) {
   Navigator.of(context).push(
     MaterialPageRoute<void>(
       builder: (_) => const ThemeLabPage(),
+    ),
+  );
+}
+
+void _openPragmaPageScaffold(BuildContext context) {
+  Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => const PragmaPageScaffold(),
     ),
   );
 }
@@ -929,6 +945,117 @@ class _TextAreaShowcase extends StatefulWidget {
 
   @override
   State<_TextAreaShowcase> createState() => _TextAreaShowcaseState();
+}
+
+class _SidebarMenuShowcase extends StatefulWidget {
+  const _SidebarMenuShowcase();
+
+  @override
+  State<_SidebarMenuShowcase> createState() => _SidebarMenuShowcaseState();
+}
+
+class _SidebarMenuShowcaseState extends State<_SidebarMenuShowcase> {
+  bool _collapsed = false;
+  String _activeId = 'dashboard';
+
+  static final List<ModelDsSidebarMenuItem> _items = <ModelDsSidebarMenuItem>[
+    ModelDsSidebarMenuItem(
+      id: 'dashboard',
+      label: 'Dashboard',
+      iconToken: DsSidebarIconToken.dashboard,
+    ),
+    ModelDsSidebarMenuItem(
+      id: 'projects',
+      label: 'Proyectos',
+      iconToken: DsSidebarIconToken.projects,
+    ),
+    ModelDsSidebarMenuItem(
+      id: 'reports',
+      label: 'Reportes',
+      iconToken: DsSidebarIconToken.reports,
+    ),
+    ModelDsSidebarMenuItem(
+      id: 'settings',
+      label: 'Configuracion',
+      iconToken: DsSidebarIconToken.settings,
+      enabled: false,
+    ),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text('DsSidebarMenuWidget', style: textTheme.headlineSmall),
+        const SizedBox(height: PragmaSpacing.md),
+        Wrap(
+          spacing: PragmaSpacing.lg,
+          runSpacing: PragmaSpacing.lg,
+          crossAxisAlignment: WrapCrossAlignment.start,
+          children: <Widget>[
+            DsSidebarMenuWidget(
+              title: 'Creci',
+              items: _items,
+              activeId: _activeId,
+              collapsed: _collapsed,
+              onItemTap: (String id) => setState(() => _activeId = id),
+              onCollapsedToggle: (bool next) =>
+                  setState(() => _collapsed = next),
+              footer: const Padding(
+                padding: EdgeInsets.only(top: PragmaSpacing.sm),
+                child: Text(
+                  'v2.0.0 · made by Prag',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 320,
+              child: PragmaCard.section(
+                headline: 'Configura sidebar',
+                body: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    SwitchListTile.adaptive(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text('Collapsed'),
+                      value: _collapsed,
+                      onChanged: (bool value) =>
+                          setState(() => _collapsed = value),
+                    ),
+                    const SizedBox(height: PragmaSpacing.xs),
+                    Text(
+                      'Activo: $_activeId',
+                      style: textTheme.labelLarge,
+                    ),
+                    const SizedBox(height: PragmaSpacing.sm),
+                    Wrap(
+                      spacing: PragmaSpacing.xs,
+                      runSpacing: PragmaSpacing.xs,
+                      children: _items
+                          .where((ModelDsSidebarMenuItem item) => item.enabled)
+                          .map(
+                            (ModelDsSidebarMenuItem item) => ChoiceChip(
+                              label: Text(item.label),
+                              selected: _activeId == item.id,
+                              onSelected: (_) =>
+                                  setState(() => _activeId = item.id),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
 }
 
 class _TextAreaShowcaseState extends State<_TextAreaShowcase> {

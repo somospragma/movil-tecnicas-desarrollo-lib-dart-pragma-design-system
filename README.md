@@ -16,6 +16,7 @@ Flutter library focused on mobile experiences that bundles Pragma's design token
 - Neon tags (`PragmaTagWidget`) with gradient capsules, avatar slot, hover/pressed glow, and removable actions.
 - Radio pills (`PragmaRadioButtonWidget`) with neon stroke, optional helper text, hover/pressed glow, and disabled styling.
 - Glow checkboxes (`PragmaCheckboxWidget`) with multi-select support, indeterminate state, dense mode, and hover/pressed neon outline.
+- Sidebar navigation (`DsSidebarMenuWidget`) with expanded/collapsed states, active item highlighting, disabled rows, and tooltip labels while collapsed.
 - Status badges (`PragmaBadgeWidget`) with light/dark palettes, icon slot, tone presets, and compact padding.
 - Accessible components (`PragmaButton`, `PragmaCard`, `PragmaIconButtonWidget`, `PragmaInputWidget`, `PragmaToastWidget`, `PragmaAccordionWidget`, `PragmaColorTokenRowWidget`, `PragmaThemeEditorWidget`, `PragmaLogoWidget`).
 - Theme lab sample that lets you edit colors/typography in real time and export a JSON payload backed by `ModelThemePragma`.
@@ -106,6 +107,32 @@ PragmaButton.icon(
 	icon: Icons.open_in_new,
 	hierarchy: PragmaButtonHierarchy.tertiary,
 	onPressed: () {},
+)
+```
+
+### Sidebar quick sample
+
+```dart
+final List<ModelDsSidebarMenuItem> items = <ModelDsSidebarMenuItem>[
+	ModelDsSidebarMenuItem(
+		id: 'dashboard',
+		label: 'Dashboard',
+		iconToken: DsSidebarIconToken.dashboard,
+	),
+	ModelDsSidebarMenuItem(
+		id: 'reports',
+		label: 'Reportes',
+		iconToken: DsSidebarIconToken.reports,
+	),
+];
+
+DsSidebarMenuWidget(
+	title: 'Creci',
+	items: items,
+	activeId: 'dashboard',
+	collapsed: false,
+	onItemTap: (String id) {},
+	onCollapsedToggle: (bool collapsed) {},
 )
 ```
 

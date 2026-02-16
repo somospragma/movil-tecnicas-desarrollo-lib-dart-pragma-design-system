@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- `DsSidebarMenuWidget`, sidebar navegable con estados `expanded/collapsed`, item activo, disabled, tooltip en modo colapsado, slots de header/footer y callback para toggle.
+- Test suite dedicada para `DsSidebarMenuWidget` cubriendo render, interacción, semántica de selección y toggle.
+- Showcase interactivo del sidebar en `example/lib/main.dart` y snippet de uso en el README.
+
 ## [1.4.0] - 2025-12-23
 
 ### Added
