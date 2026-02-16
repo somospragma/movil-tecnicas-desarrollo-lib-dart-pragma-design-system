@@ -4,6 +4,7 @@ library pragma_design_system;
 
 export 'src/domain/models/model_anatomy_attribute.dart';
 export 'src/domain/models/model_color_token.dart';
+export 'src/domain/models/model_ds_sidebar_menu_item.dart';
 export 'src/domain/models/model_field_state.dart';
 export 'src/domain/models/model_pragma_component.dart';
 export 'src/domain/models/model_theme_pragma.dart';
