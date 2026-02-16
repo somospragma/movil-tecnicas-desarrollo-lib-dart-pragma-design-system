@@ -160,64 +160,69 @@ class _SidebarHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final ColorScheme scheme = theme.colorScheme;
-    const Widget brandIsotype = _SidebarBrandIsotype();
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final ThemeData theme = Theme.of(context);
+        final ColorScheme scheme = theme.colorScheme;
+        const Widget brandIsotype = _SidebarBrandIsotype();
+        final bool compactHeader = collapsed || constraints.maxWidth < 92;
 
-    final Widget defaultHeader;
-    if (collapsed) {
-      defaultHeader = title == null
-          ? brandIsotype
-          : PragmaTooltipWidget(
-              message: title!,
-              placement: PragmaTooltipPlacement.right,
-              child: brandIsotype,
-            );
-    } else {
-      defaultHeader = Row(
-        children: <Widget>[
-          brandIsotype,
-          const SizedBox(width: PragmaSpacing.xs),
-          Container(
-            width: 1,
-            height: 18,
-            color: scheme.onPrimary.withValues(alpha: 0.45),
-          ),
-          const SizedBox(width: PragmaSpacing.xs),
-          Expanded(
-            child: title == null
-                ? const SizedBox.shrink()
-                : Text(
-                    title!,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      color: scheme.onPrimary,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-          ),
-        ],
-      );
-    }
+        final Widget defaultHeader;
+        if (compactHeader) {
+          defaultHeader = title == null
+              ? brandIsotype
+              : PragmaTooltipWidget(
+                  message: title!,
+                  placement: PragmaTooltipPlacement.right,
+                  child: brandIsotype,
+                );
+        } else {
+          defaultHeader = Row(
+            children: <Widget>[
+              brandIsotype,
+              const SizedBox(width: PragmaSpacing.xs),
+              Container(
+                width: 1,
+                height: 18,
+                color: scheme.onPrimary.withValues(alpha: 0.45),
+              ),
+              const SizedBox(width: PragmaSpacing.xs),
+              Expanded(
+                child: title == null
+                    ? const SizedBox.shrink()
+                    : Text(
+                        title!,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          color: scheme.onPrimary,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+              ),
+            ],
+          );
+        }
 
-    return Row(
-      children: <Widget>[
-        Expanded(
-          child: header ?? defaultHeader,
-        ),
-        if (onCollapsedToggle != null)
-          IconButton(
-            tooltip: collapsed ? 'Expandir menu' : 'Colapsar menu',
-            onPressed: () => onCollapsedToggle!.call(!collapsed),
-            visualDensity: VisualDensity.compact,
-            icon: Icon(
-              collapsed ? Icons.chevron_right : Icons.chevron_left,
-              color: scheme.onPrimary,
-              size: 20,
+        return Row(
+          children: <Widget>[
+            Expanded(
+              child: header ?? defaultHeader,
             ),
-          ),
-      ],
+            if (onCollapsedToggle != null)
+              IconButton(
+                tooltip: collapsed ? 'Expandir menu' : 'Colapsar menu',
+                onPressed: () => onCollapsedToggle!.call(!collapsed),
+                visualDensity: VisualDensity.compact,
+                icon: Icon(
+                  collapsed ? Icons.chevron_right : Icons.chevron_left,
+                  color: scheme.onPrimary,
+                  size: 20,
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 }
@@ -358,6 +363,7 @@ class _SidebarMenuTile extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.labelLarge?.copyWith(
+                          color: foreground,
                           fontWeight:
                               active ? FontWeight.w700 : FontWeight.w500,
                         ),

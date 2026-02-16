@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.5.0] - 2026-02-16
 
 ### Added
 
@@ -17,6 +17,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Integración de `ModelTypographyTokens` con `PragmaTypography` para construir `TextTheme` desde tokens (`textThemeFromTokens`).
 - Extensiones de tema para consumir DS desde `ThemeData`: `DsExtendedTokensExtension`, `DsSemanticColorsExtension` y `DsDataVizPaletteExtension`.
 - Pruebas de roundtrip/serialización y construcción de tema para el agregado `ModelDesignSystem` y los nuevos modelos de dominio.
+- Documentación nueva para DS: `doc/ds_sidebar.md`, `doc/ds_header.md`, `doc/ds_models.md` y `doc/model_ds_sidebar_menu_item.md`.
+
+### Changed
+
+- `example/lib/main.dart` reorganizado con layout principal `DsSidebarMenuWidget + DsHeaderWidget`, índice lateral por secciones y navegación por anclas.
+- `README.md` actualizado con flujo de integración `Sidebar -> Model -> Widget -> Layout -> AppManager` y referencias a la nueva documentación.
+
+### Fixed
+
+- Ajuste de contraste del label en `DsSidebarMenuWidget` para usar el mismo color base de foreground que los íconos.
+- Correcciones de overflow en header del sidebar en anchos reducidos y consistencia de scroll hacia secciones en el example.
 
 ## [1.4.0] - 2025-12-23
 

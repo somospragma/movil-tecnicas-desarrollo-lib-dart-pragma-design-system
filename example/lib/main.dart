@@ -45,7 +45,7 @@ class _PragmaShowcaseAppState extends State<PragmaShowcaseApp> {
   }
 }
 
-class ShowcaseScreen extends StatelessWidget {
+class ShowcaseScreen extends StatefulWidget {
   const ShowcaseScreen({
     required this.mode,
     required this.onModeChanged,
@@ -54,6 +54,98 @@ class ShowcaseScreen extends StatelessWidget {
 
   final ThemeMode mode;
   final ValueChanged<bool> onModeChanged;
+
+  @override
+  State<ShowcaseScreen> createState() => _ShowcaseScreenState();
+}
+
+class _ShowcaseScreenState extends State<ShowcaseScreen> {
+  bool _sidebarCollapsed = false;
+  String _activeSidebarId = 'overview';
+
+  final Map<String, GlobalKey> _sectionKeys = <String, GlobalKey>{
+    'overview': GlobalKey(),
+    'tokens': GlobalKey(),
+    'base': GlobalKey(),
+    'navigation': GlobalKey(),
+    'forms': GlobalKey(),
+    'feedback': GlobalKey(),
+    'data': GlobalKey(),
+    'overlays': GlobalKey(),
+    'docs': GlobalKey(),
+  };
+
+  static final List<ModelDsSidebarMenuItem> _sidebarItems =
+      <ModelDsSidebarMenuItem>[
+    ModelDsSidebarMenuItem(
+      id: 'overview',
+      label: 'Inicio',
+      iconToken: DsSidebarIconToken.home,
+    ),
+    ModelDsSidebarMenuItem(
+      id: 'tokens',
+      label: 'Tokens',
+      iconToken: DsSidebarIconToken.analytics,
+    ),
+    ModelDsSidebarMenuItem(
+      id: 'base',
+      label: 'Base',
+      iconToken: DsSidebarIconToken.dashboard,
+    ),
+    ModelDsSidebarMenuItem(
+      id: 'navigation',
+      label: 'Navegacion',
+      iconToken: DsSidebarIconToken.projects,
+    ),
+    ModelDsSidebarMenuItem(
+      id: 'forms',
+      label: 'Formularios',
+      iconToken: DsSidebarIconToken.lock,
+    ),
+    ModelDsSidebarMenuItem(
+      id: 'feedback',
+      label: 'Feedback',
+      iconToken: DsSidebarIconToken.settings,
+    ),
+    ModelDsSidebarMenuItem(
+      id: 'data',
+      label: 'Datos',
+      iconToken: DsSidebarIconToken.reports,
+    ),
+    ModelDsSidebarMenuItem(
+      id: 'overlays',
+      label: 'Overlays',
+      iconToken: DsSidebarIconToken.analytics,
+    ),
+    ModelDsSidebarMenuItem(
+      id: 'docs',
+      label: 'Docs',
+      iconToken: DsSidebarIconToken.projects,
+    ),
+  ];
+
+  void _goToSection(String id) {
+    setState(() => _activeSidebarId = id);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) {
+        return;
+      }
+      final BuildContext? targetContext = _sectionKeys[id]?.currentContext;
+      if (targetContext == null) {
+        return;
+      }
+      Scrollable.ensureVisible(
+        targetContext,
+        duration: const Duration(milliseconds: 260),
+        curve: Curves.easeInOut,
+        alignment: 0.02,
+      );
+    });
+  }
+
+  Widget _sectionAnchor(String id) {
+    return SizedBox(key: _sectionKeys[id], height: 1);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,319 +158,420 @@ class ShowcaseScreen extends StatelessWidget {
         .toList();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Pragma Design System'),
-        actions: <Widget>[
-          Row(
-            children: <Widget>[
-              Icon(
-                Icons.light_mode,
-                size: 18,
-                color: onSurfaceVariant,
-              ),
-              Switch(
-                value: mode == ThemeMode.dark,
-                onChanged: onModeChanged,
-              ),
-              Icon(
-                Icons.dark_mode,
-                size: 18,
-                color: onSurfaceVariant,
-              ),
-              const SizedBox(width: PragmaSpacing.md),
-            ],
-          ),
-          IconButton(
-            tooltip: 'Grid debugger',
-            icon: const Icon(Icons.grid_4x4_outlined),
-            onPressed: () => _openGridDebugger(context),
-          ),
-          IconButton(
-            tooltip: 'Calendar demo',
-            icon: const Icon(Icons.event_note_outlined),
-            onPressed: () => _openCalendarDemo(context),
-          ),
-          IconButton(
-            tooltip: 'Theme lab',
-            icon: const Icon(Icons.palette_outlined),
-            onPressed: () => _openThemeLab(context),
-          ),
-          IconButton(
-            tooltip: 'Page scaffold demo',
-            icon: const Icon(Icons.dashboard_customize_outlined),
-            onPressed: () => _openPragmaPageScaffold(context),
-          ),
-        ],
-      ),
-      body: ListView(
-        padding: PragmaSpacing.insetSymmetric(
-          horizontal: PragmaSpacing.xl,
-          vertical: PragmaSpacing.xl,
-        ),
+      body: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          const _LogoShowcase(),
-          const SizedBox(height: PragmaSpacing.lg),
-          Text('Paleta cromática', style: textTheme.headlineSmall),
-          const SizedBox(height: PragmaSpacing.md),
-          Text(
-            'Visualiza los tokens de color incluidos en la librería y cómo se agrupan por intención.',
-            style: textTheme.bodyMedium?.copyWith(color: onSurfaceVariant),
-          ),
-          const SizedBox(height: PragmaSpacing.lg),
-          for (final _PaletteSection section in _paletteSections)
-            _PaletteSectionView(section: section),
-          const SizedBox(height: PragmaSpacing.lg),
-          const _ColorTokenRowPlayground(),
-          const SizedBox(height: PragmaSpacing.lg),
-          Text('Componentes base', style: textTheme.headlineSmall),
-          const SizedBox(height: PragmaSpacing.md),
-          Wrap(
-            spacing: PragmaSpacing.md,
-            runSpacing: PragmaSpacing.md,
-            children: <Widget>[
-              const PragmaPrimaryButton(
-                label: 'Primario',
-                onPressed: _noop,
-              ),
-              const PragmaPrimaryButton(
-                label: 'Primario inverso',
-                tone: PragmaButtonTone.inverse,
-                onPressed: _noop,
-              ),
-              const PragmaSecondaryButton(
-                label: 'Secundario',
-                onPressed: _noop,
-              ),
-              const PragmaTertiaryButton(
-                label: 'Terciario',
-                onPressed: _noop,
-              ),
-              const PragmaSecondaryButton(
-                label: 'Secundario small',
-                size: PragmaButtonSize.small,
-                onPressed: _noop,
-              ),
-              PragmaButton.icon(
-                label: 'Texto con ícono',
-                icon: Icons.arrow_forward,
-                hierarchy: PragmaButtonHierarchy.tertiary,
-                onPressed: _noop,
-              ),
-              const PragmaIconButtonWidget(
-                icon: Icons.favorite,
-                onPressed: _noop,
-                tooltip: 'Favorito',
-                style: PragmaIconButtonStyle.filledLight,
-              ),
-              const PragmaIconButtonWidget(
-                icon: Icons.palette,
-                tooltip: 'Deshabilitado',
-                style: PragmaIconButtonStyle.outlinedLight,
-                onPressed: null,
-              ),
-              const PragmaAvatarWidget(
-                radius: PragmaSpacing.md,
-                initials: 'PD',
-                tooltip: 'Avatar estático',
-              ),
-              const PragmaBreadcrumbWidget(
-                items: <PragmaBreadcrumbItem>[
-                  PragmaBreadcrumbItem(label: 'Inicio'),
-                  PragmaBreadcrumbItem(label: 'Componentes'),
-                  PragmaBreadcrumbItem(label: 'Breadcrumb', isCurrent: true),
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(height: PragmaSpacing.lg),
-          PragmaCard.section(
-            headline: 'Estado de diseño',
-            action: PragmaButton.icon(
-              label: 'Ver detalles',
-              icon: Icons.open_in_new,
-              hierarchy: PragmaButtonHierarchy.tertiary,
-              onPressed: _noop,
-            ),
-            body: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  'Tokens sincronizados',
-                  style: textTheme.titleMedium,
+          DsSidebarMenuWidget(
+            title: 'Showcase',
+            items: _sidebarItems,
+            activeId: _activeSidebarId,
+            collapsed: _sidebarCollapsed,
+            showCollapseToggle: false,
+            onItemTap: _goToSection,
+            footer: Center(
+              child: Text(
+                _sidebarCollapsed ? '©' : '© Pragma',
+                textAlign: TextAlign.center,
+                style: textTheme.labelSmall?.copyWith(
+                  color: colorScheme.onPrimary.withValues(alpha: 0.8),
                 ),
-                const SizedBox(height: PragmaSpacing.sm),
-                Text(
-                  'Mantén consistencia visual reutilizando estos componentes en cada squad.',
-                  style: textTheme.bodyMedium,
-                ),
-              ],
+              ),
             ),
           ),
-          const SizedBox(height: PragmaSpacing.lg),
-          Text('PragmaCardWidget', style: textTheme.headlineSmall),
-          const SizedBox(height: PragmaSpacing.md),
-          Wrap(
-            spacing: PragmaSpacing.lg,
-            runSpacing: PragmaSpacing.lg,
-            children: <Widget>[
-              SizedBox(
-                width: 360,
-                child: PragmaCardWidget(
-                  title: 'Actividad semanal',
-                  subtitle: 'Actualizado hace 5 min',
-                  metadata: Wrap(
-                    spacing: PragmaSpacing.xs,
-                    runSpacing: PragmaSpacing.xs,
-                    children: <Widget>[
-                      Chip(
-                        label: const Text('Squad Atlas'),
-                        backgroundColor: colorScheme.surfaceContainerHighest,
+          Expanded(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: colorScheme.surface,
+                border: Border(
+                  left: BorderSide(color: colorScheme.outlineVariant),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  SafeArea(
+                    bottom: false,
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        top: PragmaSpacing.md,
+                        left: PragmaSpacing.lg,
+                        right: PragmaSpacing.lg,
                       ),
-                      Chip(
-                        label: const Text('Mobile'),
-                        backgroundColor: colorScheme.surfaceContainerHighest,
+                      child: DsHeaderWidget(
+                        title: 'Pragma Design System',
+                        actions: <Widget>[
+                          DsHeaderActionSurface(
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Icon(
+                                  Icons.light_mode,
+                                  size: 18,
+                                  color: onSurfaceVariant,
+                                ),
+                                Switch(
+                                  value: widget.mode == ThemeMode.dark,
+                                  onChanged: widget.onModeChanged,
+                                ),
+                                Icon(
+                                  Icons.dark_mode,
+                                  size: 18,
+                                  color: onSurfaceVariant,
+                                ),
+                              ],
+                            ),
+                          ),
+                          IconButton(
+                            tooltip: 'Grid debugger',
+                            icon: const Icon(Icons.grid_4x4_outlined),
+                            onPressed: () => _openGridDebugger(context),
+                          ),
+                          IconButton(
+                            tooltip: 'Calendar demo',
+                            icon: const Icon(Icons.event_note_outlined),
+                            onPressed: () => _openCalendarDemo(context),
+                          ),
+                          IconButton(
+                            tooltip: 'Theme lab',
+                            icon: const Icon(Icons.palette_outlined),
+                            onPressed: () => _openThemeLab(context),
+                          ),
+                          IconButton(
+                            tooltip: 'Page scaffold demo',
+                            icon:
+                                const Icon(Icons.dashboard_customize_outlined),
+                            onPressed: () => _openPragmaPageScaffold(context),
+                          ),
+                          TextButton.icon(
+                            onPressed: () => setState(
+                              () => _sidebarCollapsed = !_sidebarCollapsed,
+                            ),
+                            icon: Icon(
+                              _sidebarCollapsed
+                                  ? Icons.keyboard_double_arrow_right
+                                  : Icons.keyboard_double_arrow_left,
+                            ),
+                            label: Text(
+                              _sidebarCollapsed ? 'Expandir' : 'Contraer',
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                  body: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        'Sesiones totales',
-                        style: textTheme.titleMedium,
-                      ),
-                      const SizedBox(height: PragmaSpacing.xs),
-                      Text(
-                        '18.4K · +4.1% vs semana anterior',
-                        style: textTheme.bodyMedium?.copyWith(
-                          color: onSurfaceVariant,
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: PragmaSpacing.insetSymmetric(
+                          horizontal: PragmaSpacing.xl,
+                          vertical: PragmaSpacing.lg,
                         ),
-                      ),
-                    ],
-                  ),
-                  variant: PragmaCardVariant.tonal,
-                  actions: <Widget>[
-                    PragmaButton.icon(
-                      label: 'Ver dashboard',
-                      icon: Icons.open_in_new,
-                      hierarchy: PragmaButtonHierarchy.tertiary,
-                      onPressed: _noop,
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                width: 320,
-                child: PragmaCardWidget(
-                  title: 'Prototipo desktop',
-                  subtitle: 'Listo para pruebas internas',
-                  metadata: Text(
-                    'Actualizado por UX Research',
-                    style: textTheme.bodySmall?.copyWith(
-                      color: onSurfaceVariant,
-                    ),
-                  ),
-                  media: AspectRatio(
-                    aspectRatio: 4 / 3,
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: <Color>[
-                            colorScheme.primaryContainer,
-                            colorScheme.secondaryContainer,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            _sectionAnchor('overview'),
+                            const _LogoShowcase(),
+                            const SizedBox(height: PragmaSpacing.lg),
+                            _sectionAnchor('tokens'),
+                            Text('Paleta cromática',
+                                style: textTheme.headlineSmall),
+                            const SizedBox(height: PragmaSpacing.md),
+                            Text(
+                              'Visualiza los tokens de color incluidos en la librería y cómo se agrupan por intención.',
+                              style: textTheme.bodyMedium
+                                  ?.copyWith(color: onSurfaceVariant),
+                            ),
+                            const SizedBox(height: PragmaSpacing.lg),
+                            for (final _PaletteSection section
+                                in _paletteSections)
+                              _PaletteSectionView(section: section),
+                            const SizedBox(height: PragmaSpacing.lg),
+                            const _ColorTokenRowPlayground(),
+                            const SizedBox(height: PragmaSpacing.lg),
+                            _sectionAnchor('base'),
+                            Text('Componentes base',
+                                style: textTheme.headlineSmall),
+                            const SizedBox(height: PragmaSpacing.md),
+                            Wrap(
+                              spacing: PragmaSpacing.md,
+                              runSpacing: PragmaSpacing.md,
+                              children: <Widget>[
+                                const PragmaPrimaryButton(
+                                  label: 'Primario',
+                                  onPressed: _noop,
+                                ),
+                                const PragmaPrimaryButton(
+                                  label: 'Primario inverso',
+                                  tone: PragmaButtonTone.inverse,
+                                  onPressed: _noop,
+                                ),
+                                const PragmaSecondaryButton(
+                                  label: 'Secundario',
+                                  onPressed: _noop,
+                                ),
+                                const PragmaTertiaryButton(
+                                  label: 'Terciario',
+                                  onPressed: _noop,
+                                ),
+                                const PragmaSecondaryButton(
+                                  label: 'Secundario small',
+                                  size: PragmaButtonSize.small,
+                                  onPressed: _noop,
+                                ),
+                                PragmaButton.icon(
+                                  label: 'Texto con ícono',
+                                  icon: Icons.arrow_forward,
+                                  hierarchy: PragmaButtonHierarchy.tertiary,
+                                  onPressed: _noop,
+                                ),
+                                const PragmaIconButtonWidget(
+                                  icon: Icons.favorite,
+                                  onPressed: _noop,
+                                  tooltip: 'Favorito',
+                                  style: PragmaIconButtonStyle.filledLight,
+                                ),
+                                const PragmaIconButtonWidget(
+                                  icon: Icons.palette,
+                                  tooltip: 'Deshabilitado',
+                                  style: PragmaIconButtonStyle.outlinedLight,
+                                  onPressed: null,
+                                ),
+                                const PragmaAvatarWidget(
+                                  radius: PragmaSpacing.md,
+                                  initials: 'PD',
+                                  tooltip: 'Avatar estático',
+                                ),
+                                const PragmaBreadcrumbWidget(
+                                  items: <PragmaBreadcrumbItem>[
+                                    PragmaBreadcrumbItem(label: 'Inicio'),
+                                    PragmaBreadcrumbItem(label: 'Componentes'),
+                                    PragmaBreadcrumbItem(
+                                      label: 'Breadcrumb',
+                                      isCurrent: true,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: PragmaSpacing.lg),
+                            PragmaCard.section(
+                              headline: 'Estado de diseño',
+                              action: PragmaButton.icon(
+                                label: 'Ver detalles',
+                                icon: Icons.open_in_new,
+                                hierarchy: PragmaButtonHierarchy.tertiary,
+                                onPressed: _noop,
+                              ),
+                              body: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    'Tokens sincronizados',
+                                    style: textTheme.titleMedium,
+                                  ),
+                                  const SizedBox(height: PragmaSpacing.sm),
+                                  Text(
+                                    'Mantén consistencia visual reutilizando estos componentes en cada squad.',
+                                    style: textTheme.bodyMedium,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: PragmaSpacing.lg),
+                            Text('PragmaCardWidget',
+                                style: textTheme.headlineSmall),
+                            const SizedBox(height: PragmaSpacing.md),
+                            Wrap(
+                              spacing: PragmaSpacing.lg,
+                              runSpacing: PragmaSpacing.lg,
+                              children: <Widget>[
+                                SizedBox(
+                                  width: 360,
+                                  child: PragmaCardWidget(
+                                    title: 'Actividad semanal',
+                                    subtitle: 'Actualizado hace 5 min',
+                                    metadata: Wrap(
+                                      spacing: PragmaSpacing.xs,
+                                      runSpacing: PragmaSpacing.xs,
+                                      children: <Widget>[
+                                        Chip(
+                                          label: const Text('Squad Atlas'),
+                                          backgroundColor: colorScheme
+                                              .surfaceContainerHighest,
+                                        ),
+                                        Chip(
+                                          label: const Text('Mobile'),
+                                          backgroundColor: colorScheme
+                                              .surfaceContainerHighest,
+                                        ),
+                                      ],
+                                    ),
+                                    body: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text(
+                                          'Sesiones totales',
+                                          style: textTheme.titleMedium,
+                                        ),
+                                        const SizedBox(
+                                            height: PragmaSpacing.xs),
+                                        Text(
+                                          '18.4K · +4.1% vs semana anterior',
+                                          style: textTheme.bodyMedium?.copyWith(
+                                            color: onSurfaceVariant,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    variant: PragmaCardVariant.tonal,
+                                    actions: <Widget>[
+                                      PragmaButton.icon(
+                                        label: 'Ver dashboard',
+                                        icon: Icons.open_in_new,
+                                        hierarchy:
+                                            PragmaButtonHierarchy.tertiary,
+                                        onPressed: _noop,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 320,
+                                  child: PragmaCardWidget(
+                                    title: 'Prototipo desktop',
+                                    subtitle: 'Listo para pruebas internas',
+                                    metadata: Text(
+                                      'Actualizado por UX Research',
+                                      style: textTheme.bodySmall?.copyWith(
+                                        color: onSurfaceVariant,
+                                      ),
+                                    ),
+                                    media: AspectRatio(
+                                      aspectRatio: 4 / 3,
+                                      child: DecoratedBox(
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: <Color>[
+                                              colorScheme.primaryContainer,
+                                              colorScheme.secondaryContainer,
+                                            ],
+                                          ),
+                                        ),
+                                        child: const Center(
+                                          child:
+                                              Icon(Icons.view_in_ar, size: 48),
+                                        ),
+                                      ),
+                                    ),
+                                    body: Text(
+                                      'Comparte enlaces a los archivos clave sin perder el contexto visual.',
+                                      style: textTheme.bodyMedium,
+                                    ),
+                                    size: PragmaCardSize.small,
+                                    variant: PragmaCardVariant.outlined,
+                                    actions: <Widget>[
+                                      TextButton.icon(
+                                        onPressed: _noop,
+                                        icon: const Icon(
+                                            Icons.visibility_outlined),
+                                        label: const Text('Abrir preview'),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: PragmaSpacing.lg),
+                            Text(
+                              'PragmaAccordionWidget',
+                              style: textTheme.headlineSmall,
+                            ),
+                            const SizedBox(height: PragmaSpacing.md),
+                            PragmaAccordionWidget(
+                              text: 'Resumen del sprint',
+                              icon: Icons.calendar_today_outlined,
+                              child: Text(
+                                'Comparte acuerdos, links a tableros y métricas clave sin saturar la vista principal.',
+                                style: textTheme.bodyMedium,
+                              ),
+                            ),
+                            const SizedBox(height: PragmaSpacing.md),
+                            const PragmaAccordionWidget(
+                              text: 'Checklist bloqueado',
+                              icon: Icons.lock_outline,
+                              disable: true,
+                              size: PragmaAccordionSize.block,
+                              child: Text(
+                                'Este panel permanece cerrado hasta habilitar el flujo.',
+                              ),
+                            ),
+                            const SizedBox(height: PragmaSpacing.lg),
+                            _sectionAnchor('navigation'),
+                            const _SidebarMenuShowcase(),
+                            const SizedBox(height: PragmaSpacing.lg),
+                            _sectionAnchor('forms'),
+                            const _InputPlayground(),
+                            const SizedBox(height: PragmaSpacing.lg),
+                            const _TextAreaShowcase(),
+                            const SizedBox(height: PragmaSpacing.lg),
+                            const _TagShowcase(),
+                            const SizedBox(height: PragmaSpacing.lg),
+                            const _BadgeShowcase(),
+                            const SizedBox(height: PragmaSpacing.lg),
+                            const _CheckboxShowcase(),
+                            const SizedBox(height: PragmaSpacing.lg),
+                            const _RadioButtonShowcase(),
+                            const SizedBox(height: PragmaSpacing.lg),
+                            _sectionAnchor('feedback'),
+                            const _ToastPlayground(),
+                            const SizedBox(height: PragmaSpacing.lg),
+                            const _LoadingShowcase(),
+                            const SizedBox(height: PragmaSpacing.lg),
+                            const _StepperShowcase(),
+                            const SizedBox(height: PragmaSpacing.lg),
+                            _sectionAnchor('data'),
+                            const _TableShowcase(),
+                            const SizedBox(height: PragmaSpacing.lg),
+                            const _PaginationShowcase(),
+                            const SizedBox(height: PragmaSpacing.lg),
+                            const _FilterShowcase(),
+                            const SizedBox(height: PragmaSpacing.lg),
+                            _sectionAnchor('overlays'),
+                            const _TooltipShowcase(),
+                            const SizedBox(height: PragmaSpacing.lg),
+                            const _SearchShowcase(),
+                            const SizedBox(height: PragmaSpacing.lg),
+                            const _DropdownPlayground(),
+                            const SizedBox(height: PragmaSpacing.lg),
+                            const _DropdownListPlayground(),
+                            const SizedBox(height: PragmaSpacing.lg),
+                            const _AvatarPlayground(),
+                            const SizedBox(height: PragmaSpacing.lg),
+                            const _BreadcrumbPlayground(),
+                            const SizedBox(height: PragmaSpacing.lg),
+                            const _IconButtonPlayground(),
+                            const SizedBox(height: PragmaSpacing.lg),
+                            _sectionAnchor('docs'),
+                            Text(
+                              'Componentes documentados',
+                              style: textTheme.headlineSmall,
+                            ),
+                            const SizedBox(height: PragmaSpacing.md),
+                            Column(
+                              children: documentedComponents
+                                  .map((ModelPragmaComponent component) {
+                                return _ComponentDocCard(component: component);
+                              }).toList(),
+                            ),
                           ],
                         ),
                       ),
-                      child: const Center(
-                        child: Icon(Icons.view_in_ar, size: 48),
-                      ),
                     ),
                   ),
-                  body: Text(
-                    'Comparte enlaces a los archivos clave sin perder el contexto visual.',
-                    style: textTheme.bodyMedium,
-                  ),
-                  size: PragmaCardSize.small,
-                  variant: PragmaCardVariant.outlined,
-                  actions: <Widget>[
-                    TextButton.icon(
-                      onPressed: _noop,
-                      icon: const Icon(Icons.visibility_outlined),
-                      label: const Text('Abrir preview'),
-                    ),
-                  ],
-                ),
+                ],
               ),
-            ],
-          ),
-          const SizedBox(height: PragmaSpacing.lg),
-          Text('PragmaAccordionWidget', style: textTheme.headlineSmall),
-          const SizedBox(height: PragmaSpacing.md),
-          PragmaAccordionWidget(
-            text: 'Resumen del sprint',
-            icon: Icons.calendar_today_outlined,
-            child: Text(
-              'Comparte acuerdos, links a tableros y métricas clave sin saturar la vista principal.',
-              style: textTheme.bodyMedium,
             ),
-          ),
-          const SizedBox(height: PragmaSpacing.md),
-          const PragmaAccordionWidget(
-            text: 'Checklist bloqueado',
-            icon: Icons.lock_outline,
-            disable: true,
-            size: PragmaAccordionSize.block,
-            child:
-                Text('Este panel permanece cerrado hasta habilitar el flujo.'),
-          ),
-          const SizedBox(height: PragmaSpacing.lg),
-          const _SidebarMenuShowcase(),
-          const SizedBox(height: PragmaSpacing.lg),
-          const _InputPlayground(),
-          const SizedBox(height: PragmaSpacing.lg),
-          const _TextAreaShowcase(),
-          const SizedBox(height: PragmaSpacing.lg),
-          const _TagShowcase(),
-          const SizedBox(height: PragmaSpacing.lg),
-          const _BadgeShowcase(),
-          const SizedBox(height: PragmaSpacing.lg),
-          const _CheckboxShowcase(),
-          const SizedBox(height: PragmaSpacing.lg),
-          const _RadioButtonShowcase(),
-          const SizedBox(height: PragmaSpacing.lg),
-          const _ToastPlayground(),
-          const SizedBox(height: PragmaSpacing.lg),
-          const _LoadingShowcase(),
-          const SizedBox(height: PragmaSpacing.lg),
-          const _StepperShowcase(),
-          const SizedBox(height: PragmaSpacing.lg),
-          const _TableShowcase(),
-          const SizedBox(height: PragmaSpacing.lg),
-          const _PaginationShowcase(),
-          const SizedBox(height: PragmaSpacing.lg),
-          const _FilterShowcase(),
-          const SizedBox(height: PragmaSpacing.lg),
-          const _TooltipShowcase(),
-          const SizedBox(height: PragmaSpacing.lg),
-          const _SearchShowcase(),
-          const SizedBox(height: PragmaSpacing.lg),
-          const _DropdownPlayground(),
-          const SizedBox(height: PragmaSpacing.lg),
-          const _DropdownListPlayground(),
-          const SizedBox(height: PragmaSpacing.lg),
-          const _AvatarPlayground(),
-          const SizedBox(height: PragmaSpacing.lg),
-          const _BreadcrumbPlayground(),
-          const SizedBox(height: PragmaSpacing.lg),
-          const _IconButtonPlayground(),
-          const SizedBox(height: PragmaSpacing.lg),
-          Text('Componentes documentados', style: textTheme.headlineSmall),
-          const SizedBox(height: PragmaSpacing.md),
-          Column(
-            children:
-                documentedComponents.map((ModelPragmaComponent component) {
-              return _ComponentDocCard(component: component);
-            }).toList(),
           ),
         ],
       ),

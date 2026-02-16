@@ -78,6 +78,10 @@ class PragmaApp extends StatelessWidget {
 - Tooltip guidance vive en [doc/tooltip.md](doc/tooltip.md), detallando anatomía light/dark, delays, arrow placements y patrones touch.
 - Pagination guidance vive en [doc/pagination.md](doc/pagination.md), documentando cápsula, gaps, summary y selector por página.
 - Badge guidance vive en [doc/badge.md](doc/badge.md), detallando tonos light/dark, anatomía y casos de uso informativos.
+- Sidebar guidance vive en [doc/ds_sidebar.md](doc/ds_sidebar.md), documentando anatomía, estados expanded/collapsed y contrato del modelo de items.
+- Sidebar item model vive en [doc/model_ds_sidebar_menu_item.md](doc/model_ds_sidebar_menu_item.md), con contrato de `ModelDsSidebarMenuItem` e icon tokens permitidos.
+- Header guidance vive en [doc/ds_header.md](doc/ds_header.md), con layout base, acciones composables y recomendaciones responsive.
+- DS models guidance vive en [doc/ds_models.md](doc/ds_models.md), consolidando los modelos de dominio del sistema de diseño.
 - **Opacity:** `PragmaOpacityTokens` and `PragmaOpacity` constrain overlays to 8/30/60 intervals using `Color.withValues` for Flutter 3.22+.
 - **Domain models:** `ModelDesignSystem`, `ModelThemeData`, `ModelSemanticColors`, `ModelDataVizPalette`, `DsExtendedTokens`, `ModelTypographyTokens`, `ModelDsComponentAnatomy`, `ModelPragmaComponent`, `ModelAnatomyAttribute`, `ModelFieldState`, `ModelColorToken`, and `ModelThemePragma` serialize documentation and theme contracts with JSON roundtrip support.
 - **Grid:** `PragmaGridTokens`, `getGridConfigFromContext`, `PragmaGridContainer`, and `PragmaScaleBox` help replicate the official grid, respect gutters, and scale full mockups.
@@ -173,6 +177,33 @@ final ModelDesignSystem tuned = designSystem.copyWith(
 		),
 	),
 );
+```
+
+### Sidebar integration flow (AppManager -> Model -> Widget -> Layout)
+
+Use this sequence to keep navigation predictable and controlled:
+
+1. **AppManager/state** defines `collapsed`, `activeId`, permissions, and feature flags.
+2. **Model** builds `List<ModelDsSidebarMenuItem>` as the final navigation contract.
+3. **Widget** renders `DsSidebarMenuWidget` as a controlled component (no internal state mutation).
+4. **Layout** composes `Sidebar + Header + WorkArea` and reacts to `collapsed/activeId`.
+5. **AppManager/state** receives callbacks (`onItemTap`, `onCollapsedToggle`) and updates state/router.
+
+```dart
+class AppState {
+  final bool collapsed;
+  final String activeId;
+  final List<ModelDsSidebarMenuItem> items;
+  // ...
+}
+
+DsSidebarMenuWidget(
+  items: state.items,
+  activeId: state.activeId,
+  collapsed: state.collapsed,
+  onItemTap: (String id) => appManager.selectSection(id),
+  onCollapsedToggle: (bool value) => appManager.setCollapsed(value),
+)
 ```
 
 ### Icon button quick sample
