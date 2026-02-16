@@ -87,13 +87,25 @@ class _PragmaPageScaffoldState extends State<PragmaPageScaffold> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Text(
-                            'Area de trabajo',
-                            style: textTheme.headlineSmall,
+                      DsHeaderWidget(
+                        title: 'Area de trabajo',
+                        actions: <Widget>[
+                          DsHeaderActionSurface(
+                            child: Text(
+                              'Ambiente: demo',
+                              style: textTheme.labelMedium,
+                            ),
                           ),
-                          const Spacer(),
+                          IconButton(
+                            tooltip: 'Buscar',
+                            onPressed: () {},
+                            icon: const Icon(Icons.search),
+                          ),
+                          IconButton(
+                            tooltip: 'Alertas',
+                            onPressed: () {},
+                            icon: const Icon(Icons.notifications_outlined),
+                          ),
                           TextButton.icon(
                             onPressed: () =>
                                 setState(() => _collapsed = !_collapsed),
@@ -102,9 +114,12 @@ class _PragmaPageScaffoldState extends State<PragmaPageScaffold> {
                                   ? Icons.keyboard_double_arrow_right
                                   : Icons.keyboard_double_arrow_left,
                             ),
-                            label: Text(
-                              _collapsed ? 'Expandir' : 'Contraer',
-                            ),
+                            label: Text(_collapsed ? 'Expandir' : 'Contraer'),
+                          ),
+                          const PragmaAvatarWidget(
+                            radius: PragmaSpacing.sm,
+                            initials: 'PD',
+                            semanticLabel: 'Avatar de usuario',
                           ),
                         ],
                       ),

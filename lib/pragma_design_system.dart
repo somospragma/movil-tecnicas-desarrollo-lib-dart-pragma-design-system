@@ -20,6 +20,7 @@ export 'src/tokens/pragma_grid_tokens.dart';
 export 'src/tokens/pragma_opacity.dart';
 export 'src/tokens/pragma_spacing.dart';
 export 'src/tokens/pragma_typography.dart';
+export 'src/widgets/ds_header_widget.dart';
 export 'src/widgets/ds_sidebar_menu_widget.dart';
 export 'src/widgets/pragma_accordion_widget.dart';
 export 'src/widgets/pragma_avatar_widget.dart';
