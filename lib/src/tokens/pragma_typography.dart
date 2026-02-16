@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../domain/models/model_typography_tokens.dart';
+
 /// Tipografía oficial basada en la familia Poppins y los tamaños
 /// suministrados por el equipo de diseño.
 class PragmaTypography {
@@ -31,6 +33,54 @@ class PragmaTypography {
       labelMedium: style(PragmaTypographyTokens.captionRegular),
       labelSmall: style(PragmaTypographyTokens.footerRegular),
     );
+  }
+
+  static TextTheme textThemeFromTokens({
+    required ModelTypographyTokens typographyTokens,
+    Brightness brightness = Brightness.light,
+  }) {
+    final Color color =
+        brightness == Brightness.dark ? Colors.white : const Color(0xFF111111);
+
+    TextStyle style(ModelTypographyTokenStyle token) =>
+        _styleFromModelToken(token: token, color: color);
+
+    return TextTheme(
+      displayLarge: style(typographyTokens.displayLarge),
+      displayMedium: style(typographyTokens.displayMedium),
+      displaySmall: style(typographyTokens.displaySmall),
+      headlineLarge: style(typographyTokens.headlineLarge),
+      headlineMedium: style(typographyTokens.headlineMedium),
+      headlineSmall: style(typographyTokens.headlineSmall),
+      titleLarge: style(typographyTokens.titleLarge),
+      titleMedium: style(typographyTokens.titleMedium),
+      titleSmall: style(typographyTokens.titleSmall),
+      bodyLarge: style(typographyTokens.bodyLarge),
+      bodyMedium: style(typographyTokens.bodyMedium),
+      bodySmall: style(typographyTokens.bodySmall),
+      labelLarge: style(typographyTokens.labelLarge),
+      labelMedium: style(typographyTokens.labelMedium),
+      labelSmall: style(typographyTokens.labelSmall),
+    );
+  }
+
+  static TextStyle _styleFromModelToken({
+    required ModelTypographyTokenStyle token,
+    required Color color,
+  }) {
+    final TextStyle base = TextStyle(
+      color: color,
+      fontSize: token.fontSize,
+      height: token.lineHeight / token.fontSize,
+      fontWeight: FontWeight.values[token.fontWeight ~/ 100 - 1],
+      letterSpacing: token.letterSpacing,
+    );
+
+    if (GoogleFonts.config.allowRuntimeFetching) {
+      return GoogleFonts.poppins(textStyle: base);
+    }
+
+    return base.copyWith(fontFamily: _fontFamily);
   }
 }
 

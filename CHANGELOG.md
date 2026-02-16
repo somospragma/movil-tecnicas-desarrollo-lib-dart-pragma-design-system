@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `DsSidebarMenuWidget`, sidebar navegable con estados `expanded/collapsed`, item activo, disabled, tooltip en modo colapsado, slots de header/footer y callback para toggle.
 - Test suite dedicada para `DsSidebarMenuWidget` cubriendo render, interacción, semántica de selección y toggle.
 - Showcase interactivo del sidebar en `example/lib/main.dart` y snippet de uso en el README.
+- Modelos de dominio DS adaptados a Pragma y exportados públicamente: `ModelThemeData`, `ModelSemanticColors`, `ModelDataVizPalette`, `ModelDsComponentAnatomy`, `ModelDesignSystem` y `ModelTypographyTokens`.
+- Integración de `ModelTypographyTokens` con `PragmaTypography` para construir `TextTheme` desde tokens (`textThemeFromTokens`).
+- Extensiones de tema para consumir DS desde `ThemeData`: `DsExtendedTokensExtension`, `DsSemanticColorsExtension` y `DsDataVizPaletteExtension`.
+- Pruebas de roundtrip/serialización y construcción de tema para el agregado `ModelDesignSystem` y los nuevos modelos de dominio.
 
 ## [1.4.0] - 2025-12-23
 

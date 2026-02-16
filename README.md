@@ -18,6 +18,7 @@ Flutter library focused on mobile experiences that bundles Pragma's design token
 - Glow checkboxes (`PragmaCheckboxWidget`) with multi-select support, indeterminate state, dense mode, and hover/pressed neon outline.
 - Sidebar navigation (`DsSidebarMenuWidget`) with expanded/collapsed states, active item highlighting, disabled rows, and tooltip labels while collapsed.
 - Header scaffold (`DsHeaderWidget`) with left title, flexible right-side actions, and compact behavior for narrow layouts.
+- Domain-ready DS models: `ModelDesignSystem`, `ModelThemeData`, `ModelSemanticColors`, `ModelDataVizPalette`, `DsExtendedTokens`, `ModelTypographyTokens`, and `ModelDsComponentAnatomy`.
 - Status badges (`PragmaBadgeWidget`) with light/dark palettes, icon slot, tone presets, and compact padding.
 - Accessible components (`PragmaButton`, `PragmaCard`, `PragmaIconButtonWidget`, `PragmaInputWidget`, `PragmaToastWidget`, `PragmaAccordionWidget`, `PragmaColorTokenRowWidget`, `PragmaThemeEditorWidget`, `PragmaLogoWidget`).
 - Theme lab sample that lets you edit colors/typography in real time and export a JSON payload backed by `ModelThemePragma`.
@@ -64,7 +65,7 @@ class PragmaApp extends StatelessWidget {
 ## Tokens and components
 
 - **Colors:** `PragmaColors` exposes brand-aware `ColorScheme` definitions for light and dark modes.
-- **Typography:** `PragmaTypography` defines responsive scales built on top of Google Fonts.
+- **Typography:** `PragmaTypography` defines responsive scales built on top of Google Fonts and can build `TextTheme` from `ModelTypographyTokens`.
 - **Spacing:** `PragmaSpacing` concentrates 4pt-system values and handy utilities.
 - **Radius:** `PragmaBorderRadiusTokens` and `PragmaBorderRadius` keep rounded corners consistent in 4/8dp steps.
 - Rounded-corner guidance lives in [doc/rounded_corners.md](doc/rounded_corners.md), covering increments, implementation, and heuristics per component size.
@@ -78,7 +79,7 @@ class PragmaApp extends StatelessWidget {
 - Pagination guidance vive en [doc/pagination.md](doc/pagination.md), documentando cápsula, gaps, summary y selector por página.
 - Badge guidance vive en [doc/badge.md](doc/badge.md), detallando tonos light/dark, anatomía y casos de uso informativos.
 - **Opacity:** `PragmaOpacityTokens` and `PragmaOpacity` constrain overlays to 8/30/60 intervals using `Color.withValues` for Flutter 3.22+.
-- **Domain models:** `ModelPragmaComponent`, `ModelAnatomyAttribute`, `ModelFieldState`, `ModelColorToken`, and `ModelThemePragma` serialize the documentation sourced from Figma, power the input widgets, and guarantee JSON roundtrips.
+- **Domain models:** `ModelDesignSystem`, `ModelThemeData`, `ModelSemanticColors`, `ModelDataVizPalette`, `DsExtendedTokens`, `ModelTypographyTokens`, `ModelDsComponentAnatomy`, `ModelPragmaComponent`, `ModelAnatomyAttribute`, `ModelFieldState`, `ModelColorToken`, and `ModelThemePragma` serialize documentation and theme contracts with JSON roundtrip support.
 - **Grid:** `PragmaGridTokens`, `getGridConfigFromContext`, `PragmaGridContainer`, and `PragmaScaleBox` help replicate the official grid, respect gutters, and scale full mockups.
 - **Components:** Widgets such as `PragmaPrimaryButton`, `PragmaSecondaryButton`, `PragmaButton.icon`, `PragmaCard`, `PragmaCardWidget`, `PragmaDropdownWidget`, `PragmaInputWidget`, `PragmaToastWidget`, `PragmaAvatarWidget`, `PragmaBreadcrumbWidget`, `PragmaAccordionWidget`, `PragmaColorTokenRowWidget`, `PragmaThemeEditorWidget`, `PragmaLogoWidget`, `PragmaCalendarWidget`, `PragmaLoadingWidget`, or `PragmaTableWidget` ship consistent states and elevation.
 
@@ -154,6 +155,24 @@ DsHeaderWidget(
 		),
 	],
 )
+```
+
+### Design system model sample
+
+```dart
+final ModelDesignSystem designSystem = ModelDesignSystem.pragmaDefault();
+
+final ThemeData lightTheme = designSystem.toThemeData(
+	brightness: Brightness.light,
+);
+
+final ModelDesignSystem tuned = designSystem.copyWith(
+	typographyTokens: designSystem.typographyTokens.copyWith(
+		bodyMedium: designSystem.typographyTokens.bodyMedium.copyWith(
+			fontSize: 18,
+		),
+	),
+);
 ```
 
 ### Icon button quick sample
