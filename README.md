@@ -16,6 +16,9 @@ Flutter library focused on mobile experiences that bundles Pragma's design token
 - Neon tags (`PragmaTagWidget`) with gradient capsules, avatar slot, hover/pressed glow, and removable actions.
 - Radio pills (`PragmaRadioButtonWidget`) with neon stroke, optional helper text, hover/pressed glow, and disabled styling.
 - Glow checkboxes (`PragmaCheckboxWidget`) with multi-select support, indeterminate state, dense mode, and hover/pressed neon outline.
+- Sidebar navigation (`DsSidebarMenuWidget`) with expanded/collapsed states, active item highlighting, disabled rows, and tooltip labels while collapsed.
+- Header scaffold (`DsHeaderWidget`) with left title, flexible right-side actions, and compact behavior for narrow layouts.
+- Domain-ready DS models: `ModelDesignSystem`, `ModelThemeData`, `ModelSemanticColors`, `ModelDataVizPalette`, `DsExtendedTokens`, `ModelTypographyTokens`, and `ModelDsComponentAnatomy`.
 - Status badges (`PragmaBadgeWidget`) with light/dark palettes, icon slot, tone presets, and compact padding.
 - Accessible components (`PragmaButton`, `PragmaCard`, `PragmaIconButtonWidget`, `PragmaInputWidget`, `PragmaToastWidget`, `PragmaAccordionWidget`, `PragmaColorTokenRowWidget`, `PragmaThemeEditorWidget`, `PragmaLogoWidget`).
 - Theme lab sample that lets you edit colors/typography in real time and export a JSON payload backed by `ModelThemePragma`.
@@ -62,7 +65,7 @@ class PragmaApp extends StatelessWidget {
 ## Tokens and components
 
 - **Colors:** `PragmaColors` exposes brand-aware `ColorScheme` definitions for light and dark modes.
-- **Typography:** `PragmaTypography` defines responsive scales built on top of Google Fonts.
+- **Typography:** `PragmaTypography` defines responsive scales built on top of Google Fonts and can build `TextTheme` from `ModelTypographyTokens`.
 - **Spacing:** `PragmaSpacing` concentrates 4pt-system values and handy utilities.
 - **Radius:** `PragmaBorderRadiusTokens` and `PragmaBorderRadius` keep rounded corners consistent in 4/8dp steps.
 - Rounded-corner guidance lives in [doc/rounded_corners.md](doc/rounded_corners.md), covering increments, implementation, and heuristics per component size.
@@ -75,8 +78,12 @@ class PragmaApp extends StatelessWidget {
 - Tooltip guidance vive en [doc/tooltip.md](doc/tooltip.md), detallando anatomía light/dark, delays, arrow placements y patrones touch.
 - Pagination guidance vive en [doc/pagination.md](doc/pagination.md), documentando cápsula, gaps, summary y selector por página.
 - Badge guidance vive en [doc/badge.md](doc/badge.md), detallando tonos light/dark, anatomía y casos de uso informativos.
+- Sidebar guidance vive en [doc/ds_sidebar.md](doc/ds_sidebar.md), documentando anatomía, estados expanded/collapsed y contrato del modelo de items.
+- Sidebar item model vive en [doc/model_ds_sidebar_menu_item.md](doc/model_ds_sidebar_menu_item.md), con contrato de `ModelDsSidebarMenuItem` e icon tokens permitidos.
+- Header guidance vive en [doc/ds_header.md](doc/ds_header.md), con layout base, acciones composables y recomendaciones responsive.
+- DS models guidance vive en [doc/ds_models.md](doc/ds_models.md), consolidando los modelos de dominio del sistema de diseño.
 - **Opacity:** `PragmaOpacityTokens` and `PragmaOpacity` constrain overlays to 8/30/60 intervals using `Color.withValues` for Flutter 3.22+.
-- **Domain models:** `ModelPragmaComponent`, `ModelAnatomyAttribute`, `ModelFieldState`, `ModelColorToken`, and `ModelThemePragma` serialize the documentation sourced from Figma, power the input widgets, and guarantee JSON roundtrips.
+- **Domain models:** `ModelDesignSystem`, `ModelThemeData`, `ModelSemanticColors`, `ModelDataVizPalette`, `DsExtendedTokens`, `ModelTypographyTokens`, `ModelDsComponentAnatomy`, `ModelPragmaComponent`, `ModelAnatomyAttribute`, `ModelFieldState`, `ModelColorToken`, and `ModelThemePragma` serialize documentation and theme contracts with JSON roundtrip support.
 - **Grid:** `PragmaGridTokens`, `getGridConfigFromContext`, `PragmaGridContainer`, and `PragmaScaleBox` help replicate the official grid, respect gutters, and scale full mockups.
 - **Components:** Widgets such as `PragmaPrimaryButton`, `PragmaSecondaryButton`, `PragmaButton.icon`, `PragmaCard`, `PragmaCardWidget`, `PragmaDropdownWidget`, `PragmaInputWidget`, `PragmaToastWidget`, `PragmaAvatarWidget`, `PragmaBreadcrumbWidget`, `PragmaAccordionWidget`, `PragmaColorTokenRowWidget`, `PragmaThemeEditorWidget`, `PragmaLogoWidget`, `PragmaCalendarWidget`, `PragmaLoadingWidget`, or `PragmaTableWidget` ship consistent states and elevation.
 
@@ -106,6 +113,96 @@ PragmaButton.icon(
 	icon: Icons.open_in_new,
 	hierarchy: PragmaButtonHierarchy.tertiary,
 	onPressed: () {},
+)
+```
+
+### Sidebar quick sample
+
+```dart
+final List<ModelDsSidebarMenuItem> items = <ModelDsSidebarMenuItem>[
+	ModelDsSidebarMenuItem(
+		id: 'dashboard',
+		label: 'Dashboard',
+		iconToken: DsSidebarIconToken.dashboard,
+	),
+	ModelDsSidebarMenuItem(
+		id: 'reports',
+		label: 'Reportes',
+		iconToken: DsSidebarIconToken.reports,
+	),
+];
+
+DsSidebarMenuWidget(
+	title: 'Creci',
+	items: items,
+	activeId: 'dashboard',
+	collapsed: false,
+	onItemTap: (String id) {},
+	onCollapsedToggle: (bool collapsed) {},
+)
+```
+
+### Header quick sample
+
+```dart
+DsHeaderWidget(
+	title: 'Area de trabajo',
+	actions: <Widget>[
+		IconButton(
+			tooltip: 'Buscar',
+			onPressed: () {},
+			icon: const Icon(Icons.search),
+		),
+		const PragmaAvatarWidget(
+			radius: PragmaSpacing.sm,
+			initials: 'PD',
+		),
+	],
+)
+```
+
+### Design system model sample
+
+```dart
+final ModelDesignSystem designSystem = ModelDesignSystem.pragmaDefault();
+
+final ThemeData lightTheme = designSystem.toThemeData(
+	brightness: Brightness.light,
+);
+
+final ModelDesignSystem tuned = designSystem.copyWith(
+	typographyTokens: designSystem.typographyTokens.copyWith(
+		bodyMedium: designSystem.typographyTokens.bodyMedium.copyWith(
+			fontSize: 18,
+		),
+	),
+);
+```
+
+### Sidebar integration flow (AppManager -> Model -> Widget -> Layout)
+
+Use this sequence to keep navigation predictable and controlled:
+
+1. **AppManager/state** defines `collapsed`, `activeId`, permissions, and feature flags.
+2. **Model** builds `List<ModelDsSidebarMenuItem>` as the final navigation contract.
+3. **Widget** renders `DsSidebarMenuWidget` as a controlled component (no internal state mutation).
+4. **Layout** composes `Sidebar + Header + WorkArea` and reacts to `collapsed/activeId`.
+5. **AppManager/state** receives callbacks (`onItemTap`, `onCollapsedToggle`) and updates state/router.
+
+```dart
+class AppState {
+  final bool collapsed;
+  final String activeId;
+  final List<ModelDsSidebarMenuItem> items;
+  // ...
+}
+
+DsSidebarMenuWidget(
+  items: state.items,
+  activeId: state.activeId,
+  collapsed: state.collapsed,
+  onItemTap: (String id) => appManager.selectSection(id),
+  onCollapsedToggle: (bool value) => appManager.setCollapsed(value),
 )
 ```
 
